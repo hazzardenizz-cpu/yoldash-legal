@@ -54,9 +54,10 @@
    document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
    document.querySelectorAll('.localized').forEach(el => el.hidden = el.dataset.lang !== lang);
    document.querySelectorAll('[data-switch]').forEach(btn => btn.classList.toggle('active', btn.dataset.switch === lang));
-   const labels = {"fa":{"label":"FA","dir":"rtl","locale":"fa","nav":{"privacy":"حریم خصوصی","terms":"قوانین استفاده","deletion":"حذف حساب"},"support":"پشتیبانی","home":"خانه","request":"ارسال درخواست حذف حساب","subject":"درخواست حذف حساب Yoldash"},"tr":{"label":"TR","dir":"ltr","locale":"tr","nav":{"privacy":"Gizlilik","terms":"Kullanım koşulları","deletion":"Hesap silme"},"support":"Destek","home":"Ana sayfa","request":"Hesap silme talebi gönder","subject":"Yoldash hesap silme talebi"},"en":{"label":"EN","dir":"ltr","locale":"en","nav":{"privacy":"Privacy","terms":"Terms","deletion":"Delete account"},"support":"Support","home":"Home","request":"Send account deletion request","subject":"Yoldash account deletion request"}}[lang].nav;
+   const labels = {"fa":{"privacy":"حریم خصوصی","terms":"قوانین استفاده","deletion":"حذف حساب"},"tr":{"privacy":"Gizlilik","terms":"Kullanım koşulları","deletion":"Hesap silme"},"en":{"privacy":"Privacy","terms":"Terms","deletion":"Delete account"}}[lang];
+   const files = {privacy:'privacy.html',terms:'terms.html',deletion:'delete-account.html'};
    document.querySelectorAll('[data-nav]').forEach(a => {
-      const r = a.dataset.nav; a.textContent = labels[r]; a.href = '${pageFile[r] || ''}?lang=' + encodeURIComponent(lang);
+      const r = a.dataset.nav; a.textContent = labels[r]; a.href = files[r] + '?lang=' + encodeURIComponent(lang);
    });
    const u = new URL(location.href); u.searchParams.set('lang', lang); history.replaceState(null,'',u);
  };
