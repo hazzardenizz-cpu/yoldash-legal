@@ -130,7 +130,41 @@
       <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><button type="button" class="chat-person active chat-person-btn" id="publicChatPerson"><span class="avatar green">YG</span><span><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></span><time id="chatTime">—</time></button><div class="shipment-list-head"><span data-i18n="shipmentChat">گفتگوی محموله</span><small data-i18n="activeRooms">فعال</small></div><div id="shipmentRoomList" class="shipment-room-list"><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green" id="chatRoomAvatar">YG</span><div><b id="chatRoomTitle" data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
 
       <section class="generic-page page" id="page-drivers"><div class="empty-state glass"><div class="empty-icon">◉</div><h1 data-i18n="drivers">راننده و ماشین</h1><p data-i18n="driversDesc">پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.</p><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div></section>
-      <section class="generic-page page" id="page-services"><div class="empty-state glass"><div class="empty-icon">◇</div><h1 data-i18n="services">خدمات</h1><p data-i18n="servicesDesc">بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.</p><div class="contact-card"><span class="contact-badge">YD</span><div><small data-i18n="siteManager">مدیر سایت</small><b>Hazar Deniz</b><a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a></div><a class="contact-action" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></div><div class="legal-links"><a href="/privacy" data-i18n="privacy">حریم خصوصی</a><a href="/terms" data-i18n="terms">شرایط استفاده</a></div></div></section>
+      <section class="generic-page page" id="page-services">
+        <div class="services-shell">
+          <section class="services-hero glass">
+            <div>
+              <span class="eyebrow"><i class="live-dot"></i><span data-i18n="serviceCenter">مرکز خدمات Yoldash</span></span>
+              <h1 data-i18n="services">خدمات</h1>
+              <p data-i18n="servicesLiveDesc">بیمه ترکیه، اسناد حمل و ابزارهای عملیاتی را از همان حساب مشترک اپ مدیریت کنید.</p>
+              <div class="hero-actions">
+                <button class="btn primary" id="openInsuranceBtn"><span>◇</span><span data-i18n="startInsurance">ثبت بیمه ترکیه</span></button>
+                <a class="btn secondary service-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer"><span>◌</span><span data-i18n="whatsappContact">WhatsApp</span></a>
+              </div>
+            </div>
+            <div class="insurance-price-card">
+              <span data-i18n="turkeyInsurance">بیمه ترکیه</span>
+              <b id="sigortaPrice">—</b>
+              <small><span data-i18n="threeMonthPlan">پلن ۳ ماهه</span> · <span id="sigortaAvailability" data-i18n="loginRequired">ورود لازم است</span></small>
+            </div>
+          </section>
+
+          <section class="service-grid">
+            <article class="service-card featured glass"><span class="service-icon amber">◇</span><div><small data-i18n="availableNow">فعال</small><h3 data-i18n="turkeyInsurance">بیمه ترکیه</h3><p data-i18n="insuranceDesc">ثبت درخواست، بارگذاری مدارک، رسید پرداخت و پیگیری صدور بیمه‌نامه.</p></div><button class="text-link" id="openInsuranceBtn2" data-i18n="startInsurance">ثبت بیمه ترکیه</button></article>
+            <article class="service-card glass"><span class="service-icon green">▤</span><div><small data-i18n="sharedData">مشترک با اپ</small><h3>CMR</h3><p data-i18n="cmrDesc">مدیریت اسناد CMR و دسترسی سریع به پرونده‌های حمل.</p></div><span class="service-state" data-i18n="nextPhase">مرحله بعد</span></article>
+            <article class="service-card glass"><span class="service-icon blue">▣</span><div><small data-i18n="secureMarket">اطلاعات مشترک و امن با اپ Yoldash</small><h3 data-i18n="documents">اسناد</h3><p data-i18n="documentsDesc">مرکز امن مدارک راننده و حمل با Storage خصوصی Yoldash.</p></div><span class="service-state" data-i18n="nextPhase">مرحله بعد</span></article>
+            <article class="service-card glass"><span class="service-icon violet">◎</span><div><small data-i18n="transportManagement">مدیریت حمل</small><h3 data-i18n="expenses">هزینه‌ها</h3><p data-i18n="expensesDesc">ثبت و مشاهده هزینه‌های مرتبط با سفر و محموله.</p></div><span class="service-state" data-i18n="nextPhase">مرحله بعد</span></article>
+          </section>
+
+          <section class="panel glass insurance-history">
+            <div class="section-head"><div><span class="kicker" data-i18n="turkeyInsurance">بیمه ترکیه</span><h2 data-i18n="myInsuranceRequests">درخواست‌های من</h2></div><button class="btn secondary" id="refreshInsurance">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div>
+            <div id="insuranceRequestList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="insuranceLoginHint">برای مشاهده یا ثبت بیمه وارد حساب Yoldash شوید.</span></div></div>
+          </section>
+
+          <div class="contact-card service-contact"><span class="contact-badge">YD</span><div><small data-i18n="siteManager">مدیر سایت</small><b>Hazar Deniz</b><a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a></div><a class="contact-action" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></div>
+          <div class="legal-links"><a href="/privacy" data-i18n="privacy">حریم خصوصی</a><a href="/terms" data-i18n="terms">شرایط استفاده</a></div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -215,6 +249,28 @@
     </form>
   </dialog>
 
+
+
+  <dialog id="sigortaModal">
+    <form id="sigortaForm" class="modal glass sigorta-modal">
+      <div class="modal-head"><div><span class="kicker" data-i18n="turkeyInsurance">بیمه ترکیه</span><h2 data-i18n="insuranceApplication">درخواست بیمه ۳ ماهه</h2></div><button type="button" class="close" data-close="sigortaModal">×</button></div>
+      <div class="sigorta-plan-summary"><div><span data-i18n="threeMonthPlan">پلن ۳ ماهه</span><b id="sigortaModalPrice">—</b></div><div id="sigortaPaymentDetails"><span data-i18n="paymentInfo">اطلاعات پرداخت پس از ورود نمایش داده می‌شود.</span></div></div>
+      <div class="form-grid">
+        <label><span data-i18n="applicantName">نام متقاضی</span><input id="sigortaApplicant" required></label>
+        <label><span data-i18n="phone">شماره تلفن</span><input id="sigortaPhone" placeholder="+905xxxxxxxxx" required></label>
+        <label><span data-i18n="whatsappPhone">واتساپ</span><input id="sigortaWhatsapp" placeholder="+905xxxxxxxxx" required></label>
+        <label><span data-i18n="plan">پلن</span><input value="3 months" disabled></label>
+      </div>
+      <div class="sigorta-files">
+        <label class="file-field"><span>01</span><div><b data-i18n="passport">پاسپورت</b><small data-i18n="allowedInsuranceFiles">PDF / JPG / PNG / WEBP · حداکثر 15MB</small></div><input id="sigortaPassport" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required></label>
+        <label class="file-field"><span>02</span><div><b data-i18n="tractorTriptyque">کاپتاژ کشنده</b><small data-i18n="allowedInsuranceFiles">PDF / JPG / PNG / WEBP · حداکثر 15MB</small></div><input id="sigortaTractor" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required></label>
+        <label class="file-field"><span>03</span><div><b data-i18n="containerTriptyque">کاپتاژ تریلر / کانتینر</b><small data-i18n="allowedInsuranceFiles">PDF / JPG / PNG / WEBP · حداکثر 15MB</small></div><input id="sigortaContainer" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required></label>
+        <label class="file-field"><span>04</span><div><b data-i18n="paymentReceipt">رسید پرداخت</b><small data-i18n="allowedInsuranceFiles">PDF / JPG / PNG / WEBP · حداکثر 15MB</small></div><input id="sigortaReceipt" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required></label>
+      </div>
+      <div class="auth-status" id="sigortaStatus"></div>
+      <div class="modal-actions"><button type="button" class="btn secondary" data-close="sigortaModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="submitSigorta" data-i18n="submitInsurance">ارسال درخواست بیمه</button></div>
+    </form>
+  </dialog>
 
   <dialog id="cargoDetailsModal">
     <div class="modal glass freight-details-modal">
