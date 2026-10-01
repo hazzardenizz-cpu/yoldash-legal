@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#030817" />
+  <meta name="description" content="Yoldash — road freight platform for shippers, drivers and transport companies." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://www.getyoldash.com/" />
+  <link rel="icon" href="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" />
+  <link rel="apple-touch-icon" href="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" />
+  
+  <style>
+
+:root{--bg:#030817;--bg2:#071020;--surface:#0d172b;--surface2:#111e35;--surface3:#162642;--line:#243756;--text:#f7f9fc;--muted:#91a4c5;--amber:#ffa800;--amber2:#ffc247;--green:#00c98d;--blue:#5ea8ff;--violet:#a78bfa;--danger:#ff6b6b;--radius:22px;--shadow:0 18px 55px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif}body{overflow-x:hidden}button,input,select{font:inherit}.ambient{position:fixed;border-radius:50%;filter:blur(110px);opacity:.13;pointer-events:none}.ambient-a{width:450px;height:450px;background:#ffa800;right:-170px;top:-120px}.ambient-b{width:600px;height:600px;background:#00c98d;left:20%;bottom:-420px}.glass{background:linear-gradient(145deg,rgba(18,32,56,.88),rgba(8,18,36,.86));border:1px solid rgba(73,102,148,.34);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.shell{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;max-width:1600px;margin:auto;padding:18px;min-height:100vh}.sidebar{position:sticky;top:18px;height:calc(100vh - 36px);border-radius:28px;padding:22px 16px;display:flex;flex-direction:column;z-index:5}.brand{display:flex;align-items:center;gap:12px;padding:4px 9px 24px}.brand img{width:46px;height:46px;border-radius:14px;box-shadow:0 0 0 1px rgba(255,168,0,.45),0 10px 30px rgba(255,168,0,.15)}.brand b{font-size:23px;color:var(--amber)}.brand span{display:block;font-size:11px;color:var(--muted);margin-top:3px}.sidebar nav{display:flex;flex-direction:column;gap:7px}.nav-item{position:relative;border:0;background:transparent;color:#aebed8;display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:15px;cursor:pointer;transition:.25s;text-align:start}.nav-item:hover{background:rgba(255,255,255,.045);color:#fff;transform:translateX(-2px)}[dir=ltr] .nav-item:hover{transform:translateX(2px)}.nav-item.active{background:linear-gradient(90deg,rgba(255,168,0,.19),rgba(255,168,0,.055));color:#fff;border:1px solid rgba(255,168,0,.18)}.nav-item.active:before{content:"";position:absolute;inset-inline-start:-1px;width:3px;height:24px;border-radius:4px;background:var(--amber);box-shadow:0 0 20px var(--amber)}.ico{font-size:20px;color:#bfcee7;width:25px;text-align:center}.nav-item.active .ico{color:var(--amber)}.badge{margin-inline-start:auto;background:rgba(255,168,0,.13);border:1px solid rgba(255,168,0,.27);color:var(--amber2);font-size:10px;padding:2px 7px;border-radius:20px}.dot{margin-inline-start:auto;width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 14px var(--green)}.sidebar-card{margin-top:auto;display:flex;gap:10px;align-items:flex-start;background:rgba(0,201,141,.07);border:1px solid rgba(0,201,141,.16);padding:13px;border-radius:17px}.shield{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:rgba(0,201,141,.14);color:var(--green)}.sidebar-card b{font-size:12px}.sidebar-card span{display:block;color:var(--muted);font-size:10px;line-height:1.55;margin-top:4px}.sidebar-foot{display:flex;justify-content:space-between;color:#526684;font-size:9px;padding:14px 6px 0}.main{min-width:0;padding-bottom:20px}.topbar{display:flex;gap:14px;align-items:center;margin:2px 0 18px}.search{height:48px;border-radius:16px;display:flex;align-items:center;gap:10px;padding:0 15px;flex:1;box-shadow:none}.search span{color:var(--amber);font-size:21px}.search input{flex:1;background:transparent;border:0;outline:0;color:var(--text);min-width:0}.search input::placeholder{color:#64799b}.top-actions{display:flex;align-items:center;gap:9px}.lang-switch{padding:4px;border-radius:14px;display:flex;gap:2px;box-shadow:none}.lang-switch button{border:0;background:transparent;color:#778aaa;padding:8px 9px;border-radius:10px;cursor:pointer;font-weight:700;font-size:11px}.lang-switch button.active{background:var(--amber);color:#211600}.icon-btn{width:45px;height:45px;border-radius:14px;color:#dce6f7;border:1px solid rgba(73,102,148,.34);cursor:pointer;position:relative}.pulse{position:absolute;width:7px;height:7px;background:var(--green);border-radius:50%;top:8px;right:8px;box-shadow:0 0 0 4px rgba(0,201,141,.1)}.profile{height:48px;border-radius:15px;color:var(--text);display:flex;align-items:center;gap:9px;padding:4px 10px 4px 6px;cursor:pointer}.avatar{width:34px;height:34px;border-radius:11px;background:linear-gradient(145deg,#3b2a00,#161006);border:1px solid rgba(255,168,0,.34);color:var(--amber);display:grid;place-items:center;font-weight:800;font-size:11px}.avatar.green{background:#073a30;border-color:rgba(0,201,141,.35);color:#77f3cd}.profile-txt{text-align:start}.profile-txt b{display:block;font-size:11px}.profile-txt small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.mobile-menu{display:none}.page{display:none}.page.active{display:grid}.hero{grid-template-columns:1.05fr .95fr;min-height:390px;border-radius:30px;padding:42px 46px;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,168,0,.03),transparent 40%,rgba(0,201,141,.04));pointer-events:none}.hero-copy{z-index:2;align-self:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:30px;background:rgba(0,201,141,.08);border:1px solid rgba(0,201,141,.18);color:#9de9d1;font-size:11px}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(0,201,141,.08),0 0 18px var(--green)}h1,h2,h3,p{margin-top:0}.hero h1{font-size:clamp(34px,4vw,62px);line-height:1.12;margin:20px 0 15px;letter-spacing:-1.8px}.hero h1 em{font-style:normal;color:var(--amber);text-shadow:0 0 42px rgba(255,168,0,.16)}.hero p{max-width:650px;color:#aab9d1;line-height:1.9;font-size:14px}.hero-actions{display:flex;gap:10px;margin-top:25px}.btn{border:0;border-radius:14px;padding:13px 18px;display:inline-flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;font-weight:800;transition:.22s}.btn:hover{transform:translateY(-2px)}.primary{background:linear-gradient(135deg,var(--amber),#ffbf2f);color:#221700;box-shadow:0 12px 28px rgba(255,168,0,.18)}.secondary{background:#13213a;color:#dce7f8;border:1px solid #2a4062}.trust-row{display:flex;gap:30px;margin-top:30px}.trust-row span{display:flex;flex-direction:column}.trust-row b{font-size:17px}.trust-row small{color:#7286a7;font-size:9px;margin-top:3px}.hero-visual{position:relative;min-height:305px;border-radius:25px;background:linear-gradient(145deg,#071122,#0a1830);border:1px solid #1f3558;overflow:hidden;box-shadow:inset 0 0 70px rgba(0,0,0,.25)}.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(94,168,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(94,168,255,.055) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(circle,#000 30%,transparent 85%)}.route-line{position:absolute;width:65%;height:160px;left:17%;top:21%;border:2px dashed rgba(255,168,0,.65);border-color:var(--amber) transparent transparent var(--amber);border-radius:55% 0 0 0;transform:rotate(9deg)}.route-node{position:absolute;width:15px;height:15px;border-radius:50%;border:3px solid #071122}.route-node:after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid currentColor;opacity:.25}.route-node.start{left:20%;bottom:28%;background:var(--green);color:var(--green);box-shadow:0 0 22px var(--green)}.route-node.end{right:18%;top:23%;background:var(--amber);color:var(--amber);box-shadow:0 0 22px var(--amber)}.route-card{position:absolute;min-width:135px;background:rgba(13,25,45,.92);border:1px solid #294263;border-radius:16px;padding:12px 14px;box-shadow:0 16px 30px rgba(0,0,0,.25)}.route-card span{display:block;color:#7085a5;font-size:9px}.route-card b{display:block;margin:4px 0;font-size:16px}.route-card small{color:#7185a5;font-size:8px}.route-card.from{left:5%;bottom:7%}.route-card.to{right:5%;top:7%}.truck-chip{position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);padding:9px 11px;background:#15243b;border:1px solid #334b6f;border-radius:13px;font-size:9px;color:#c3d0e5}.truck-chip:first-letter{color:var(--amber)}.truck-chip b{display:block;color:#fff;margin-top:3px;font-size:11px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}.metric{display:flex;gap:13px;align-items:center;padding:15px 16px;border-radius:18px;box-shadow:none}.metric-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-weight:900}.metric-icon.amber{background:rgba(255,168,0,.1);color:var(--amber)}.metric-icon.green{background:rgba(0,201,141,.1);color:var(--green)}.metric-icon.blue{background:rgba(94,168,255,.1);color:var(--blue)}.metric-icon.violet{background:rgba(167,139,250,.1);color:var(--violet)}.metric span{display:block;color:#8094b5;font-size:9px}.metric b{font-size:22px;line-height:1.2}.metric small{font-size:8px;color:#7890b4;margin-inline-start:6px}.up{color:var(--green)!important}.down{color:var(--danger)!important}.content-grid{grid-template-columns:minmax(0,1fr) 300px;gap:14px}.panel{border-radius:24px;padding:20px;box-shadow:none}.panel-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:15px}.panel-head.small{align-items:center}.kicker{display:block;color:var(--amber);font-size:9px;font-weight:800;letter-spacing:.2px;margin-bottom:4px}.panel h2{font-size:19px;margin:0}.panel h3{font-size:16px;margin:0}.filter-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}.chip,.ghost{border:1px solid #28405f;background:#0b172a;color:#8297b8;border-radius:10px;padding:7px 10px;font-size:9px;cursor:pointer}.chip.active{background:rgba(255,168,0,.1);border-color:rgba(255,168,0,.32);color:var(--amber2)}.ghost{background:transparent;border-color:transparent;color:#aabbd5}.cargo-list{display:flex;flex-direction:column;gap:9px}.cargo-card{position:relative;display:grid;grid-template-columns:1.3fr .8fr .65fr auto;align-items:center;gap:16px;padding:15px;background:linear-gradient(145deg,rgba(17,31,55,.8),rgba(10,21,40,.82));border:1px solid #203655;border-radius:17px;transition:.22s;overflow:hidden}.cargo-card:hover{transform:translateY(-2px);border-color:#3a567d;background:linear-gradient(145deg,rgba(20,36,63,.9),rgba(11,24,45,.92))}.cargo-card:before{content:"";position:absolute;inset-inline-start:0;width:3px;height:45%;background:var(--amber);border-radius:0 4px 4px 0}.route{display:flex;align-items:center;gap:10px}.city b{display:block;font-size:13px}.city small{display:block;font-size:8px;color:#7186a7;margin-top:3px}.route-arrow{color:var(--amber);font-size:18px}.cargo-meta{display:flex;gap:12px}.cargo-meta div span,.price span{display:block;color:#7085a5;font-size:8px}.cargo-meta div b{font-size:10px}.price b{display:block;font-size:14px;margin-top:2px}.cargo-card .btn{padding:9px 12px;font-size:9px;border-radius:10px}.right-column{display:flex;flex-direction:column;gap:14px}.quick-panel,.fx-panel{padding:17px}.quick{width:100%;border:1px solid #203655;background:#0b172a;color:#fff;border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px;text-align:start;cursor:pointer;margin-top:8px}.quick>span{width:33px;height:33px;border-radius:10px;background:#132641;color:#8eb0dc;display:grid;place-items:center}.quick.amber>span{background:rgba(255,168,0,.11);color:var(--amber)}.quick div{flex:1}.quick b{display:block;font-size:10px}.quick small{display:block;color:#7186a7;font-size:8px;margin-top:3px}.quick i{font-style:normal;color:#536b8f}.status{font-size:8px;color:#8fa4c3;display:flex;align-items:center;gap:5px}.status i,.chat-room-head small i{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;box-shadow:0 0 9px var(--green)}.fx{display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:10px 0;border-bottom:1px solid #1c304c}.fx:last-child{border:0}.fx span{font-size:9px;color:#8fa3c1}.fx b{font-size:12px}.fx small{font-size:8px;margin-inline-start:8px}.generic-page{min-height:calc(100vh - 95px)}.full{width:100%;min-height:600px}.page-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.page-title h1{margin:0;font-size:30px}.page-title.mini h2{margin:0}.board-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:16px}.search.inline{max-width:480px;box-shadow:none}.cargo-list.expanded .cargo-card{padding:20px}.empty-state{width:100%;min-height:520px;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}.empty-icon{width:80px;height:80px;border-radius:24px;background:rgba(255,168,0,.09);border:1px solid rgba(255,168,0,.23);display:grid;place-items:center;color:var(--amber);font-size:33px;margin-bottom:18px}.empty-state h1{font-size:28px}.empty-state p{max-width:600px;color:#8ea1bf;line-height:1.9}.chat-shell{width:100%;min-height:620px;border-radius:28px;display:grid;grid-template-columns:300px 1fr;overflow:hidden}.chat-list{padding:20px;border-inline-end:1px solid #203451}.chat-person{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:11px;border-radius:14px;margin-bottom:6px}.chat-person.active{background:#12213a;border:1px solid #263e60}.chat-person b{display:block;font-size:10px}.chat-person small{display:block;color:#7085a5;font-size:8px;margin-top:3px}.chat-person time{font-size:8px;color:#64789a}.chat-room{display:grid;grid-template-rows:auto 1fr auto;min-width:0}.chat-room-head{display:flex;gap:10px;align-items:center;padding:17px 20px;border-bottom:1px solid #1d304c}.chat-room-head b{display:block;font-size:11px}.chat-room-head small{color:#7d92b2;font-size:8px}.messages{padding:25px;display:flex;flex-direction:column;gap:11px;justify-content:flex-end;background:radial-gradient(circle at 50% 30%,rgba(18,42,72,.35),transparent 55%)}.bubble{max-width:60%;padding:11px 13px;background:#152641;border:1px solid #28405f;border-radius:15px 15px 15px 4px;font-size:10px;line-height:1.7}.bubble.me{align-self:flex-end;background:#352a08;border-color:#5a470f;border-radius:15px 15px 4px 15px}.bubble time{display:block;color:#7184a1;font-size:7px;margin-top:4px}.composer{padding:13px 17px;display:flex;gap:8px;border-top:1px solid #1d304c}.composer input{flex:1;border:1px solid #273e60;background:#0a1628;color:#fff;border-radius:12px;outline:0;padding:10px 12px}.composer button{width:38px;border:1px solid #29415f;background:#13213a;color:#a7bad7;border-radius:11px}.composer .send{background:var(--amber);color:#201400;border:0}.mobile-bottom{display:none}dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:none}dialog::backdrop{background:rgba(0,3,10,.78);backdrop-filter:blur(7px)}.modal{width:min(720px,calc(100vw - 30px));border-radius:26px;padding:24px}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.modal h2{margin:0}.close{border:1px solid #2b4263;background:#101d33;color:#aebdd2;width:34px;height:34px;border-radius:10px;cursor:pointer}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal label span{display:block;color:#91a4c3;font-size:9px;margin:0 4px 6px}.modal input,.modal select{width:100%;border:1px solid #2a4163;background:#091529;color:#fff;border-radius:12px;padding:12px;outline:0}.modal-note{display:flex;gap:8px;align-items:center;background:rgba(0,201,141,.06);border:1px solid rgba(0,201,141,.17);color:#95d9c6;padding:11px;border-radius:12px;font-size:9px;margin-top:14px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.auth{width:min(430px,calc(100vw - 30px));text-align:center}.auth>img{width:70px;height:70px;border-radius:20px;margin-bottom:10px}.auth h2{color:var(--amber);font-size:28px}.auth p{color:#8da0be}.auth label{text-align:start;display:block;margin-top:11px}.wide{width:100%;margin-top:15px}.auth>small{display:block;color:#647a9c;font-size:8px;margin-top:12px}.close.floating{position:absolute;top:18px;inset-inline-end:18px}
+@media (max-width:1100px){.shell{grid-template-columns:82px 1fr}.sidebar{padding:18px 10px}.brand{justify-content:center;padding-inline:0}.brand div,.nav-item>span:not(.ico),.sidebar-card div,.sidebar-foot{display:none}.brand img{width:43px;height:43px}.nav-item{justify-content:center;padding:13px 0}.nav-item.active:before{inset-inline-start:-10px}.sidebar-card{justify-content:center;padding:10px}.content-grid{grid-template-columns:1fr}.right-column{display:grid;grid-template-columns:1fr 1fr}.hero{padding:32px}.profile-txt{display:none}}
+@media (max-width:800px){body{padding-bottom:75px}.shell{display:block;padding:10px}.sidebar{position:fixed;inset:10px auto 10px 10px;width:245px;height:auto;transform:translateX(-110%);transition:.25s;z-index:30}.sidebar.open{transform:translateX(0)}[dir=rtl] .sidebar{left:auto;right:10px;transform:translateX(110%)}[dir=rtl] .sidebar.open{transform:translateX(0)}.brand div,.nav-item>span:not(.ico),.sidebar-card div,.sidebar-foot{display:block}.nav-item{justify-content:flex-start;padding:13px 14px}.nav-item.active:before{inset-inline-start:-1px}.topbar{position:sticky;top:5px;z-index:20;background:rgba(3,8,23,.72);backdrop-filter:blur(16px);padding:5px;border-radius:17px}.mobile-menu{display:block;width:42px;height:42px;border:1px solid #2c4263;background:#0d192d;color:#fff;border-radius:12px}.topbar>.search{display:none}.profile{display:none}.lang-switch button{padding:7px 8px}.hero{grid-template-columns:1fr;padding:27px 22px;min-height:auto}.hero-visual{margin-top:24px;min-height:280px}.hero h1{font-size:38px}.metrics{grid-template-columns:1fr 1fr}.content-grid{display:block}.right-column{display:grid;grid-template-columns:1fr;margin-top:12px}.filter-row .chip{display:none}.cargo-card{grid-template-columns:1fr auto}.cargo-meta,.price{display:none}.mobile-bottom{position:fixed;display:grid;grid-template-columns:repeat(4,1fr);bottom:8px;left:10px;right:10px;border-radius:20px;padding:6px;z-index:25}.mobile-bottom button{border:0;background:transparent;color:#7f91ad;border-radius:14px;padding:8px 3px;font-size:16px}.mobile-bottom button span{display:block;font-size:8px;margin-top:3px}.mobile-bottom button.active{background:rgba(255,168,0,.12);color:var(--amber)}.chat-shell{grid-template-columns:1fr}.chat-list{display:none}.board-toolbar{flex-wrap:wrap}.board-toolbar .search.inline{width:100%;max-width:none}.form-grid{grid-template-columns:1fr}.trust-row{gap:18px}.hero-actions{flex-wrap:wrap}.modal{padding:19px}}
+@media (max-width:500px){.hero h1{font-size:32px}.hero p{font-size:12px}.metrics{grid-template-columns:1fr 1fr;gap:8px}.metric{padding:11px}.metric-icon{width:35px;height:35px}.metric b{font-size:17px}.hero{border-radius:23px}.panel{padding:15px}.cargo-card{padding:13px}.route-card{min-width:110px}.route-card b{font-size:13px}.route-card.from{left:3%}.route-card.to{right:3%}}
+
+
+</style>
+  <title>Yoldash — Road Freight Platform</title>
+  <style>
+    .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border:1px solid rgba(73,102,148,.34);background:rgba(3,8,23,.45);border-radius:14px;margin:14px 0}.auth-tabs button{border:0;background:transparent;color:#7e92b2;padding:10px;border-radius:10px;cursor:pointer;font-weight:800}.auth-tabs button.active{background:#15243b;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,168,0,.16)}
+    .auth-type{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.type-btn{border:1px solid #2a4062;background:#0b172b;color:#b6c4da;border-radius:13px;padding:10px 8px;cursor:pointer;font-size:11px;font-weight:800}.type-btn.active{border-color:rgba(255,168,0,.55);background:rgba(255,168,0,.1);color:#ffd16b}
+    .form-grid.three{grid-template-columns:repeat(3,1fr)}.form-grid label>span{display:block;color:#8fa1c0;font-size:10px;margin-bottom:7px}.form-grid input,.form-grid select,.modal label input,.modal label select,.modal label textarea{width:100%;border:1px solid #2a4062;background:#0a1528;color:#f7f9fc;border-radius:12px;padding:12px 13px;outline:0}.modal label textarea{min-height:92px;resize:vertical}.form-grid input:focus,.form-grid select:focus,.modal label input:focus,.modal label select:focus,.modal label textarea:focus{border-color:rgba(255,168,0,.6);box-shadow:0 0 0 3px rgba(255,168,0,.08)}
+    .stack{display:flex;flex-direction:column;gap:10px}.auth-status{font-size:11px;line-height:1.6;color:#91a4c5;min-height:18px}.auth-status.error{color:#ff9292}.auth-status.ok{color:#78e6c3}.muted{color:#8295b4}.hidden{display:none!important}.wide{width:100%}.link-btn{background:transparent;border:0;color:#ffbd36;cursor:pointer;padding:4px;font-size:11px}
+    .toast-wrap{position:fixed;z-index:100;inset-inline-end:22px;bottom:22px;display:flex;flex-direction:column;gap:9px;max-width:min(360px,calc(100vw - 44px))}.toast{background:#0d172b;border:1px solid #2a4062;border-radius:15px;padding:12px 14px;box-shadow:0 18px 50px rgba(0,0,0,.35);font-size:12px;line-height:1.6}.toast.ok{border-color:rgba(0,201,141,.32)}.toast.error{border-color:rgba(255,107,107,.35)}
+    .loading-card{min-height:170px;border-radius:19px;background:linear-gradient(90deg,#0b1629 20%,#12223b 40%,#0b1629 60%);background-size:200% 100%;animation:shimmer 1.3s infinite}@keyframes shimmer{to{background-position:-200% 0}}
+    .empty-inline{padding:28px 18px;text-align:center;border:1px dashed #2a4062;border-radius:18px;color:#7e92b2}.empty-inline b{display:block;color:#e7edf7;margin-bottom:6px}
+    .session-chip{display:flex;gap:8px;align-items:center;margin:12px 0 2px;padding:10px 12px;border-radius:13px;background:rgba(0,201,141,.07);border:1px solid rgba(0,201,141,.16)}.session-chip i{width:8px;height:8px;border-radius:50%;background:#00c98d;box-shadow:0 0 14px #00c98d}.session-chip span{font-size:11px;color:#9ddfc9}
+    .dialog-section{border-top:1px solid rgba(73,102,148,.22);padding-top:14px;margin-top:14px}.dialog-section h3{font-size:13px;margin-bottom:10px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.profile-grid div{padding:10px;border-radius:12px;background:#0a1528;border:1px solid #203450}.profile-grid span{display:block;color:#7488a9;font-size:9px}.profile-grid b{display:block;margin-top:3px;font-size:11px;word-break:break-word}
+    .cargo-card button.offer-btn{border-color:rgba(0,201,141,.3);color:#8df0d1}.cargo-card button.owner-btn{opacity:.6;cursor:default}.cargo-card .owner{display:block;color:#7185a5;font-size:8px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cargo-card .status-pill{display:inline-flex;align-items:center;gap:5px;font-size:8px;color:#8fe6cd;background:rgba(0,201,141,.08);border:1px solid rgba(0,201,141,.15);border-radius:999px;padding:4px 7px}.cargo-card .status-pill:before{content:"";width:5px;height:5px;border-radius:50%;background:#00c98d}
+    .chat-shell.real-chat{min-height:660px}.chat-list .chat-person.placeholder{opacity:.55}.messages{overflow:auto}.bubble .sender{display:block;font-size:9px;color:#7e92b2;margin-bottom:4px}.bubble.me .sender{color:#5c4b15}.composer button:disabled,.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.composer .send{border:0}
+    .top-status{display:flex;align-items:center;gap:7px;color:#7388aa;font-size:9px}.top-status i{width:7px;height:7px;border-radius:50%;background:#00c98d;box-shadow:0 0 14px rgba(0,201,141,.6)}.top-status.offline i{background:#ff6b6b;box-shadow:0 0 14px rgba(255,107,107,.55)}
+    .modal-note.warning{background:rgba(255,168,0,.06);border-color:rgba(255,168,0,.18);color:#d7bf86}.modal-note.error{background:rgba(255,107,107,.06);border-color:rgba(255,107,107,.18);color:#ffacac}
+    .legal-links{display:flex;gap:12px;justify-content:center;margin-top:10px}.legal-links a{color:#7086a8;font-size:9px;text-decoration:none}.legal-links a:hover{color:#ffbd36}
+    .city-wrap{position:relative}.city-results{position:absolute;z-index:20;inset-inline:0;top:calc(100% + 5px);background:#0b172b;border:1px solid #2a4062;border-radius:13px;box-shadow:0 18px 40px rgba(0,0,0,.35);max-height:220px;overflow:auto;display:none}.city-results.open{display:block}.city-results button{width:100%;border:0;background:transparent;color:#e8eef8;text-align:start;padding:10px 12px;border-bottom:1px solid rgba(73,102,148,.16);cursor:pointer}.city-results button:last-child{border-bottom:0}.city-results button:hover{background:rgba(255,168,0,.07)}.city-results small{display:block;color:#7488a9;margin-top:3px;font-size:9px}
+    @media(max-width:720px){.form-grid.three{grid-template-columns:1fr}.auth-type{grid-template-columns:1fr 1fr}.profile-grid{grid-template-columns:1fr}.toast-wrap{inset-inline:12px;bottom:12px}.chat-shell.real-chat{min-height:580px}}
+  </style>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="shell">
+    <aside class="sidebar glass">
+      <div class="brand"><img src="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" alt="Yoldash"><div><b>Yoldash</b><span data-i18n="roadFreight">حمل‌ونقل جاده‌ای</span></div></div>
+      <nav>
+        <button class="nav-item active" data-page="home"><span class="ico">⌂</span><span data-i18n="home">خانه</span></button>
+        <button class="nav-item" data-page="loads"><span class="ico">▦</span><span data-i18n="loadBoard">اعلام بار</span><span class="badge" id="loadCountBadge">—</span></button>
+        <button class="nav-item" data-page="shipments"><span class="ico">⇄</span><span data-i18n="myShipments">حمل‌های من</span></button>
+        <button class="nav-item" data-page="chat"><span class="ico">◌</span><span data-i18n="chat">گفتگو</span><span class="dot" id="chatDot"></span></button>
+        <button class="nav-item" data-page="drivers"><span class="ico">◉</span><span data-i18n="drivers">راننده و ماشین</span></button>
+        <button class="nav-item" data-page="services"><span class="ico">◇</span><span data-i18n="services">خدمات</span></button>
+      </nav>
+      <div class="sidebar-card"><span class="shield">✓</span><div><b data-i18n="secureTitle">اتصال امن Yoldash</b><span data-i18n="secureText">داده‌ها با اپ و Supabase مشترک است</span></div></div>
+      <div class="sidebar-foot"><span>YOLDASH WEB V1</span><span>© 2026</span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn glass mobile-menu" id="mobileMenu">☰</button>
+        <div class="search glass"><span>⌕</span><input id="globalSearch" data-i18n-placeholder="search" placeholder="جستجوی بار، شهر یا کاربر..."></div>
+        <div class="top-actions">
+          <div class="top-status" id="networkStatus"><i></i><span data-i18n="onlineNow">آنلاین</span></div>
+          <div class="lang-switch glass"><button data-lang="fa" class="active">FA</button><button data-lang="tr">TR</button><button data-lang="en">EN</button></div>
+          <button class="icon-btn glass" title="Notifications">♢<span class="pulse"></span></button>
+          <button class="profile glass" id="authBtn"><span class="avatar" id="profileAvatar">YD</span><span class="profile-txt"><b id="profileName" data-i18n="guest">کاربر مهمان</b><small id="profileMeta" data-i18n="login">ورود / ثبت‌نام</small></span><span>⌄</span></button>
+        </div>
+      </header>
+
+      <section class="hero glass page active" id="page-home">
+        <div class="hero-copy">
+          <span class="eyebrow"><i class="live-dot"></i><span data-i18n="livePlatform">پلتفرم زنده حمل‌ونقل جاده‌ای</span></span>
+          <h1 data-i18n="heroTitle">بار، راننده و مسیر؛<br><em>همه در یک Yoldash.</em></h1>
+          <p data-i18n="heroText">بار خود را اعلام کنید، پیشنهاد دریافت کنید و حمل خود را از یک داشبورد سریع و یکپارچه مدیریت کنید.</p>
+          <div class="hero-actions"><button class="btn primary" id="createLoadBtn"><span>＋</span><span data-i18n="createLoad">اعلام بار جدید</span></button><button class="btn secondary" id="openBoardBtn"><span>↗</span><span data-i18n="viewLoads">مشاهده بارها</span></button></div>
+          <div class="trust-row"><span><b>24/7</b><small data-i18n="online">دسترسی آنلاین</small></span><span><b>3</b><small data-i18n="languages">زبان</small></span><span><b>1</b><small data-i18n="sharedAccount">حساب مشترک وب و اپ</small></span></div>
+        </div>
+        <div class="hero-visual"><div class="map-grid"></div><div class="route-line"></div><span class="route-node start"></span><span class="route-node end"></span><div class="route-card from"><span data-i18n="origin">مبدأ</span><b>İstanbul</b><small>TR · Marmara</small></div><div class="route-card to"><span data-i18n="destination">مقصد</span><b>Tehran</b><small>IR · Tehran</small></div><div class="truck-chip">🚛 <b data-i18n="truckOnRoute">کامیون در مسیر</b></div></div>
+      </section>
+
+      <section class="metrics page active" id="metrics-home">
+        <article class="metric glass"><span class="metric-icon amber">▦</span><div><span data-i18n="activeLoads">بارهای فعال</span><b id="metricLoads">—</b><small class="up">live</small></div></article>
+        <article class="metric glass"><span class="metric-icon green">◉</span><div><span data-i18n="onlineDrivers">رانندگان آنلاین</span><b>—</b><small data-i18n="sharedData">مشترک با اپ</small></div></article>
+        <article class="metric glass"><span class="metric-icon blue">⇄</span><div><span data-i18n="inTransit">در حال حمل</span><b id="metricShipments">—</b><small data-i18n="today">امروز</small></div></article>
+        <article class="metric glass"><span class="metric-icon violet">✓</span><div><span data-i18n="completed">تحویل موفق</span><b>—</b><small data-i18n="sharedData">مشترک با اپ</small></div></article>
+      </section>
+
+      <section class="content-grid page active" id="content-home">
+        <div class="panel glass loads-panel"><div class="section-head"><div><span class="kicker" data-i18n="marketplace">بازار حمل‌ونقل</span><h2 data-i18n="freshLoads">بارهای تازه اعلام‌شده</h2></div><button class="text-link" id="seeAll" data-i18n="seeAll">مشاهده همه</button></div><div class="cargo-list" id="cargoList"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div></div>
+        <div class="side-stack">
+          <div class="panel glass quick-panel"><div class="section-head"><div><span class="kicker" data-i18n="quickAccess">دسترسی سریع</span><h2 data-i18n="actions">عملیات</h2></div></div><button class="quick" id="quickLoad"><span class="quick-icon amber">＋</span><span><b data-i18n="newLoad">اعلام بار جدید</b><small data-i18n="newLoadHint">کمتر از ۲ دقیقه</small></span><i>›</i></button><button class="quick" id="quickBrowse"><span class="quick-icon green">⌕</span><span><b data-i18n="findDriver">پیدا کردن راننده</b><small data-i18n="findDriverHint">جستجوی هوشمند</small></span><i>›</i></button><button class="quick" id="quickChat"><span class="quick-icon blue">◌</span><span><b data-i18n="openChat">باز کردن گفتگو</b><small id="chatHint" data-i18n="chatLoginHint">پس از ورود</small></span><i>›</i></button></div>
+          <div class="panel glass rate-panel"><div class="section-head"><div><span class="kicker" data-i18n="liveRates">نرخ لحظه‌ای</span><h2 data-i18n="currency">ارز</h2></div><span class="status"><i></i><span data-i18n="live">زنده</span></span></div><div class="rates"><div><b>USD</b><span>—</span></div><div><b>EUR</b><span>—</span></div><div><b>TRY</b><span>—</span></div></div><small class="muted" data-i18n="ratesNote">اتصال نرخ ارز در فاز بعدی فعال می‌شود.</small></div>
+        </div>
+      </section>
+
+      <section class="generic-page page" id="page-loads"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="marketplace">بازار حمل‌ونقل</span><h1 data-i18n="loadBoard">اعلام بار</h1></div><button class="btn primary" id="createLoadBtn2">＋ <span data-i18n="createLoad">اعلام بار جدید</span></button></div><div class="board-toolbar"><div class="search inline"><span>⌕</span><input id="loadSearch" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div><button class="chip active" data-filter="all" data-i18n="all">همه</button><button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button><button class="chip" data-filter="domestic" data-i18n="domestic">داخلی</button></div><div class="cargo-list expanded" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div></div></section>
+
+      <section class="generic-page page" id="page-shipments"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="transportManagement">مدیریت حمل</span><h1 data-i18n="myShipments">حمل‌های من</h1></div><button class="btn secondary" id="refreshShipments">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div><p class="muted" data-i18n="shipmentsDesc">همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.</p><div class="cargo-list expanded" id="shipmentList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForShipments">برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.</span></div></div></div></section>
+
+      <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><div class="chat-person active"><span class="avatar green">YG</span><div><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></div><time id="chatTime">—</time></div><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green">YG</span><div><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
+
+      <section class="generic-page page" id="page-drivers"><div class="empty-state glass"><div class="empty-icon">◉</div><h1 data-i18n="drivers">راننده و ماشین</h1><p data-i18n="driversDesc">پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.</p><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div></section>
+      <section class="generic-page page" id="page-services"><div class="empty-state glass"><div class="empty-icon">◇</div><h1 data-i18n="services">خدمات</h1><p data-i18n="servicesDesc">بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.</p><div class="legal-links"><a href="https://www.getyoldash.com/privacy" data-i18n="privacy">حریم خصوصی</a><a href="https://www.getyoldash.com/terms" data-i18n="terms">شرایط استفاده</a></div></div></section>
+    </main>
+  </div>
+
+  <dialog id="loadModal">
+    <form id="loadForm" class="modal glass">
+      <div class="modal-head"><div><span class="kicker" data-i18n="newLoad">اعلام بار جدید</span><h2 data-i18n="cargoDetails">مشخصات بار</h2></div><button type="button" class="close" data-close="loadModal">×</button></div>
+      <div class="form-grid three">
+        <label><span data-i18n="originCountry">کشور مبدأ</span><select id="originCountry" required><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+        <label class="city-wrap"><span data-i18n="originCity">شهر مبدا</span><input id="originCity" autocomplete="off" required><div class="city-results" id="originCityResults"></div></label>
+        <label><span data-i18n="originCustoms">گمرک مبدأ</span><input id="originCustoms"></label>
+        <label><span data-i18n="destinationCountry">کشور مقصد</span><select id="destinationCountry" required><option value="IR">Iran · IR</option><option value="TR">Türkiye · TR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+        <label class="city-wrap"><span data-i18n="destinationCity">شهر مقصد</span><input id="destinationCity" autocomplete="off" required><div class="city-results" id="destinationCityResults"></div></label>
+        <label><span data-i18n="destinationCustoms">گمرک مقصد</span><input id="destinationCustoms"></label>
+        <label><span data-i18n="cargoType">نوع بار</span><input id="cargoType" data-i18n-placeholder="cargoTypeHint" placeholder="مثلاً مواد غذایی" required></label>
+        <label><span data-i18n="truckType">نوع خودرو</span><select id="truckType" required><option value="CURTAIN" data-i18n="curtain">چادری</option><option value="FLATBED" data-i18n="flatbed">کفی</option><option value="TANKER" data-i18n="tanker">تانکر</option><option value="REFRIGERATED" data-i18n="reefer">یخچالی</option><option value="LIGHT_TRUCK" data-i18n="lightTruck">کامیون سبک</option></select></label>
+        <label><span data-i18n="truckCount">تعداد کامیون</span><input id="truckCount" type="number" min="1" value="1" required></label>
+        <label><span data-i18n="weight">وزن (kg)</span><input id="weightKg" type="number" min="1" step="0.01"></label>
+        <label><span data-i18n="price">کرایه پیشنهادی</span><input id="freightPrice" type="number" min="0" step="0.01"></label>
+        <label><span data-i18n="currency">ارز</span><select id="currencyCode"><option value="USD">USD</option><option value="EUR">EUR</option><option value="TRY">TRY</option><option value="IRR">IRR</option></select></label>
+        <label><span data-i18n="loadingAt">زمان بارگیری</span><input id="loadingAt" type="datetime-local"></label>
+        <label><span data-i18n="validity">اعتبار آگهی</span><select id="validityDays"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select></label>
+        <label><span data-i18n="exitBorder">مرز خروجی</span><input id="exitBorder"></label>
+      </div>
+      <label class="stack"><span data-i18n="description">توضیحات</span><textarea id="cargoDescription" maxlength="1500"></textarea></label>
+      <div class="modal-note" id="quotaNote"><span>✓</span><span data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</span></div>
+      <div class="modal-actions"><button type="button" class="btn secondary" data-close="loadModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="publishLoadBtn" data-i18n="publishLoad">انتشار بار</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="authModal">
+    <form id="authForm" class="modal auth glass">
+      <button type="button" class="close floating" data-close="authModal">×</button>
+      <img src="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" alt="Yoldash"><h2>Yoldash</h2>
+      <p id="authSubtitle" data-i18n="authSubtitle">با حساب مشترک اپ وارد شوید</p>
+      <div id="loggedOutAuth">
+        <div class="auth-tabs"><button type="button" class="active" data-auth-mode="signin" data-i18n="signIn">ورود</button><button type="button" data-auth-mode="signup" data-i18n="register">ثبت‌نام</button></div>
+        <div class="stack hidden" id="accountTypeBlock"><span class="muted" data-i18n="accountType">نوع حساب</span><div class="auth-type"><button type="button" class="type-btn" data-business-type="DRIVER" data-i18n="driver">راننده</button><button type="button" class="type-btn" data-business-type="CARGO_OWNER" data-i18n="cargoOwner">صاحب بار</button><button type="button" class="type-btn" data-business-type="TRANSPORT_COMPANY" data-i18n="transportCompany">شرکت حمل‌ونقل</button><button type="button" class="type-btn" data-business-type="BROKER" data-i18n="broker">واسطه</button></div></div>
+        <label><span data-i18n="email">ایمیل</span><input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label><span data-i18n="password">رمز عبور</span><input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required></label>
+        <button class="btn primary wide" id="authSubmit" type="submit" data-i18n="signIn">ورود</button>
+        <div class="auth-status" id="authStatus"></div>
+        <button type="button" class="link-btn" id="forgotPassword" data-i18n="forgotPassword">رمز عبور را فراموش کرده‌ام</button>
+        <small data-i18n="authNote">حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.</small>
+      </div>
+      <div id="loggedInAuth" class="hidden">
+        <div class="session-chip"><i></i><span data-i18n="signedInShared">شما با حساب مشترک Yoldash وارد شده‌اید.</span></div>
+        <div class="profile-grid" id="profileGrid"></div>
+        <div class="dialog-section">
+          <h3 data-i18n="completeProfile">تکمیل پروفایل</h3>
+          <div class="form-grid">
+            <label><span data-i18n="firstName">نام</span><input id="profileFirstName"></label>
+            <label><span data-i18n="lastName">نام خانوادگی</span><input id="profileLastName"></label>
+            <label><span data-i18n="phone">شماره تلفن</span><input id="profilePhone" placeholder="+905xxxxxxxxx"></label>
+            <label><span id="businessPrimaryLabel">—</span><input id="businessPrimary"></label>
+            <label><span data-i18n="countryCode">کشور</span><select id="profileCountry"><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+            <label id="businessSecondaryLabelWrap"><span id="businessSecondaryLabel">—</span><input id="businessSecondary"></label>
+          </div>
+          <div id="driverExtra" class="form-grid hidden" style="margin-top:9px">
+            <label><span data-i18n="whatsappPhone">واتساپ</span><input id="driverWhatsapp" placeholder="+905xxxxxxxxx"></label>
+            <label><span data-i18n="tractorPlate">پلاک ترانزیت کشنده</span><input id="tractorPlate"></label>
+            <label><span data-i18n="containerPlate">پلاک ترانزیت تریلر/کانتینر</span><input id="containerPlate"></label>
+            <label><span data-i18n="driverCompany">نام شرکت راننده</span><input id="driverCompany"></label>
+          </div>
+          <button type="button" class="btn primary wide" id="saveProfileBtn" style="margin-top:10px" data-i18n="saveProfile">ذخیره پروفایل</button>
+          <div class="auth-status" id="profileStatus"></div>
+        </div>
+        <div class="dialog-section"><button type="button" class="btn secondary wide" id="signOutBtn" data-i18n="signOut">خروج از حساب</button></div>
+      </div>
+      <div class="legal-links"><a href="https://www.getyoldash.com/privacy" data-i18n="privacy">حریم خصوصی</a><a href="https://www.getyoldash.com/terms" data-i18n="terms">شرایط استفاده</a></div>
+    </form>
+  </dialog>
+
+  <dialog id="offerModal">
+    <form id="offerForm" class="modal glass">
+      <div class="modal-head"><div><span class="kicker" data-i18n="transportRequest">درخواست حمل</span><h2 id="offerRoute">—</h2></div><button type="button" class="close" data-close="offerModal">×</button></div>
+      <input id="offerCargoId" type="hidden">
+      <div class="form-grid"><label><span data-i18n="offerPrice">قیمت پیشنهادی</span><input id="offerPrice" type="number" min="1" step="0.01"></label><label><span data-i18n="currency">ارز</span><select id="offerCurrency"><option>USD</option><option>EUR</option><option>TRY</option></select></label><label><span data-i18n="requestedTruckCount">تعداد کامیون پیشنهادی</span><input id="offerTruckCount" type="number" min="1" value="1"></label><label><span data-i18n="message">پیام</span><input id="offerMessage" maxlength="500"></label></div>
+      <div class="modal-actions"><button type="button" class="btn secondary" data-close="offerModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="submitOffer" data-i18n="sendRequest">ارسال درخواست</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+  <script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.2';
+
+const SUPABASE_URL = 'https://ubqrafuustkyenbbzhtg.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4rrohZA7Vsu76Fywpqg9Bg_ozmpPHeH';
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+});
+
+const $ = (q, root = document) => root.querySelector(q);
+const $$ = (q, root = document) => [...root.querySelectorAll(q)];
+const esc = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const uuidLike = v => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v || '');
+const localeMap = { fa: 'fa-IR', tr: 'tr-TR', en: 'en-US' };
+const canPostTypes = new Set(['CARGO_OWNER', 'TRANSPORT_COMPANY', 'BROKER']);
+const canOfferTypes = new Set(['DRIVER', 'TRANSPORT_COMPANY']);
+
+const translations = {
+fa:{
+roadFreight:'حمل‌ونقل جاده‌ای',home:'خانه',loadBoard:'اعلام بار',myShipments:'حمل‌های من',chat:'گفتگو',drivers:'راننده و ماشین',services:'خدمات',secureTitle:'اتصال امن Yoldash',secureText:'داده‌ها با اپ و Supabase مشترک است',search:'جستجوی بار، شهر یا کاربر...',guest:'کاربر مهمان',login:'ورود / ثبت‌نام',livePlatform:'پلتفرم زنده حمل‌ونقل جاده‌ای',heroTitle:'بار، راننده و مسیر؛<br><em>همه در یک Yoldash.</em>',heroText:'بار خود را اعلام کنید، پیشنهاد دریافت کنید و حمل خود را از یک داشبورد سریع و یکپارچه مدیریت کنید.',createLoad:'اعلام بار جدید',viewLoads:'مشاهده بارها',online:'دسترسی آنلاین',languages:'زبان',sharedAccount:'حساب مشترک وب و اپ',origin:'مبدأ',destination:'مقصد',truckOnRoute:'کامیون در مسیر',activeLoads:'بارهای فعال',onlineDrivers:'رانندگان آنلاین',inTransit:'در حال حمل',today:'امروز',completed:'تحویل موفق',marketplace:'بازار حمل‌ونقل',freshLoads:'بارهای تازه اعلام‌شده',all:'همه',international:'بین‌المللی',domestic:'داخلی',seeAll:'مشاهده همه',quickAccess:'دسترسی سریع',actions:'عملیات',newLoad:'اعلام بار جدید',newLoadHint:'کمتر از ۲ دقیقه',findDriver:'مشاهده بارها',findDriverHint:'برای راننده و شرکت حمل',openChat:'باز کردن گفتگو',chatLoginHint:'پس از ورود',liveRates:'نرخ لحظه‌ای',currency:'ارز',live:'زنده',ratesNote:'اتصال نرخ ارز در فاز بعدی فعال می‌شود.',searchLoads:'جستجو بر اساس مبدا، مقصد یا نوع بار',shipmentsDesc:'همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.',transportManagement:'مدیریت حمل',refresh:'به‌روزرسانی',loginRequired:'ورود لازم است',loginForShipments:'برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.',communication:'ارتباطات',publicChat:'گفتگوی عمومی Yoldash',sharedCommunity:'جامعه مشترک وب و اپ',shipmentChat:'گفتگوی محموله',shipmentChatHint:'پس از پذیرش پیشنهاد فعال می‌شود',onlineNow:'آنلاین',loginForChat:'برای ورود به گفتگوی Yoldash وارد حساب شوید.',message:'پیام بنویسید...',driversDesc:'پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.',servicesDesc:'بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.',privacy:'حریم خصوصی',terms:'شرایط استفاده',cargoDetails:'مشخصات بار',originCountry:'کشور مبدأ',originCity:'شهر مبدا',originCustoms:'گمرک مبدأ',destinationCountry:'کشور مقصد',destinationCity:'شهر مقصد',destinationCustoms:'گمرک مقصد',cargoType:'نوع بار',cargoTypeHint:'مثلاً مواد غذایی',truckType:'نوع خودرو',truckCount:'تعداد کامیون',weight:'وزن (kg)',price:'کرایه پیشنهادی',loadingAt:'زمان بارگیری',validity:'اعتبار آگهی',exitBorder:'مرز خروجی',description:'توضیحات',sharedSupabase:'این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.',cancel:'انصراف',publishLoad:'انتشار بار',authSubtitle:'با حساب مشترک اپ وارد شوید',email:'ایمیل',password:'رمز عبور',authNote:'حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.',signIn:'ورود',register:'ثبت‌نام',accountType:'نوع حساب',driver:'راننده',cargoOwner:'صاحب بار',transportCompany:'شرکت حمل‌ونقل',broker:'واسطه',forgotPassword:'رمز عبور را فراموش کرده‌ام',signedInShared:'شما با حساب مشترک Yoldash وارد شده‌اید.',completeProfile:'تکمیل پروفایل',firstName:'نام',lastName:'نام خانوادگی',phone:'شماره تلفن',countryCode:'کشور',whatsappPhone:'واتساپ',tractorPlate:'پلاک ترانزیت کشنده',containerPlate:'پلاک ترانزیت تریلر/کانتینر',driverCompany:'نام شرکت راننده',saveProfile:'ذخیره پروفایل',signOut:'خروج از حساب',transportRequest:'درخواست حمل',offerPrice:'قیمت پیشنهادی',requestedTruckCount:'تعداد کامیون پیشنهادی',sendRequest:'ارسال درخواست',curtain:'چادری',flatbed:'کفی',tanker:'تانکر',reefer:'یخچالی',lightTruck:'کامیون سبک',sharedData:'مشترک با اپ',details:'جزئیات',tons:'تن',trucks:'کامیون',owner:'اعلام‌کننده',requestTransport:'درخواست حمل',yourLoad:'بار شما',profileNeeded:'برای ادامه ابتدا پروفایل تجاری خود را کامل کنید.',noLoads:'در حال حاضر بار فعالی پیدا نشد.',noShipments:'حمل یا بار فعالی برای حساب شما پیدا نشد.',noMessages:'هنوز پیامی در گفتگو نیست.',authSuccess:'ورود با موفقیت انجام شد.',signupCheckEmail:'ثبت‌نام انجام شد. ایمیل خود را برای تأیید حساب بررسی کنید.',passwordResetSent:'لینک بازیابی رمز عبور برای شما ارسال شد.',profileSaved:'پروفایل با موفقیت ذخیره شد.',loadPublished:'بار با موفقیت منتشر شد و در اپ هم قابل مشاهده است.',offerSent:'درخواست حمل با موفقیت ارسال شد.',messageSent:'پیام ارسال شد.',loading:'در حال بارگذاری...',companyName:'نام شرکت',organizationName:'نام سازمان / مجموعه',licenseNumber:'شماره گواهینامه',registrationNumber:'شماره ثبت',optional:'اختیاری',accountInactive:'این حساب غیرفعال است.',driverCannotPost:'حساب راننده نمی‌تواند اعلام بار ایجاد کند. رانندگان می‌توانند برای بارها درخواست حمل بفرستند.',postOnlyBusiness:'فقط صاحب بار، شرکت حمل‌ونقل یا واسطه می‌تواند بار اعلام کند.',offerOnlyProvider:'فقط راننده یا شرکت حمل‌ونقل می‌تواند درخواست حمل بفرستد.',profileIncomplete:'پروفایل تجاری هنوز کامل نیست.',invalidPhone:'شماره تلفن باید با فرمت بین‌المللی مثل +905xxxxxxxxx باشد.',requiredFields:'لطفاً فیلدهای ضروری را کامل کنید.',networkError:'ارتباط با سرور برقرار نشد. اینترنت را بررسی کنید.',unexpectedError:'خطایی رخ داد. دوباره تلاش کنید.',verificationRequired:'اگر ایمیل حساب هنوز تأیید نشده، ابتدا لینک تأیید را باز کنید.',onlineLabel:'آنلاین',offlineLabel:'آفلاین',quota:'سهمیه امروز',remaining:'باقی‌مانده',unlimited:'نامحدود',profile:'پروفایل',businessType:'نوع حساب'
+},
+tr:{
+roadFreight:'Karayolu Taşımacılığı',home:'Ana Sayfa',loadBoard:'Yük İlanları',myShipments:'Taşımalarım',chat:'Sohbet',drivers:'Sürücü & Araç',services:'Hizmetler',secureTitle:'Güvenli Yoldash bağlantısı',secureText:'Veriler uygulama ve Supabase ile ortaktır',search:'Yük, şehir veya kullanıcı ara...',guest:'Misafir kullanıcı',login:'Giriş / Kayıt',livePlatform:'Canlı karayolu taşımacılık platformu',heroTitle:'Yük, sürücü ve rota;<br><em>hepsi tek Yoldash’ta.</em>',heroText:'Yük ilanı verin, teklifler alın ve taşımalarınızı hızlı, birleşik bir panelden yönetin.',createLoad:'Yeni Yük İlanı',viewLoads:'Yükleri Gör',online:'Çevrimiçi erişim',languages:'Dil',sharedAccount:'Web & uygulama ortak hesabı',origin:'Çıkış',destination:'Varış',truckOnRoute:'Araç yolda',activeLoads:'Aktif yükler',onlineDrivers:'Çevrimiçi sürücüler',inTransit:'Yolda',today:'bugün',completed:'Başarılı teslimat',marketplace:'Taşıma pazarı',freshLoads:'Yeni yayınlanan yükler',all:'Tümü',international:'Uluslararası',domestic:'Yurtiçi',seeAll:'Tümünü gör',quickAccess:'Hızlı erişim',actions:'İşlemler',newLoad:'Yeni yük ilanı',newLoadHint:'2 dakikadan kısa',findDriver:'Yükleri görüntüle',findDriverHint:'Sürücü ve taşıyıcı için',openChat:'Sohbeti aç',chatLoginHint:'Girişten sonra',liveRates:'Canlı kurlar',currency:'Döviz',live:'Canlı',ratesNote:'Döviz kuru bağlantısı sonraki aşamada etkinleştirilecek.',searchLoads:'Çıkış, varış veya yük türüne göre ara',shipmentsDesc:'Aktif, teslim edilmiş ve bekleyen tüm taşımalarınızı buradan yönetin.',transportManagement:'Taşıma yönetimi',refresh:'Yenile',loginRequired:'Giriş gerekli',loginForShipments:'Taşımalarınızı görmek için Yoldash hesabınıza giriş yapın.',communication:'İletişim',publicChat:'Yoldash genel sohbeti',sharedCommunity:'Web ve uygulama ortak topluluğu',shipmentChat:'Sevkiyat sohbeti',shipmentChatHint:'Teklif kabul edilince açılır',onlineNow:'Çevrimiçi',loginForChat:'Yoldash sohbetine katılmak için giriş yapın.',message:'Mesaj yazın...',driversDesc:'Sürücü, araç ve uygunluk verileri bu web uygulamasında ortak Yoldash verilerine bağlanır.',servicesDesc:'Türkiye sigortası, CMR, belgeler, masraflar ve sürücü araçları bu panelde birleşecek.',privacy:'Gizlilik',terms:'Kullanım Şartları',cargoDetails:'Yük bilgileri',originCountry:'Çıkış ülkesi',originCity:'Çıkış şehri',originCustoms:'Çıkış gümrüğü',destinationCountry:'Varış ülkesi',destinationCity:'Varış şehri',destinationCustoms:'Varış gümrüğü',cargoType:'Yük türü',cargoTypeHint:'Örn. gıda',truckType:'Araç türü',truckCount:'Araç sayısı',weight:'Ağırlık (kg)',price:'Önerilen navlun',loadingAt:'Yükleme zamanı',validity:'İlan geçerliliği',exitBorder:'Çıkış sınırı',description:'Açıklama',sharedSupabase:'Bu form doğrudan Yoldash uygulamasıyla aynı Supabase’e kaydeder.',cancel:'İptal',publishLoad:'Yükü Yayınla',authSubtitle:'Uygulamadaki ortak hesabınızla giriş yapın',email:'E-posta',password:'Şifre',authNote:'Web ve uygulama aynı Supabase Auth hesabını kullanır.',signIn:'Giriş',register:'Kayıt',accountType:'Hesap türü',driver:'Sürücü',cargoOwner:'Yük sahibi',transportCompany:'Nakliye şirketi',broker:'Komisyoncu',forgotPassword:'Şifremi unuttum',signedInShared:'Ortak Yoldash hesabınızla giriş yaptınız.',completeProfile:'Profili tamamla',firstName:'Ad',lastName:'Soyad',phone:'Telefon',countryCode:'Ülke',whatsappPhone:'WhatsApp',tractorPlate:'Çekici transit plakası',containerPlate:'Dorse/konteyner transit plakası',driverCompany:'Sürücü şirketi',saveProfile:'Profili Kaydet',signOut:'Çıkış Yap',transportRequest:'Taşıma talebi',offerPrice:'Teklif fiyatı',requestedTruckCount:'İstenen araç sayısı',sendRequest:'Talebi Gönder',curtain:'Tenteli',flatbed:'Dorse',tanker:'Tanker',reefer:'Frigo',lightTruck:'Hafif kamyon',sharedData:'Uygulamayla ortak',details:'Detaylar',tons:'ton',trucks:'araç',owner:'İlan sahibi',requestTransport:'Taşıma talebi',yourLoad:'Sizin yükünüz',profileNeeded:'Devam etmek için işletme profilinizi tamamlayın.',noLoads:'Şu anda aktif yük bulunamadı.',noShipments:'Hesabınız için aktif taşıma veya yük bulunamadı.',noMessages:'Henüz mesaj yok.',authSuccess:'Giriş başarılı.',signupCheckEmail:'Kayıt tamamlandı. Hesabı doğrulamak için e-postanızı kontrol edin.',passwordResetSent:'Şifre sıfırlama bağlantısı gönderildi.',profileSaved:'Profil başarıyla kaydedildi.',loadPublished:'Yük başarıyla yayınlandı ve uygulamada da görülebilir.',offerSent:'Taşıma talebi gönderildi.',messageSent:'Mesaj gönderildi.',loading:'Yükleniyor...',companyName:'Şirket adı',organizationName:'Kurum / firma adı',licenseNumber:'Ehliyet numarası',registrationNumber:'Sicil numarası',optional:'İsteğe bağlı',accountInactive:'Bu hesap devre dışı.',driverCannotPost:'Sürücü hesabı yük ilanı veremez. Sürücüler yüklere taşıma talebi gönderebilir.',postOnlyBusiness:'Yalnızca yük sahibi, nakliye şirketi veya komisyoncu yük ilanı verebilir.',offerOnlyProvider:'Yalnızca sürücü veya nakliye şirketi taşıma talebi gönderebilir.',profileIncomplete:'İşletme profili henüz tamamlanmadı.',invalidPhone:'Telefon uluslararası formatta olmalı, örn. +905xxxxxxxxx.',requiredFields:'Lütfen zorunlu alanları doldurun.',networkError:'Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.',unexpectedError:'Bir hata oluştu. Tekrar deneyin.',verificationRequired:'E-posta henüz doğrulanmadıysa doğrulama bağlantısını açın.',onlineLabel:'Çevrimiçi',offlineLabel:'Çevrimdışı',quota:'Bugünkü kota',remaining:'kalan',unlimited:'Sınırsız',profile:'Profil',businessType:'Hesap türü'
+},
+en:{
+roadFreight:'Road Freight',home:'Home',loadBoard:'Load Board',myShipments:'My Shipments',chat:'Chat',drivers:'Drivers & Trucks',services:'Services',secureTitle:'Secure Yoldash connection',secureText:'Shared data with the app and Supabase',search:'Search loads, cities and users...',guest:'Guest user',login:'Sign in / Register',livePlatform:'Live road-freight platform',heroTitle:'Loads, drivers & routes;<br><em>all in one Yoldash.</em>',heroText:'Post loads, receive offers and manage freight from one fast, unified dashboard.',createLoad:'Post New Load',viewLoads:'Browse Loads',online:'Online access',languages:'Languages',sharedAccount:'Shared web & app account',origin:'Origin',destination:'Destination',truckOnRoute:'Truck en route',activeLoads:'Active loads',onlineDrivers:'Drivers online',inTransit:'In transit',today:'today',completed:'Successful deliveries',marketplace:'Freight marketplace',freshLoads:'Recently posted loads',all:'All',international:'International',domestic:'Domestic',seeAll:'See all',quickAccess:'Quick access',actions:'Actions',newLoad:'Post new load',newLoadHint:'Under 2 minutes',findDriver:'Browse loads',findDriverHint:'For drivers & carriers',openChat:'Open chat',chatLoginHint:'After sign in',liveRates:'Live rates',currency:'FX',live:'Live',ratesNote:'Live FX connectivity will be enabled in the next phase.',searchLoads:'Search by origin, destination or cargo type',shipmentsDesc:'Manage all active, delivered and pending shipments in one place.',transportManagement:'Transport management',refresh:'Refresh',loginRequired:'Sign in required',loginForShipments:'Sign in to your Yoldash account to see your shipments.',communication:'Communications',publicChat:'Yoldash public chat',sharedCommunity:'Shared web & app community',shipmentChat:'Shipment chat',shipmentChatHint:'Opens after an offer is accepted',onlineNow:'Online',loginForChat:'Sign in to join the Yoldash chat.',message:'Write a message...',driversDesc:'Driver, vehicle and availability data in this web app connects to the shared Yoldash backend.',servicesDesc:'Turkey insurance, CMR, documents, expenses and driver tools will live in this unified dashboard.',privacy:'Privacy',terms:'Terms of Use',cargoDetails:'Cargo details',originCountry:'Origin country',originCity:'Origin city',originCustoms:'Origin customs',destinationCountry:'Destination country',destinationCity:'Destination city',destinationCustoms:'Destination customs',cargoType:'Cargo type',cargoTypeHint:'e.g. food products',truckType:'Truck type',truckCount:'Truck count',weight:'Weight (kg)',price:'Proposed freight',loadingAt:'Loading time',validity:'Listing validity',exitBorder:'Exit border',description:'Description',sharedSupabase:'This form writes directly to the same Supabase used by the Yoldash app.',cancel:'Cancel',publishLoad:'Publish Load',authSubtitle:'Sign in with the same account you use in the app',email:'Email',password:'Password',authNote:'Web and Android use the same Supabase Auth account.',signIn:'Sign In',register:'Register',accountType:'Account type',driver:'Driver',cargoOwner:'Cargo owner',transportCompany:'Transport company',broker:'Broker',forgotPassword:'Forgot password',signedInShared:'You are signed in with your shared Yoldash account.',completeProfile:'Complete profile',firstName:'First name',lastName:'Last name',phone:'Phone',countryCode:'Country',whatsappPhone:'WhatsApp',tractorPlate:'Tractor transit plate',containerPlate:'Trailer/container transit plate',driverCompany:'Driver company',saveProfile:'Save Profile',signOut:'Sign Out',transportRequest:'Transport request',offerPrice:'Proposed price',requestedTruckCount:'Requested trucks',sendRequest:'Send Request',curtain:'Curtain-side',flatbed:'Flatbed',tanker:'Tanker',reefer:'Refrigerated',lightTruck:'Light truck',sharedData:'Shared with app',details:'Details',tons:'tons',trucks:'trucks',owner:'Posted by',requestTransport:'Request transport',yourLoad:'Your load',profileNeeded:'Complete your business profile before continuing.',noLoads:'No active loads were found right now.',noShipments:'No active transport or cargo was found for your account.',noMessages:'There are no messages yet.',authSuccess:'Signed in successfully.',signupCheckEmail:'Registration completed. Check your email to confirm the account.',passwordResetSent:'Password reset link was sent.',profileSaved:'Profile saved successfully.',loadPublished:'Load published successfully and is now shared with the app.',offerSent:'Transport request sent successfully.',messageSent:'Message sent.',loading:'Loading...',companyName:'Company name',organizationName:'Organization / business name',licenseNumber:'License number',registrationNumber:'Registration number',optional:'Optional',accountInactive:'This account is inactive.',driverCannotPost:'Driver accounts cannot post loads. Drivers can submit transport requests to available loads.',postOnlyBusiness:'Only cargo owners, transport companies or brokers can post loads.',offerOnlyProvider:'Only drivers or transport companies can send transport requests.',profileIncomplete:'The business profile is not complete yet.',invalidPhone:'Phone must use international format, e.g. +905xxxxxxxxx.',requiredFields:'Please complete the required fields.',networkError:'Could not reach the server. Check your internet connection.',unexpectedError:'Something went wrong. Please try again.',verificationRequired:'If the email is not confirmed yet, open the verification link first.',onlineLabel:'Online',offlineLabel:'Offline',quota:'Today quota',remaining:'remaining',unlimited:'Unlimited',profile:'Profile',businessType:'Account type'
+}}
+;
+
+const state = {
+  lang: localStorage.getItem('yoldash_lang') || 'fa',
+  session: null,
+  profile: null,
+  businessProfile: null,
+  loads: [],
+  loadFilter: 'all',
+  authMode: 'signin',
+  selectedBusinessType: null,
+  city: { origin: null, destination: null },
+  chatTimer: null
+};
+
+function t(key){ return translations[state.lang]?.[key] ?? translations.en[key] ?? key; }
+function toast(message, type='ok'){
+  const node = document.createElement('div');
+  node.className = `toast ${type}`;
+  node.textContent = message;
+  $('#toastWrap').appendChild(node);
+  setTimeout(()=>node.remove(), 4200);
+}
+function humanError(error){
+  const msg = String(error?.message || error || '').toLowerCase();
+  if (!navigator.onLine || msg.includes('failed to fetch') || msg.includes('network')) return t('networkError');
+  if (msg.includes('email not confirmed')) return t('verificationRequired');
+  if (msg.includes('business profile name is required')) return t('profileNeeded');
+  if (msg.includes('daily cargo') || msg.includes('quota')) return `${t('quota')}: ${error?.message || ''}`;
+  if (msg.includes('row-level security') || msg.includes('permission denied') || msg.includes('not allowed')) return error?.message || t('unexpectedError');
+  return error?.message || t('unexpectedError');
+}
+function initials(text='YD'){
+  const parts = String(text).trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return 'YD';
+  return parts.slice(0,2).map(v=>v[0]).join('').toUpperCase();
+}
+function dateLabel(value){
+  if (!value) return '—';
+  try { return new Intl.DateTimeFormat(localeMap[state.lang], {dateStyle:'medium', timeStyle:'short'}).format(new Date(value)); }
+  catch { return String(value); }
+}
+function relativeLabel(value){
+  if (!value) return '—';
+  const delta = Math.round((new Date(value).getTime()-Date.now())/60000);
+  const rtf = new Intl.RelativeTimeFormat(localeMap[state.lang], {numeric:'auto'});
+  if (Math.abs(delta) < 60) return rtf.format(delta, 'minute');
+  const h = Math.round(delta/60); if (Math.abs(h)<24) return rtf.format(h,'hour');
+  return rtf.format(Math.round(h/24),'day');
+}
+function truckKey(value){
+  return ({CURTAIN:'curtain',FLATBED:'flatbed',TANKER:'tanker',REFRIGERATED:'reefer',LIGHT_TRUCK:'lightTruck'})[String(value||'').toUpperCase()] || null;
+}
+function cityName(row,prefix){
+  const localized = row?.[`${prefix}_city_name_${state.lang}`];
+  return localized || row?.[`${prefix}_city`] || '—';
+}
+function typeLabel(type){
+  return ({DRIVER:'driver',CARGO_OWNER:'cargoOwner',TRANSPORT_COMPANY:'transportCompany',BROKER:'broker'})[type] ? t(({DRIVER:'driver',CARGO_OWNER:'cargoOwner',TRANSPORT_COMPANY:'transportCompany',BROKER:'broker'})[type]) : (type || '—');
+}
+function businessPrimaryLabel(type){
+  if (type==='DRIVER') return t('licenseNumber');
+  if (type==='TRANSPORT_COMPANY') return t('companyName');
+  return t('organizationName');
+}
+function businessSecondaryLabel(type){ return type==='TRANSPORT_COMPANY' ? `${t('registrationNumber')} · ${t('optional')}` : t('optional'); }
+
+function applyLanguage(next, persist=true){
+  state.lang = ['fa','tr','en'].includes(next) ? next : 'fa';
+  if (persist) localStorage.setItem('yoldash_lang', state.lang);
+  document.documentElement.lang = state.lang;
+  document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
+  $$('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  $$('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  $$('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===state.lang));
+  renderLoads();
+  renderProfileUI();
+  if (state.session) renderChatFromCache?.();
+}
+function page(name){
+  $$('.page').forEach(p=>p.classList.remove('active'));
+  if(name==='home') ['page-home','metrics-home','content-home'].forEach(id=>$('#'+id)?.classList.add('active'));
+  else $('#page-'+name)?.classList.add('active');
+  $$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+  $('.sidebar')?.classList.remove('open');
+  if(name==='shipments') loadShipments();
+  if(name==='chat') loadChat();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function cargoCard(c, shipment=false){
+  const from = cityName(c,'origin');
+  const to = cityName(c,'destination');
+  const tt = truckKey(c.required_truck_type);
+  const kg = Number(c.weight_kg || 0);
+  const weight = kg ? (kg/1000).toLocaleString(localeMap[state.lang],{maximumFractionDigits:2}) : '—';
+  const price = c.freight_price != null ? `${Number(c.freight_price).toLocaleString(localeMap[state.lang])} ${esc(c.currency_code||'')}` : '—';
+  const own = state.session?.user?.id && state.session.user.id === c.owner_id;
+  let action = `<button class="btn secondary" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>`;
+  if (!shipment && state.session && canOfferTypes.has(state.profile?.business_user_type) && !own) action = `<button class="btn secondary offer-btn" data-offer="${esc(c.id)}">${t('requestTransport')} ↗</button>`;
+  else if (!shipment && own) action = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
+  return `<article class="cargo-card" data-cargo-id="${esc(c.id)}">
+    <div class="route"><div class="city"><b>${esc(from)}</b><small>${esc(c.origin_country_code||'')}</small></div><span class="route-arrow">→</span><div class="city"><b>${esc(to)}</b><small>${esc(c.destination_country_code||'')}</small></div></div>
+    <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
+    <div class="cargo-meta"><div><span>${t('truckType')}</span><b>${tt?t(tt):esc(c.required_truck_type||'—')}</b></div><div><span>${t('weight')}</span><b>${weight} ${kg?t('tons'):''}</b></div><div><span>${t('trucks')}</span><b>${esc(c.remaining_truck_count ?? c.truck_count ?? 1)}</b></div></div>
+    <div class="price"><span>${t('price')}</span><b>${price}</b><span>${esc(relativeLabel(c.published_at||c.announced_at||c.created_at))}</span><small class="owner">${t('owner')}: ${esc(c.owner_display_name||'Yoldash')}</small></div>${action}</article>`;
+}
+function emptyBlock(titleKey, body='') { return `<div class="empty-inline"><b>${t(titleKey)}</b>${body?`<span>${esc(body)}</span>`:''}</div>`; }
+function renderLoads(){
+  const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
+  const filtered = state.loads.filter(c=>{
+    if(state.loadFilter==='international' && c.origin_country_code===c.destination_country_code) return false;
+    if(state.loadFilter==='domestic' && c.origin_country_code!==c.destination_country_code) return false;
+    if(!q) return true;
+    return [cityName(c,'origin'),cityName(c,'destination'),c.cargo_type,c.required_truck_type,c.owner_display_name].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+  });
+  const home = $('#cargoList'), all = $('#cargoListAll');
+  if(home) home.innerHTML = state.loads.length ? state.loads.slice(0,3).map(c=>cargoCard(c)).join('') : emptyBlock('noLoads');
+  if(all) all.innerHTML = filtered.length ? filtered.map(c=>cargoCard(c)).join('') : emptyBlock('noLoads');
+  $('#loadCountBadge').textContent = state.loads.length ? String(state.loads.length) : '0';
+  $('#metricLoads').textContent = state.loads.length ? String(state.loads.length) : '0';
+  bindCargoActions();
+}
+function bindCargoActions(){
+  $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
+    const c=state.loads.find(x=>x.id===btn.dataset.cargoDetails);
+    if(c) toast(`${cityName(c,'origin')} → ${cityName(c,'destination')} · ${c.cargo_type || ''}`,'ok');
+  });
+}
+async function loadLoads(query=''){
+  try{
+    const {data,error} = await supabase.rpc('get_open_cargo_posts',{p_query:query||'',p_offset:0,p_limit:50});
+    if(error) throw error;
+    state.loads = Array.isArray(data) ? data : [];
+  }catch(err){
+    console.warn('get_open_cargo_posts failed, trying public table fallback',err);
+    const {data,error} = await supabase.from('cargo_posts').select('*').eq('status','PUBLISHED').is('deleted_at',null).gt('expires_at',new Date().toISOString()).order('published_at',{ascending:false}).limit(50);
+    if(error){ state.loads=[]; toast(humanError(error),'error'); }
+    else state.loads=data||[];
+  }
+  renderLoads();
+}
+
+async function refreshSession(){
+  const {data:{session}} = await supabase.auth.getSession();
+  state.session = session;
+  if(session) await loadProfile(); else { state.profile=null; state.businessProfile=null; }
+  renderProfileUI();
+  if(session){ loadUnread(); }
+}
+async function loadProfile(){
+  if(!state.session) return;
+  const uid=state.session.user.id;
+  const {data,error}=await supabase.from('profiles').select('id,email,first_name,last_name,phone,is_active,business_user_type,whatsapp_phone,tractor_transit_plate,container_transit_plate,driver_company_name').eq('id',uid).single();
+  if(error){ console.error(error); return; }
+  state.profile=data;
+  state.businessProfile = await fetchBusinessProfile(data.business_user_type,uid);
+  populateProfileEditor();
+}
+async function fetchBusinessProfile(type,uid){
+  const tables={DRIVER:'driver_profiles',CARGO_OWNER:'cargo_owner_profiles',TRANSPORT_COMPANY:'transport_companies',BROKER:'broker_profiles'};
+  const table=tables[type]; if(!table) return null;
+  const {data,error}=await supabase.from(table).select('*').eq('user_id',uid).maybeSingle();
+  return error ? null : data;
+}
+function displayName(){
+  const p=state.profile,b=state.businessProfile;
+  if(!p) return state.session?.user?.email || t('guest');
+  if(p.business_user_type==='TRANSPORT_COMPANY' && b?.company_name) return b.company_name;
+  if(['CARGO_OWNER','BROKER'].includes(p.business_user_type) && b?.organization_name) return b.organization_name;
+  if(p.business_user_type==='DRIVER' && p.driver_company_name) return p.driver_company_name;
+  const n=[p.first_name,p.last_name].filter(Boolean).join(' ').trim();
+  return n || p.email || state.session?.user?.email || 'Yoldash';
+}
+function renderProfileUI(){
+  const logged=!!state.session;
+  $('#loggedOutAuth')?.classList.toggle('hidden',logged);
+  $('#loggedInAuth')?.classList.toggle('hidden',!logged);
+  if(logged){
+    const name=displayName();
+    $('#profileName').textContent=name;
+    $('#profileMeta').textContent=typeLabel(state.profile?.business_user_type);
+    $('#profileAvatar').textContent=initials(name);
+    const items=[
+      [t('profile'),name], [t('email'),state.profile?.email||state.session.user.email||'—'],
+      [t('businessType'),typeLabel(state.profile?.business_user_type)], [t('phone'),state.profile?.phone||'—']
+    ];
+    $('#profileGrid').innerHTML=items.map(([a,b])=>`<div><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join('');
+    $('#chatHint').textContent=t('publicChat');
+  }else{
+    $('#profileName').textContent=t('guest'); $('#profileMeta').textContent=t('login'); $('#profileAvatar').textContent='YD'; $('#chatHint').textContent=t('chatLoginHint');
+  }
+}
+function populateProfileEditor(){
+  const p=state.profile||{}, b=state.businessProfile||{}, type=p.business_user_type;
+  $('#profileFirstName').value=p.first_name||''; $('#profileLastName').value=p.last_name||''; $('#profilePhone').value=p.phone||'';
+  $('#profileCountry').value=b.country_code||'TR';
+  $('#businessPrimaryLabel').textContent=businessPrimaryLabel(type); $('#businessSecondaryLabel').textContent=businessSecondaryLabel(type);
+  $('#businessSecondaryLabelWrap').classList.toggle('hidden',type!=='TRANSPORT_COMPANY');
+  $('#driverExtra').classList.toggle('hidden',type!=='DRIVER');
+  if(type==='DRIVER') $('#businessPrimary').value=b.license_number||'';
+  else if(type==='TRANSPORT_COMPANY'){ $('#businessPrimary').value=b.company_name||''; $('#businessSecondary').value=b.registration_number||''; }
+  else $('#businessPrimary').value=b.organization_name||'';
+  $('#driverWhatsapp').value=p.whatsapp_phone||''; $('#tractorPlate').value=p.tractor_transit_plate||''; $('#containerPlate').value=p.container_transit_plate||''; $('#driverCompany').value=p.driver_company_name||'';
+}
+async function saveProfile(){
+  if(!state.session||!state.profile) return;
+  const status=$('#profileStatus'); status.className='auth-status'; status.textContent=t('loading');
+  const first=$('#profileFirstName').value.trim(), last=$('#profileLastName').value.trim(), phone=$('#profilePhone').value.trim();
+  const primary=$('#businessPrimary').value.trim(), secondary=$('#businessSecondary').value.trim(), country=$('#profileCountry').value;
+  if(!first||!last||!phone||!primary){ status.className='auth-status error'; status.textContent=t('requiredFields'); return; }
+  if(!/^\+[1-9]\d{7,14}$/.test(phone)){ status.className='auth-status error'; status.textContent=t('invalidPhone'); return; }
+  try{
+    const uid=state.session.user.id, type=state.profile.business_user_type;
+    const base={first_name:first,last_name:last,phone};
+    if(type==='DRIVER'){
+      const whatsapp=$('#driverWhatsapp').value.trim(), tractor=$('#tractorPlate').value.trim().toUpperCase(), container=$('#containerPlate').value.trim().toUpperCase(), company=$('#driverCompany').value.trim();
+      if(!/^\+[1-9]\d{7,14}$/.test(whatsapp)||!tractor||!container||!company){ throw new Error(t('requiredFields')); }
+      Object.assign(base,{whatsapp_phone:whatsapp,tractor_transit_plate:tractor,container_transit_plate:container,driver_company_name:company});
+    }
+    let {error}=await supabase.from('profiles').update(base).eq('id',uid); if(error) throw error;
+    const payloadMap={
+      DRIVER:{user_id:uid,country_code:country,license_number:primary,license_country_code:country},
+      CARGO_OWNER:{user_id:uid,country_code:country,organization_name:primary},
+      TRANSPORT_COMPANY:{user_id:uid,company_name:primary,country_code:country,registration_number:secondary||null},
+      BROKER:{user_id:uid,country_code:country,organization_name:primary}
+    };
+    ({error}=await supabase.from(({DRIVER:'driver_profiles',CARGO_OWNER:'cargo_owner_profiles',TRANSPORT_COMPANY:'transport_companies',BROKER:'broker_profiles'})[type]).upsert(payloadMap[type],{onConflict:'user_id'})); if(error) throw error;
+    await loadProfile(); renderProfileUI(); status.className='auth-status ok'; status.textContent=t('profileSaved'); toast(t('profileSaved'));
+  }catch(err){ status.className='auth-status error'; status.textContent=humanError(err); }
+}
+
+function setAuthMode(mode){
+  state.authMode=mode;
+  $$('[data-auth-mode]').forEach(b=>b.classList.toggle('active',b.dataset.authMode===mode));
+  $('#accountTypeBlock').classList.toggle('hidden',mode!=='signup');
+  $('#authSubmit').textContent=mode==='signup'?t('register'):t('signIn');
+  $('#authPassword').autocomplete=mode==='signup'?'new-password':'current-password';
+  $('#authStatus').textContent='';
+}
+async function submitAuth(ev){
+  ev.preventDefault();
+  const email=$('#authEmail').value.trim(), password=$('#authPassword').value;
+  const status=$('#authStatus'); status.className='auth-status'; status.textContent=t('loading');
+  try{
+    if(state.authMode==='signup'){
+      if(!state.selectedBusinessType) throw new Error(t('accountType'));
+      if(password.length<8) throw new Error('Password must be at least 8 characters.');
+      const redirect = location.protocol.startsWith('http') ? `${location.origin}/` : 'https://www.getyoldash.com/';
+      const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:redirect,data:{business_user_type:state.selectedBusinessType}}});
+      if(error) throw error;
+      if(data.session){ state.session=data.session; await loadProfile(); renderProfileUI(); status.className='auth-status ok'; status.textContent=t('authSuccess'); }
+      else { status.className='auth-status ok'; status.textContent=t('signupCheckEmail'); }
+    }else{
+      const {data,error}=await supabase.auth.signInWithPassword({email,password}); if(error) throw error;
+      state.session=data.session; await loadProfile(); renderProfileUI(); status.className='auth-status ok'; status.textContent=t('authSuccess'); setTimeout(()=>$('#authModal').close(),700);
+    }
+  }catch(err){ status.className='auth-status error'; status.textContent=humanError(err); }
+}
+async function forgotPassword(){
+  const email=$('#authEmail').value.trim(); if(!email){ $('#authStatus').textContent=t('email'); return; }
+  const redirect=location.protocol.startsWith('http')?`${location.origin}/`:'https://www.getyoldash.com/';
+  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:redirect});
+  if(error){ $('#authStatus').className='auth-status error'; $('#authStatus').textContent=humanError(error); }
+  else { $('#authStatus').className='auth-status ok'; $('#authStatus').textContent=t('passwordResetSent'); }
+}
+
+function isBusinessProfileReady(){
+  const type=state.profile?.business_user_type,b=state.businessProfile,p=state.profile;
+  if(!type||!b) return false;
+  if(type==='DRIVER') return !!(b.license_number && p.whatsapp_phone && p.tractor_transit_plate && p.container_transit_plate && p.driver_company_name);
+  if(type==='TRANSPORT_COMPANY') return !!b.company_name;
+  return !!b.organization_name;
+}
+async function openLoadModal(){
+  if(!state.session){ $('#authModal').showModal(); toast(t('loginRequired'),'error'); return; }
+  if(!state.profile?.is_active){ toast(t('accountInactive'),'error'); return; }
+  if(!canPostTypes.has(state.profile?.business_user_type)){ toast(state.profile?.business_user_type==='DRIVER'?t('driverCannotPost'):t('postOnlyBusiness'),'error'); return; }
+  if(!isBusinessProfileReady()){ $('#authModal').showModal(); $('#profileStatus').className='auth-status error'; $('#profileStatus').textContent=t('profileNeeded'); return; }
+  $('#loadModal').showModal();
+  try{
+    const {data}=await supabase.rpc('get_current_cargo_daily_quota'); const q=Array.isArray(data)?data[0]:data;
+    if(q){ $('#quotaNote').innerHTML=`<span>✓</span><span>${t('quota')}: ${esc(q.used_count)} / ${esc(q.daily_limit)} · ${t('remaining')}: ${esc(q.remaining_count)}</span>`; }
+  }catch{}
+}
+async function submitLoad(ev){
+  ev.preventDefault();
+  const btn=$('#publishLoadBtn'); btn.disabled=true; btn.textContent=t('loading');
+  try{
+    if(!state.session) throw new Error(t('loginRequired'));
+    const price=$('#freightPrice').value ? Number($('#freightPrice').value) : null;
+    const payload={
+      status:'PUBLISHED',cargo_type:$('#cargoType').value.trim(),required_truck_type:$('#truckType').value,
+      origin_country_code:$('#originCountry').value,origin_city:$('#originCity').value.trim(),destination_country_code:$('#destinationCountry').value,destination_city:$('#destinationCity').value.trim(),
+      origin_customs:$('#originCustoms').value.trim()||null,destination_customs:$('#destinationCustoms').value.trim()||null,exit_border:$('#exitBorder').value.trim()||null,
+      weight_kg:$('#weightKg').value?Number($('#weightKg').value):null,truck_count:Number($('#truckCount').value||1),loading_at:$('#loadingAt').value?new Date($('#loadingAt').value).toISOString():null,
+      freight_price:price,currency_code:price?$('#currencyCode').value:null,description:$('#cargoDescription').value.trim()||null,validity_days:Number($('#validityDays').value||3)
+    };
+    for(const which of ['origin','destination']){
+      const c=state.city[which]; if(!c) continue;
+      if(uuidLike(c.city_id)) payload[`${which}_city_id`]=c.city_id;
+      if(c.geoname_id!=null) payload[`${which}_geoname_id`]=Number(c.geoname_id);
+      if(c.latitude!=null) payload[`${which}_lat`]=Number(c.latitude);
+      if(c.longitude!=null) payload[`${which}_lng`]=Number(c.longitude);
+      for(const l of ['en','fa','tr']) if(c[`name_${l}`]) payload[`${which}_city_name_${l}`]=c[`name_${l}`];
+    }
+    if(!payload.cargo_type||!payload.origin_city||!payload.destination_city) throw new Error(t('requiredFields'));
+    const {error}=await supabase.from('cargo_posts').insert(payload).select('id').single(); if(error) throw error;
+    $('#loadModal').close(); $('#loadForm').reset(); state.city={origin:null,destination:null}; toast(t('loadPublished')); await loadLoads();
+  }catch(err){ toast(humanError(err),'error'); }
+  finally{ btn.disabled=false; btn.textContent=t('publishLoad'); }
+}
+
+async function setupCitySearch(which){
+  const input=$(`#${which}City`), results=$(`#${which}CityResults`), country=$(`#${which}Country`); let timer;
+  input.addEventListener('input',()=>{
+    state.city[which]=null; clearTimeout(timer); const q=input.value.trim();
+    if(q.length<2){results.classList.remove('open');results.innerHTML='';return;}
+    timer=setTimeout(async()=>{
+      const {data,error}=await supabase.rpc('search_cities_v3',{p_query:q,p_limit:8,p_country_code:country.value});
+      if(error||!data?.length){results.classList.remove('open');return;}
+      results.innerHTML=data.map((c,i)=>`<button type="button" data-city-index="${i}"><b>${esc(c.matched_name||c.name_en||'')}</b><small>${esc(c.country_code||'')} · ${esc(c.region_name||'')}</small></button>`).join('');
+      results.classList.add('open');
+      $$('[data-city-index]',results).forEach(b=>b.onclick=()=>{const c=data[Number(b.dataset.cityIndex)];state.city[which]=c;input.value=c[`name_${state.lang}`]||c.matched_name||c.name_en||'';results.classList.remove('open');});
+    },300);
+  });
+  country.addEventListener('change',()=>{state.city[which]=null;input.value='';results.classList.remove('open');});
+}
+
+function openOffer(id){
+  const cargo=state.loads.find(x=>x.id===id); if(!cargo) return;
+  if(!state.session){ $('#authModal').showModal(); toast(t('loginRequired'),'error'); return; }
+  if(!canOfferTypes.has(state.profile?.business_user_type)){ toast(t('offerOnlyProvider'),'error'); return; }
+  if(!isBusinessProfileReady()){ $('#authModal').showModal(); $('#profileStatus').className='auth-status error'; $('#profileStatus').textContent=t('profileNeeded'); return; }
+  $('#offerCargoId').value=id; $('#offerRoute').textContent=`${cityName(cargo,'origin')} → ${cityName(cargo,'destination')}`; $('#offerTruckCount').max=cargo.remaining_truck_count||cargo.truck_count||1; $('#offerModal').showModal();
+}
+async function submitOffer(ev){
+  ev.preventDefault(); const btn=$('#submitOffer');btn.disabled=true;btn.textContent=t('loading');
+  try{
+    const price=$('#offerPrice').value?Number($('#offerPrice').value):null;
+    const {error}=await supabase.rpc('submit_cargo_offer',{p_cargo_id:$('#offerCargoId').value,p_proposed_price:price,p_currency_code:price?$('#offerCurrency').value:null,p_message:$('#offerMessage').value.trim()||null,p_requested_truck_count:Number($('#offerTruckCount').value||1)});
+    if(error) throw error; $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent'));
+  }catch(err){toast(humanError(err),'error');}
+  finally{btn.disabled=false;btn.textContent=t('sendRequest');}
+}
+
+async function loadShipments(){
+  const el=$('#shipmentList');
+  if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForShipments'));$('#metricShipments').textContent='—';return;}
+  el.innerHTML='<div class="loading-card"></div><div class="loading-card"></div>';
+  try{
+    const {data,error}=await supabase.rpc('get_my_transport_cargo'); if(error) throw error;
+    const rows=Array.isArray(data)?data:[]; el.innerHTML=rows.length?rows.map(c=>cargoCard(c,true)).join(''):emptyBlock('noShipments'); $('#metricShipments').textContent=String(rows.length); bindCargoActions();
+  }catch(err){el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
+}
+
+let chatCache=[];
+function renderChatFromCache(){
+  const el=$('#chatMessages'); if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForChat'));return;}
+  if(!chatCache.length){el.innerHTML=emptyBlock('noMessages');return;}
+  const uid=state.session.user.id;
+  el.innerHTML=chatCache.map(m=>`<div class="bubble ${m.sender_id===uid?'me':''}"><span class="sender">${esc(m.sender_name||'Yoldash')}</span><span>${m.deleted_at?'—':esc(m.body||'')}</span><time>${esc(dateLabel(m.created_at))}</time></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+async function loadChat(silent=false){
+  const input=$('#chatInput'),send=$('#sendChat');
+  if(!state.session){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
+  input.disabled=false;send.disabled=false;
+  try{
+    const {data,error}=await supabase.rpc('get_public_chat_messages',{p_limit:60,p_before:null}); if(error) throw error;
+    chatCache=(data||[]).slice().reverse(); renderChatFromCache(); $('#chatTime').textContent=chatCache.length?new Date(chatCache.at(-1).created_at).toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit'}):'—';
+    supabase.rpc('mark_public_chat_read').then(()=>loadUnread());
+  }catch(err){if(!silent) toast(humanError(err),'error');}
+  clearInterval(state.chatTimer); state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},12000);
+}
+async function sendChat(){
+  const input=$('#chatInput'), body=input.value.trim(); if(!body||!state.session) return;
+  const btn=$('#sendChat'); btn.disabled=true;
+  try{
+    const rid=crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    const {error}=await supabase.rpc('send_public_chat_message_idempotent',{p_request_id:rid,p_body:body,p_reply_to_id:null}); if(error) throw error;
+    input.value=''; await loadChat(true);
+  }catch(err){toast(humanError(err),'error');} finally{btn.disabled=false;}
+}
+async function loadUnread(){
+  if(!state.session){$('#chatDot').style.display='none';return;}
+  try{const {data,error}=await supabase.rpc('get_public_chat_unread_count'); if(error) throw error; const n=Number(data||0); $('#chatDot').style.display=n>0?'block':'none'; $('#chatHint').textContent=n?`${n} · ${t('publicChat')}`:t('publicChat');}catch{}
+}
+
+function networkUI(){
+  const online=navigator.onLine,node=$('#networkStatus');node.classList.toggle('offline',!online);node.querySelector('span').textContent=online?t('onlineLabel'):t('offlineLabel');
+}
+function canonicalFallback(){
+  const host=location.hostname.toLowerCase();
+  if(host==='getyoldash.com'||(host.endsWith('.getyoldash.com')&&host!=='www.getyoldash.com')||(host==='www.getyoldash.com'&&location.protocol==='http:')){
+    location.replace(`https://www.getyoldash.com${location.pathname}${location.search}${location.hash}`);
+  }
+}
+
+function bindUI(){
+  $$('[data-lang]').forEach(b=>b.addEventListener('click',()=>applyLanguage(b.dataset.lang)));
+  $$('[data-page]').forEach(b=>b.addEventListener('click',()=>page(b.dataset.page)));
+  $$('[data-close]').forEach(b=>b.addEventListener('click',()=>$('#'+b.dataset.close)?.close()));
+  $('#mobileMenu').onclick=()=>$('.sidebar').classList.toggle('open');
+  ['createLoadBtn','createLoadBtn2','quickLoad'].forEach(id=>$('#'+id)?.addEventListener('click',openLoadModal));
+  $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
+  $('#quickBrowse').onclick=()=>page('loads'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
+  $('#refreshShipments').onclick=loadShipments;
+  $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth);
+  $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=forgotPassword; $('#signOutBtn').onclick=async()=>{await supabase.auth.signOut();$('#authModal').close();toast(t('signOut'));};
+  $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
+  $$('[data-business-type]').forEach(b=>b.onclick=()=>{state.selectedBusinessType=b.dataset.businessType;$$('[data-business-type]').forEach(x=>x.classList.toggle('active',x===b));});
+  $('#loadSearch').addEventListener('input',renderLoads);
+  $('#globalSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){page('loads');$('#loadSearch').value=e.target.value;renderLoads();}});
+  $$('[data-filter]').forEach(b=>b.onclick=()=>{state.loadFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLoads();});
+  $('#sendChat').onclick=sendChat; $('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+  window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
+}
+
+async function init(){
+  canonicalFallback(); bindUI(); networkUI(); applyLanguage(state.lang,false); setAuthMode('signin');
+  setupCitySearch('origin'); setupCitySearch('destination');
+  await Promise.all([refreshSession(),loadLoads()]);
+  supabase.auth.onAuthStateChange((_event,session)=>setTimeout(async()=>{state.session=session;if(session) await loadProfile(); else {state.profile=null;state.businessProfile=null;chatCache=[];}renderProfileUI();loadUnread();if($('#page-chat').classList.contains('active')) loadChat(true);},0));
+}
+init();
+
+</script>
+</body>
+</html>
