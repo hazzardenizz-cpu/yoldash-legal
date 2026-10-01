@@ -129,7 +129,32 @@
 
       <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><button type="button" class="chat-person active chat-person-btn" id="publicChatPerson"><span class="avatar green">YG</span><span><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></span><time id="chatTime">—</time></button><div class="shipment-list-head"><span data-i18n="shipmentChat">گفتگوی محموله</span><small data-i18n="activeRooms">فعال</small></div><div id="shipmentRoomList" class="shipment-room-list"><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green" id="chatRoomAvatar">YG</span><div><b id="chatRoomTitle" data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
 
-      <section class="generic-page page" id="page-drivers"><div class="empty-state glass"><div class="empty-icon">◉</div><h1 data-i18n="drivers">راننده و ماشین</h1><p data-i18n="driversDesc">پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.</p><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div></section>
+      <section class="generic-page page" id="page-drivers">
+        <div class="driver-hub-shell">
+          <section class="driver-hub-hero glass">
+            <div>
+              <span class="eyebrow"><i class="live-dot"></i><span data-i18n="driverHub">بازار راننده و خودرو</span></span>
+              <h1 data-i18n="drivers">راننده و ماشین</h1>
+              <p data-i18n="driverHubDesc">برای پیدا کردن راننده یا خودرو آگهی ثبت کنید و آگهی‌های فعال کاربران Yoldash را ببینید.</p>
+              <div class="hero-actions"><button class="btn primary" id="createDriverListing">＋ <span data-i18n="newDriverListing">آگهی جدید</span></button><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div>
+            </div>
+            <div class="driver-hub-stat">
+              <span data-i18n="activeListings">آگهی فعال</span><b id="driverListingCount">—</b><small data-i18n="sharedData">مشترک با اپ</small>
+            </div>
+          </section>
+          <section class="driver-hub-board glass">
+            <div class="board-control-row">
+              <div class="search inline board-search"><span>⌕</span><input id="driverHubSearch" data-i18n-placeholder="searchDriverHub" placeholder="شهر، عنوان یا نوع خودرو"></div>
+              <div class="board-filters">
+                <button class="chip active" data-driver-filter="all" data-i18n="all">همه</button>
+                <button class="chip" data-driver-filter="NEED_DRIVER" data-i18n="needDriver">راننده می‌خواهم</button>
+                <button class="chip" data-driver-filter="NEED_VEHICLE" data-i18n="needVehicle">خودرو می‌خواهم</button>
+              </div>
+            </div>
+            <div id="driverHubList" class="driver-listing-grid"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="driverHubLoginHint">برای مشاهده آگهی‌های راننده و خودرو وارد شوید.</span></div></div>
+          </section>
+        </div>
+      </section>
       <section class="generic-page page" id="page-services">
         <div class="services-shell">
           <section class="services-hero glass">
@@ -250,6 +275,26 @@
   </dialog>
 
 
+
+
+  <dialog id="driverListingModal">
+    <form id="driverListingForm" class="modal glass">
+      <div class="modal-head"><div><span class="kicker" data-i18n="driverHub">بازار راننده و خودرو</span><h2 data-i18n="newDriverListing">آگهی جدید</h2></div><button type="button" class="close" data-close="driverListingModal">×</button></div>
+      <div class="form-grid">
+        <label><span data-i18n="listingType">نوع آگهی</span><select id="driverListingType"><option value="NEED_DRIVER" data-i18n="needDriver">راننده می‌خواهم</option><option value="NEED_VEHICLE" data-i18n="needVehicle">خودرو می‌خواهم</option></select></label>
+        <label><span data-i18n="employmentType">نوع همکاری</span><select id="driverEmploymentType"><option value="SERVICE" data-i18n="serviceWork">سرویسی</option><option value="PERMANENT" data-i18n="permanentWork">دائمی</option></select></label>
+        <label><span data-i18n="title">عنوان</span><input id="driverListingTitle" maxlength="120" required></label>
+        <label><span data-i18n="countryCode">کشور</span><select id="driverListingCountry"><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option></select></label>
+        <label><span data-i18n="city">شهر</span><input id="driverListingCity" maxlength="100" required></label>
+        <label><span data-i18n="truckType">نوع خودرو</span><input id="driverListingTruck" maxlength="80"></label>
+        <label><span data-i18n="phone">شماره تماس</span><input id="driverListingPhone" maxlength="32" required></label>
+        <label class="identity-check"><input id="driverListingIdentity" type="checkbox"><span data-i18n="showIdentity">نمایش نام من در آگهی</span></label>
+      </div>
+      <label class="wide-field"><span data-i18n="description">توضیحات</span><textarea id="driverListingDescription" maxlength="1200" rows="5" required></textarea></label>
+      <div class="auth-status" id="driverListingStatus"></div>
+      <div class="modal-actions"><button type="button" class="btn secondary" data-close="driverListingModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="submitDriverListing" data-i18n="publishListing">انتشار آگهی</button></div>
+    </form>
+  </dialog>
 
   <dialog id="sigortaModal">
     <form id="sigortaForm" class="modal glass sigorta-modal">
