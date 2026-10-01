@@ -9,3 +9,5 @@ Production web application for Yoldash road freight transportation.
 - Phone / WhatsApp: +90 532 662 9800
 
 Vercel should deploy this repository from the main branch.
+
+<!-- deploy-trigger: 2026-10-01 -->
