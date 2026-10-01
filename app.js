@@ -474,7 +474,20 @@ function bindUI(){
 async function init(){
   canonicalFallback(); bindUI(); networkUI(); applyLanguage(state.lang,false); setAuthMode('signin');
   setupCitySearch('origin'); setupCitySearch('destination');
+
+  supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
+    state.session=session;
+    if(session) await loadProfile();
+    else {state.profile=null;state.businessProfile=null;chatCache=[];}
+    renderProfileUI();
+    loadUnread();
+    if(event==='PASSWORD_RECOVERY'){
+      $('#recoveryStatus').textContent='';
+      $('#recoveryModal')?.showModal();
+    }
+    if($('#page-chat').classList.contains('active')) loadChat(true);
+  },0));
+
   await Promise.all([refreshSession(),loadLoads()]);
-  supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{state.session=session;if(session) await loadProfile(); else {state.profile=null;state.businessProfile=null;chatCache=[];}renderProfileUI();loadUnread();if(event==='PASSWORD_RECOVERY'){$('#recoveryStatus').textContent='';$('#recoveryModal')?.showModal();}if($('#page-chat').classList.contains('active')) loadChat(true);},0));
 }
 init();
