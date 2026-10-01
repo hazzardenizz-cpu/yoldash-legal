@@ -38,3 +38,49 @@ html[lang="fa"] h1,html[lang="fa"] h2,html[lang="fa"] h3,html[lang="fa"] .brand 
 #fxStatus.fx-offline i{background:var(--danger);box-shadow:0 0 9px var(--danger)}
 #fxStatus.fx-stale i{background:var(--amber);box-shadow:0 0 9px var(--amber)}
 @keyframes fxspin{to{transform:rotate(360deg)}}
+
+
+/* Readability pass — keep desktop dashboard compact but never microscopic */
+body{font-size:14px}
+.nav-item{font-size:15px;font-weight:600}
+.brand span{font-size:12px}
+.sidebar-card b{font-size:13px}.sidebar-card span{font-size:11px}.sidebar-foot{font-size:10px}
+.profile-txt b{font-size:12px}.profile-txt small{font-size:10px}
+.kicker{font-size:11px}.status{font-size:10px}
+.metric span{font-size:11px}.metric small{font-size:10px}
+.quick b{font-size:12px}.quick small{font-size:10px}
+.city b{font-size:15px}.city small{font-size:10px}
+.cargo-meta div span,.price span{font-size:10px}.cargo-meta div b{font-size:12px}
+.cargo-card .btn{font-size:11px}
+.fx-code b{font-size:12px}.fx-code small{font-size:9px}.live-fx strong{font-size:15px}.live-fx em{font-size:10px}.fx-footer .muted{font-size:9px}
+.chip,.ghost{font-size:11px}
+.chat-person b{font-size:12px}.chat-person small,.chat-person time,.chat-room-head small{font-size:10px}.chat-room-head b{font-size:13px}.bubble{font-size:12px}
+.contact-card small{font-size:11px}.contact-card a{font-size:12px}
+
+/* Services page */
+.services-page{display:grid;gap:16px}
+.services-intro{border-radius:28px;padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:22px;background:radial-gradient(circle at 10% 20%,rgba(255,168,0,.08),transparent 30%),linear-gradient(145deg,rgba(18,32,56,.92),rgba(8,18,36,.9))}
+.services-intro h1{font-size:34px;margin:3px 0 8px}
+.services-intro p{max-width:760px;margin:0;color:#9bacc7;font-size:14px;line-height:1.9}
+.services-support{text-decoration:none;white-space:nowrap}
+.services-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.service-tile{border-radius:20px;padding:20px;min-height:230px;display:flex;flex-direction:column;box-shadow:none}
+.service-tile.service-featured{border-color:rgba(255,168,0,.28);background:linear-gradient(145deg,rgba(41,35,25,.72),rgba(8,18,36,.94))}
+.service-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.service-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:19px;font-weight:900}
+.service-icon.amber{background:rgba(255,168,0,.11);color:var(--amber)}
+.service-icon.green{background:rgba(0,201,141,.1);color:var(--green)}
+.service-icon.blue{background:rgba(94,168,255,.1);color:var(--blue)}
+.service-icon.violet{background:rgba(167,139,250,.1);color:var(--violet)}
+.service-pill{font-size:10px;color:#90a4c3;border:1px solid #2a405f;background:#0b172a;padding:5px 8px;border-radius:999px}
+.service-pill.active{color:#79e6c4;border-color:rgba(0,201,141,.28);background:rgba(0,201,141,.08)}
+.service-tile h2{font-size:18px;margin:20px 0 8px}
+.service-tile p{font-size:12px;color:#8fa3c0;line-height:1.8;margin:0 0 16px;flex:1}
+.service-link{display:inline-flex;align-items:center;gap:6px;color:#ffd16b;text-decoration:none;font-size:12px;font-weight:800}
+.service-note{font-size:10px;color:#6f86aa}
+.services-contact{border-radius:20px;padding:17px 18px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:13px;box-shadow:none}
+.services-contact-copy small{display:block;color:#8295b4;font-size:10px}.services-contact-copy b{display:block;font-size:14px;margin:2px 0}.services-contact-copy span{display:block;color:#91a4c3;font-size:11px}
+.services-contact-actions{display:flex;align-items:center;gap:8px}.services-contact-actions a{color:#ffbd36;text-decoration:none;font-size:12px}.services-contact-actions .contact-action{padding:9px 12px;border-radius:11px;border:1px solid rgba(0,201,141,.25);background:rgba(0,201,141,.08);color:#8df0d1;font-weight:800}
+.legal-links{display:flex;justify-content:center;gap:16px;padding:4px 0 10px}.legal-links a{color:#7187a9;text-decoration:none;font-size:11px}
+@media(max-width:1100px){.services-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.services-intro{align-items:flex-start;flex-direction:column;padding:22px}.services-grid{grid-template-columns:1fr}.services-contact{grid-template-columns:auto 1fr}.services-contact-actions{grid-column:1/-1;justify-content:flex-start;margin-inline-start:57px}}
