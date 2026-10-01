@@ -176,12 +176,32 @@ async function loadLoads(query=''){
   renderLoads();
 }
 
+async function ensureSession(){
+  try{
+    const {data,error}=await supabase.auth.getSession();
+    if(error) throw error;
+    const session=data?.session||null;
+    if(session){
+      const changed=!state.session || state.session.user?.id!==session.user?.id || state.session.access_token!==session.access_token;
+      state.session=session;
+      if(changed || !state.profile || state.profile.id!==session.user.id) await loadProfile();
+      renderProfileUI();
+      return session;
+    }
+    state.session=null;
+    state.profile=null;
+    state.businessProfile=null;
+    renderProfileUI();
+    return null;
+  }catch(err){
+    console.warn('ensureSession',err);
+    return state.session||null;
+  }
+}
+
 async function refreshSession(){
-  const {data:{session}} = await supabase.auth.getSession();
-  state.session = session;
-  if(session) await loadProfile(); else { state.profile=null; state.businessProfile=null; }
-  renderProfileUI();
-  if(session){ loadUnread(); }
+  const session=await ensureSession();
+  if(session) loadUnread();
 }
 async function loadProfile(){
   if(!state.session) return;
@@ -358,7 +378,8 @@ function renderDriverHub(){
   $('[data-delete-driver-listing]').forEach(b=>b.onclick=()=>deleteDriverListing(b.dataset.deleteDriverListing));
 }
 async function loadDriverHub(){
-  if(!state.session){state.driverListings=[];renderDriverHub();return;}
+  const session=state.session||await ensureSession();
+  if(!session){state.driverListings=[];renderDriverHub();return;}
   try{
     const {data,error}=await supabase.from('driver_hub_listings').select('id,user_id,listing_type,title,description,country_code,city,truck_type,contact_phone,status,created_at,updated_at,show_identity,first_name,last_name,employment_type').order('created_at',{ascending:false}).limit(200);
     if(error) throw error;
@@ -366,8 +387,10 @@ async function loadDriverHub(){
   }catch(err){state.driverListings=[];toast(humanError(err),'error');}
   renderDriverHub();
 }
-function openDriverListing(id=null){
-  if(!state.session){$('#authModal').showModal();toast(t('loginRequired'),'error');return;}
+async function openDriverListing(id=null){
+  const session=state.session||await ensureSession();
+  if(!session){$('#authModal').showModal();toast(t('loginRequired'),'error');return;}
+  if(!state.profile) await loadProfile();
   if(!state.profile?.is_active){toast(t('accountInactive'),'error');return;}
   $('#driverListingForm').reset();
   $('#driverListingStatus').className='auth-status'; $('#driverListingStatus').textContent='';
@@ -389,10 +412,11 @@ function openDriverListing(id=null){
 }
 async function submitDriverListing(ev){
   ev.preventDefault();
-  if(!state.session) return;
+  const session=state.session||await ensureSession();
+  if(!session){$('#authModal').showModal();toast(t('loginRequired'),'error');return;}
   const btn=$('#submitDriverListing'),status=$('#driverListingStatus');
   const payload={
-    user_id:state.session.user.id,
+    user_id:session.user.id,
     listing_type:$('#driverListingType').value,
     title:$('#driverListingTitle').value.trim(),
     description:$('#driverListingDescription').value.trim(),
@@ -420,7 +444,8 @@ async function submitDriverListing(ev){
   finally{btn.disabled=false;btn.textContent=$('#driverListingId').value?t('saveChanges'):t('publishListing');}
 }
 async function toggleDriverListing(id,currentStatus){
-  if(!state.session) return;
+  const session=state.session||await ensureSession();
+  if(!session){$('#authModal').showModal();return;}
   const next=currentStatus==='ACTIVE'?'CLOSED':'ACTIVE';
   try{
     const {error}=await supabase.from('driver_hub_listings').update({status:next,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',state.session.user.id);
@@ -430,7 +455,9 @@ async function toggleDriverListing(id,currentStatus){
   }catch(err){toast(humanError(err),'error');}
 }
 async function deleteDriverListing(id){
-  if(!state.session||!confirm(t('deleteListingConfirm'))) return;
+  const session=state.session||await ensureSession();
+  if(!session){$('#authModal').showModal();return;}
+  if(!confirm(t('deleteListingConfirm'))) return;
   try{
     const {error}=await supabase.from('driver_hub_listings').delete().eq('id',id).eq('user_id',state.session.user.id);
     if(error) throw error;
@@ -651,6 +678,10 @@ async function init(){
   setupCitySearch('origin'); setupCitySearch('destination');
 
   supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
+    if(event==='INITIAL_SESSION' && !session){
+      const current=await supabase.auth.getSession();
+      session=current.data?.session||null;
+    }
     state.session=session;
     if(session) await loadProfile();
     else {state.profile=null;state.businessProfile=null;chatCache=[];}
