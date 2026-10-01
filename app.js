@@ -41,7 +41,10 @@ const state = {
   chatTimer: null,
   driverListings: [],
   driverFilter: 'all',
-  driverScope: 'all'
+  driverScope: 'all',
+  loadRealtimeChannel: null,
+  loadRefreshTimer: null,
+  loadRefreshDebounce: null
 };
 
 function t(key){ return translations[state.lang]?.[key] ?? translations.en[key] ?? key; }
@@ -123,6 +126,7 @@ function page(name){
   $$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
   $('.sidebar')?.classList.remove('open');
   if(name==='shipments') loadShipments();
+  if(name==='home'||name==='loads') loadLoads();
   if(name==='chat') loadChat();
   if(name==='drivers') loadDriverHub();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -180,6 +184,34 @@ async function loadLoads(query=''){
     else state.loads=data||[];
   }
   renderLoads();
+}
+
+function scheduleLoadRefresh(delay=500){
+  clearTimeout(state.loadRefreshDebounce);
+  state.loadRefreshDebounce=setTimeout(()=>loadLoads(),delay);
+}
+function startLiveLoads(){
+  try{
+    if(state.loadRealtimeChannel) supabase.removeChannel(state.loadRealtimeChannel);
+    state.loadRealtimeChannel=supabase
+      .channel('web-live-cargo-posts')
+      .on('postgres_changes',{event:'*',schema:'public',table:'cargo_posts'},()=>scheduleLoadRefresh(350))
+      .subscribe();
+  }catch(err){
+    console.warn('cargo realtime unavailable',err);
+  }
+
+  clearInterval(state.loadRefreshTimer);
+  state.loadRefreshTimer=setInterval(()=>{
+    if(document.visibilityState==='visible') loadLoads();
+  },30000);
+
+  if(!window.__yoldashLoadVisibilityBound){
+    window.__yoldashLoadVisibilityBound=true;
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible') loadLoads();
+    });
+  }
 }
 
 async function ensureSession(){
@@ -688,7 +720,7 @@ function bindUI(){
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
   $('#refreshShipments').onclick=loadShipments;
-  $('#createDriverListing').onclick=openDriverListing; $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
+  $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=forgotPassword; $('#signOutBtn').onclick=async()=>{await supabase.auth.signOut();$('#authModal').close();toast(t('signOut'));};
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
@@ -723,6 +755,7 @@ async function init(){
   },0));
 
   await Promise.all([refreshSession(),loadLoads()]);
+  startLiveLoads();
   startFxRates();
 }
 init();
