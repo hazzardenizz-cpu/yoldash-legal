@@ -166,6 +166,18 @@
     </form>
   </dialog>
 
+  <dialog id="recoveryModal">
+    <form id="recoveryForm" class="modal auth glass">
+      <button type="button" class="close floating" data-close="recoveryModal">×</button>
+      <h2 data-i18n="setNewPassword">رمز عبور جدید</h2>
+      <p class="muted" data-i18n="setNewPasswordHint">یک رمز عبور جدید و امن برای حساب Yoldash انتخاب کنید.</p>
+      <label><span data-i18n="newPassword">رمز عبور جدید</span><input id="recoveryPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label><span data-i18n="confirmPassword">تکرار رمز عبور</span><input id="recoveryPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required></label>
+      <button class="btn primary wide" id="recoverySubmit" type="submit" data-i18n="saveNewPassword">ذخیره رمز عبور جدید</button>
+      <div class="auth-status" id="recoveryStatus"></div>
+    </form>
+  </dialog>
+
   <dialog id="offerModal">
     <form id="offerForm" class="modal glass">
       <div class="modal-head"><div><span class="kicker" data-i18n="transportRequest">درخواست حمل</span><h2 id="offerRoute">—</h2></div><button type="button" class="close" data-close="offerModal">×</button></div>
