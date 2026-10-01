@@ -128,7 +128,7 @@
                 <button class="chip" data-driver-filter="NEED_VEHICLE" data-i18n="needVehicle">خودرو می‌خواهم</button>
               </div>
             </div>
-            <div id="driverHubList" class="driver-listing-grid"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="driverHubLoginHint">برای مشاهده آگهی‌های راننده و خودرو وارد شوید.</span></div></div>
+            <div class="driver-scope-tabs"><button class="active" data-driver-scope="all" data-i18n="allListings">همه آگهی‌های فعال</button><button data-driver-scope="mine" data-i18n="myListings">آگهی‌های من</button></div><div id="driverHubList" class="driver-listing-grid"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="driverHubLoginHint">برای مشاهده آگهی‌های راننده و خودرو وارد شوید.</span></div></div>
           </section>
         </div>
       </section>
@@ -222,7 +222,7 @@
 
 <dialog id="driverListingModal">
     <form id="driverListingForm" class="modal glass">
-      <div class="modal-head"><div><span class="kicker" data-i18n="driverHub">بازار راننده و خودرو</span><h2 data-i18n="newDriverListing">آگهی جدید</h2></div><button type="button" class="close" data-close="driverListingModal">×</button></div>
+      <div class="modal-head"><div><span class="kicker" data-i18n="driverHub">بازار راننده و خودرو</span><h2 id="driverListingModalTitle" data-i18n="newDriverListing">آگهی جدید</h2></div><button type="button" class="close" data-close="driverListingModal">×</button></div><input type="hidden" id="driverListingId">
       <div class="form-grid">
         <label><span data-i18n="listingType">نوع آگهی</span><select id="driverListingType"><option value="NEED_DRIVER" data-i18n="needDriver">راننده می‌خواهم</option><option value="NEED_VEHICLE" data-i18n="needVehicle">خودرو می‌خواهم</option></select></label>
         <label><span data-i18n="employmentType">نوع همکاری</span><select id="driverEmploymentType"><option value="SERVICE" data-i18n="serviceWork">سرویسی</option><option value="PERMANENT" data-i18n="permanentWork">دائمی</option></select></label>

@@ -98,3 +98,8 @@ body{font-size:14px}
 .driver-hub-board{border-radius:25px;padding:15px}.driver-hub-board .board-control-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
 .driver-hub-board .board-search{flex:1;max-width:none}.driver-hub-board .board-filters{display:flex;gap:6px;white-space:nowrap}
 @media(max-width:760px){.driver-hub-board .board-control-row{flex-direction:column;align-items:stretch}.driver-hub-board .board-filters{overflow:auto;padding-bottom:2px}}
+
+/* Driver Hub CRUD */
+.driver-scope-tabs{display:flex;justify-content:flex-end;gap:4px;margin:0 0 12px;padding:4px;border:1px solid #29405f;border-radius:12px;background:#091529;width:max-content;margin-inline-start:auto}.driver-scope-tabs button{border:0;background:transparent;color:#7e92b1;border-radius:8px;padding:8px 12px;font:inherit;font-size:10px;cursor:pointer}.driver-scope-tabs button.active{background:rgba(255,168,0,.1);color:#ffd06a}
+.driver-listing-card.closed{opacity:.72}.driver-listing-state{font-size:9px;padding:4px 7px;border-radius:99px;border:1px solid}.driver-listing-state.active{color:#75e4c1;border-color:rgba(0,201,141,.22);background:rgba(0,201,141,.055)}.driver-listing-state.closed{color:#9aacC5;border-color:#334966;background:rgba(255,255,255,.025)}.delete-driver-listing{border:1px solid rgba(255,107,107,.22);background:rgba(255,107,107,.055);color:#ff9b9b}
+@media(max-width:720px){.driver-scope-tabs{width:100%;margin-inline-start:0}.driver-scope-tabs button{flex:1}}
