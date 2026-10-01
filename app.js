@@ -16,7 +16,7 @@ const canOfferTypes = new Set(['DRIVER', 'TRANSPORT_COMPANY']);
 
 const translations = {
 fa:{
-roadFreight:'حمل‌ونقل جاده‌ای',home:'خانه',loadBoard:'اعلام بار',myShipments:'حمل‌های من',chat:'گفتگو',drivers:'راننده و ماشین',services:'خدمات',secureTitle:'اتصال امن Yoldash',secureText:'داده‌ها با اپ و Supabase مشترک است',search:'جستجوی بار، شهر یا کاربر...',guest:'کاربر مهمان',login:'ورود / ثبت‌نام',livePlatform:'پلتفرم زنده حمل‌ونقل جاده‌ای',heroTitle:'بار، راننده و مسیر؛<br><em>همه در یک Yoldash.</em>',heroText:'بار خود را اعلام کنید، پیشنهاد دریافت کنید و حمل خود را از یک داشبورد سریع و یکپارچه مدیریت کنید.',createLoad:'اعلام بار جدید',viewLoads:'مشاهده بارها',online:'دسترسی آنلاین',languages:'زبان',sharedAccount:'حساب مشترک وب و اپ',origin:'مبدأ',destination:'مقصد',truckOnRoute:'کامیون در مسیر',activeLoads:'بارهای فعال',onlineDrivers:'رانندگان آنلاین',inTransit:'در حال حمل',today:'امروز',completed:'تحویل موفق',marketplace:'بازار حمل‌ونقل',freshLoads:'بارهای تازه اعلام‌شده',all:'همه',international:'بین‌المللی',domestic:'داخلی',seeAll:'مشاهده همه',quickAccess:'دسترسی سریع',actions:'عملیات',newLoad:'اعلام بار جدید',newLoadHint:'کمتر از ۲ دقیقه',findDriver:'مشاهده بارها',findDriverHint:'برای راننده و شرکت حمل',openChat:'باز کردن گفتگو',chatLoginHint:'پس از ورود',liveRates:'نرخ لحظه‌ای',currency:'ارز',live:'زنده',ratesNote:'اتصال نرخ ارز در فاز بعدی فعال می‌شود.',searchLoads:'جستجو بر اساس مبدا، مقصد یا نوع بار',shipmentsDesc:'همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.',transportManagement:'مدیریت حمل',refresh:'به‌روزرسانی',loginRequired:'ورود لازم است',loginForShipments:'برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.',communication:'ارتباطات',publicChat:'گفتگوی عمومی Yoldash',sharedCommunity:'جامعه مشترک وب و اپ',shipmentChat:'گفتگوی محموله',shipmentChatHint:'پس از پذیرش پیشنهاد فعال می‌شود',onlineNow:'آنلاین',loginForChat:'برای ورود به گفتگوی Yoldash وارد حساب شوید.',message:'پیام بنویسید...',driversDesc:'پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.',servicesDesc:'بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.',siteManager:'مدیر سایت',whatsappContact:'واتساپ',privacy:'حریم خصوصی',terms:'شرایط استفاده',cargoDetails:'مشخصات بار',originCountry:'کشور مبدأ',originCity:'شهر مبدا',originCustoms:'گمرک مبدأ',destinationCountry:'کشور مقصد',destinationCity:'شهر مقصد',destinationCustoms:'گمرک مقصد',cargoType:'نوع بار',cargoTypeHint:'مثلاً مواد غذایی',truckType:'نوع خودرو',truckCount:'تعداد کامیون',weight:'وزن (kg)',price:'کرایه پیشنهادی',loadingAt:'زمان بارگیری',validity:'اعتبار آگهی',exitBorder:'مرز خروجی',description:'توضیحات',sharedSupabase:'این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.',cancel:'انصراف',publishLoad:'انتشار بار',authSubtitle:'با حساب مشترک اپ وارد شوید',email:'ایمیل',password:'رمز عبور',authNote:'حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.',signIn:'ورود',register:'ثبت‌نام',accountType:'نوع حساب',driver:'راننده',cargoOwner:'صاحب بار',transportCompany:'شرکت حمل‌ونقل',broker:'واسطه',forgotPassword:'رمز عبور را فراموش کرده‌ام',signedInShared:'شما با حساب مشترک Yoldash وارد شده‌اید.',completeProfile:'تکمیل پروفایل',firstName:'نام',lastName:'نام خانوادگی',phone:'شماره تلفن',countryCode:'کشور',whatsappPhone:'واتساپ',tractorPlate:'پلاک ترانزیت کشنده',containerPlate:'پلاک ترانزیت تریلر/کانتینر',driverCompany:'نام شرکت راننده',saveProfile:'ذخیره پروفایل',signOut:'خروج از حساب',transportRequest:'درخواست حمل',offerPrice:'قیمت پیشنهادی',requestedTruckCount:'تعداد کامیون پیشنهادی',sendRequest:'ارسال درخواست',curtain:'چادری',flatbed:'کفی',tanker:'تانکر',reefer:'یخچالی',lightTruck:'کامیون سبک',sharedData:'مشترک با اپ',details:'جزئیات',tons:'تن',trucks:'کامیون',owner:'اعلام‌کننده',requestTransport:'درخواست حمل',yourLoad:'بار شما',profileNeeded:'برای ادامه ابتدا پروفایل تجاری خود را کامل کنید.',noLoads:'در حال حاضر بار فعالی پیدا نشد.',noShipments:'حمل یا بار فعالی برای حساب شما پیدا نشد.',noMessages:'هنوز پیامی در گفتگو نیست.',authSuccess:'ورود با موفقیت انجام شد.',signupCheckEmail:'ثبت‌نام انجام شد. ایمیل خود را برای تأیید حساب بررسی کنید.',passwordResetSent:'لینک بازیابی رمز عبور برای شما ارسال شد.',setNewPassword:'رمز عبور جدید',setNewPasswordHint:'یک رمز عبور جدید و امن برای حساب Yoldash انتخاب کنید.',newPassword:'رمز عبور جدید',confirmPassword:'تکرار رمز عبور',saveNewPassword:'ذخیره رمز عبور جدید',passwordsMismatch:'رمزهای عبور یکسان نیستند.',passwordUpdated:'رمز عبور با موفقیت تغییر کرد.',profileSaved:'پروفایل با موفقیت ذخیره شد.',loadPublished:'بار با موفقیت منتشر شد و در اپ هم قابل مشاهده است.',offerSent:'درخواست حمل با موفقیت ارسال شد.',messageSent:'پیام ارسال شد.',loading:'در حال بارگذاری...',companyName:'نام شرکت',organizationName:'نام سازمان / مجموعه',licenseNumber:'شماره گواهینامه',registrationNumber:'شماره ثبت',optional:'اختیاری',accountInactive:'این حساب غیرفعال است.',driverCannotPost:'حساب راننده نمی‌تواند اعلام بار ایجاد کند. رانندگان می‌توانند برای بارها درخواست حمل بفرستند.',postOnlyBusiness:'فقط صاحب بار، شرکت حمل‌ونقل یا واسطه می‌تواند بار اعلام کند.',offerOnlyProvider:'فقط راننده یا شرکت حمل‌ونقل می‌تواند درخواست حمل بفرستد.',profileIncomplete:'پروفایل تجاری هنوز کامل نیست.',invalidPhone:'شماره تلفن باید با فرمت بین‌المللی مثل +905xxxxxxxxx باشد.',requiredFields:'لطفاً فیلدهای ضروری را کامل کنید.',networkError:'ارتباط با سرور برقرار نشد. اینترنت را بررسی کنید.',unexpectedError:'خطایی رخ داد. دوباره تلاش کنید.',verificationRequired:'اگر ایمیل حساب هنوز تأیید نشده، ابتدا لینک تأیید را باز کنید.',onlineLabel:'آنلاین',offlineLabel:'آفلاین',quota:'سهمیه امروز',remaining:'باقی‌مانده',unlimited:'نامحدود',profile:'پروفایل',liveFreight:'بازار زنده حمل جاده‌ای',boardSubtitle:'بارهای فعال Yoldash را در یک نمای سریع ببینید، مسیرها را مقایسه کنید و مستقیم برای حمل درخواست بفرستید.',secureMarket:'اطلاعات مشترک و امن با اپ Yoldash',openLoads:'بار باز',crossBorder:'بین‌المللی',domesticLoads:'داخلی',freshToday:'امروز',liveFeed:'زنده',availableLoads:'بار قابل حمل',syncedWithApp:'همگام با اپ',capacity:'ظرفیت',loadingDate:'بارگیری',openStatus:'باز',close:'بستن',postedAt:'زمان انتشار',remainingCapacity:'ظرفیت باقی‌مانده',noDescription:'توضیحی ثبت نشده',activeRooms:'فعال',noShipmentChats:'هنوز گفتگوی فعال محموله‌ای ندارید.',shipmentRoom:'گفتگوی حمل',imageMessage:'📷 تصویر',documentMessage:'📎 سند',locationMessage:'📍 موقعیت',businessType:'نوع حساب'
+roadFreight:'حمل‌ونقل جاده‌ای',home:'خانه',loadBoard:'اعلام بار',myShipments:'حمل‌های من',chat:'گفتگو',drivers:'راننده و ماشین',services:'خدمات',secureTitle:'اتصال امن Yoldash',secureText:'داده‌ها با اپ و Supabase مشترک است',search:'جستجوی بار، شهر یا کاربر...',guest:'کاربر مهمان',login:'ورود / ثبت‌نام',livePlatform:'پلتفرم زنده حمل‌ونقل جاده‌ای',heroTitle:'بار، راننده و مسیر؛<br><em>همه در یک Yoldash.</em>',heroText:'بار خود را اعلام کنید، پیشنهاد دریافت کنید و حمل خود را از یک داشبورد سریع و یکپارچه مدیریت کنید.',createLoad:'اعلام بار جدید',viewLoads:'مشاهده بارها',online:'دسترسی آنلاین',languages:'زبان',sharedAccount:'حساب مشترک وب و اپ',origin:'مبدأ',destination:'مقصد',truckOnRoute:'کامیون در مسیر',activeLoads:'بارهای فعال',onlineDrivers:'رانندگان آنلاین',inTransit:'در حال حمل',today:'امروز',completed:'تحویل موفق',marketplace:'بازار حمل‌ونقل',freshLoads:'بارهای تازه اعلام‌شده',all:'همه',international:'بین‌المللی',domestic:'داخلی',seeAll:'مشاهده همه',quickAccess:'دسترسی سریع',actions:'عملیات',newLoad:'اعلام بار جدید',newLoadHint:'کمتر از ۲ دقیقه',findDriver:'مشاهده بارها',findDriverHint:'برای راننده و شرکت حمل',openChat:'باز کردن گفتگو',chatLoginHint:'پس از ورود',liveRates:'نرخ لحظه‌ای',currency:'ارز',live:'زنده',ratesNote:'اتصال نرخ ارز در فاز بعدی فعال می‌شود.',searchLoads:'جستجو بر اساس مبدا، مقصد یا نوع بار',shipmentsDesc:'همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.',transportManagement:'مدیریت حمل',refresh:'به‌روزرسانی',loginRequired:'ورود لازم است',loginForShipments:'برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.',communication:'ارتباطات',publicChat:'گفتگوی عمومی Yoldash',sharedCommunity:'جامعه مشترک وب و اپ',shipmentChat:'گفتگوی محموله',shipmentChatHint:'پس از پذیرش پیشنهاد فعال می‌شود',onlineNow:'آنلاین',loginForChat:'برای ورود به گفتگوی Yoldash وارد حساب شوید.',message:'پیام بنویسید...',driversDesc:'پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.',servicesDesc:'بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.',siteManager:'مدیر سایت',whatsappContact:'واتساپ',privacy:'حریم خصوصی',terms:'شرایط استفاده',cargoDetails:'مشخصات بار',originCountry:'کشور مبدأ',originCity:'شهر مبدا',originCustoms:'گمرک مبدأ',destinationCountry:'کشور مقصد',destinationCity:'شهر مقصد',destinationCustoms:'گمرک مقصد',cargoType:'نوع بار',cargoTypeHint:'مثلاً مواد غذایی',truckType:'نوع خودرو',truckCount:'تعداد کامیون',weight:'وزن (kg)',price:'کرایه پیشنهادی',loadingAt:'زمان بارگیری',validity:'اعتبار آگهی',exitBorder:'مرز خروجی',description:'توضیحات',sharedSupabase:'این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.',cancel:'انصراف',publishLoad:'انتشار بار',authSubtitle:'با حساب مشترک اپ وارد شوید',email:'ایمیل',password:'رمز عبور',authNote:'حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.',signIn:'ورود',register:'ثبت‌نام',accountType:'نوع حساب',driver:'راننده',cargoOwner:'صاحب بار',transportCompany:'شرکت حمل‌ونقل',broker:'واسطه',forgotPassword:'رمز عبور را فراموش کرده‌ام',signedInShared:'شما با حساب مشترک Yoldash وارد شده‌اید.',completeProfile:'تکمیل پروفایل',firstName:'نام',lastName:'نام خانوادگی',phone:'شماره تلفن',countryCode:'کشور',whatsappPhone:'واتساپ',tractorPlate:'پلاک ترانزیت کشنده',containerPlate:'پلاک ترانزیت تریلر/کانتینر',driverCompany:'نام شرکت راننده',saveProfile:'ذخیره پروفایل',signOut:'خروج از حساب',transportRequest:'درخواست حمل',offerPrice:'قیمت پیشنهادی',requestedTruckCount:'تعداد کامیون پیشنهادی',sendRequest:'ارسال درخواست',curtain:'چادری',flatbed:'کفی',tanker:'تانکر',reefer:'یخچالی',lightTruck:'کامیون سبک',sharedData:'مشترک با اپ',details:'جزئیات',tons:'تن',trucks:'کامیون',owner:'اعلام‌کننده',requestTransport:'درخواست حمل',yourLoad:'بار شما',profileNeeded:'برای ادامه ابتدا پروفایل تجاری خود را کامل کنید.',noLoads:'در حال حاضر بار فعالی پیدا نشد.',noShipments:'حمل یا بار فعالی برای حساب شما پیدا نشد.',noMessages:'هنوز پیامی در گفتگو نیست.',authSuccess:'ورود با موفقیت انجام شد.',signupCheckEmail:'ثبت‌نام انجام شد. ایمیل خود را برای تأیید حساب بررسی کنید.',passwordResetSent:'لینک بازیابی رمز عبور برای شما ارسال شد.',setNewPassword:'رمز عبور جدید',setNewPasswordHint:'یک رمز عبور جدید و امن برای حساب Yoldash انتخاب کنید.',newPassword:'رمز عبور جدید',confirmPassword:'تکرار رمز عبور',saveNewPassword:'ذخیره رمز عبور جدید',passwordsMismatch:'رمزهای عبور یکسان نیستند.',passwordUpdated:'رمز عبور با موفقیت تغییر کرد.',profileSaved:'پروفایل با موفقیت ذخیره شد.',loadPublished:'بار با موفقیت منتشر شد و در اپ هم قابل مشاهده است.',offerSent:'درخواست حمل با موفقیت ارسال شد.',messageSent:'پیام ارسال شد.',loading:'در حال بارگذاری...',companyName:'نام شرکت',organizationName:'نام سازمان / مجموعه',licenseNumber:'شماره گواهینامه',registrationNumber:'شماره ثبت',optional:'اختیاری',accountInactive:'این حساب غیرفعال است.',driverCannotPost:'حساب راننده نمی‌تواند اعلام بار ایجاد کند. رانندگان می‌توانند برای بارها درخواست حمل بفرستند.',postOnlyBusiness:'فقط صاحب بار، شرکت حمل‌ونقل یا واسطه می‌تواند بار اعلام کند.',offerOnlyProvider:'فقط راننده یا شرکت حمل‌ونقل می‌تواند درخواست حمل بفرستد.',profileIncomplete:'پروفایل تجاری هنوز کامل نیست.',invalidPhone:'شماره تلفن باید با فرمت بین‌المللی مثل +905xxxxxxxxx باشد.',requiredFields:'لطفاً فیلدهای ضروری را کامل کنید.',networkError:'ارتباط با سرور برقرار نشد. اینترنت را بررسی کنید.',unexpectedError:'خطایی رخ داد. دوباره تلاش کنید.',verificationRequired:'اگر ایمیل حساب هنوز تأیید نشده، ابتدا لینک تأیید را باز کنید.',onlineLabel:'آنلاین',offlineLabel:'آفلاین',quota:'سهمیه امروز',remaining:'باقی‌مانده',unlimited:'نامحدود',profile:'پروفایل',liveFreight:'بازار زنده حمل جاده‌ای',boardSubtitle:'بارهای فعال Yoldash را در یک نمای سریع ببینید، مسیرها را مقایسه کنید و مستقیم برای حمل درخواست بفرستید.',secureMarket:'اطلاعات مشترک و امن با اپ Yoldash',openLoads:'بار باز',crossBorder:'بین‌المللی',domesticLoads:'داخلی',freshToday:'امروز',liveFeed:'زنده',availableLoads:'بار قابل حمل',syncedWithApp:'همگام با اپ',capacity:'ظرفیت',loadingDate:'بارگیری',openStatus:'باز',close:'بستن',postedAt:'زمان انتشار',remainingCapacity:'ظرفیت باقی‌مانده',noDescription:'توضیحی ثبت نشده',activeRooms:'فعال',noShipmentChats:'هنوز گفتگوی فعال محموله‌ای ندارید.',shipmentRoom:'گفتگوی حمل',imageMessage:'📷 تصویر',documentMessage:'📎 سند',locationMessage:'📍 موقعیت',serviceCenter:'مرکز خدمات Yoldash',servicesLiveDesc:'بیمه ترکیه، اسناد حمل و ابزارهای عملیاتی را از همان حساب مشترک اپ مدیریت کنید.',startInsurance:'ثبت بیمه ترکیه',turkeyInsurance:'بیمه ترکیه',threeMonthPlan:'پلن ۳ ماهه',availableNow:'فعال',insuranceDesc:'ثبت درخواست، بارگذاری مدارک، رسید پرداخت و پیگیری صدور بیمه‌نامه.',cmrDesc:'مدیریت اسناد CMR و دسترسی سریع به پرونده‌های حمل.',documents:'اسناد',documentsDesc:'مرکز امن مدارک راننده و حمل با Storage خصوصی Yoldash.',expenses:'هزینه‌ها',expensesDesc:'ثبت و مشاهده هزینه‌های مرتبط با سفر و محموله.',nextPhase:'مرحله بعد',myInsuranceRequests:'درخواست‌های من',insuranceLoginHint:'برای مشاهده یا ثبت بیمه وارد حساب Yoldash شوید.',insuranceApplication:'درخواست بیمه ۳ ماهه',paymentInfo:'اطلاعات پرداخت پس از ورود نمایش داده می‌شود.',applicantName:'نام متقاضی',plan:'پلن',passport:'پاسپورت',tractorTriptyque:'کاپتاژ کشنده',containerTriptyque:'کاپتاژ تریلر / کانتینر',paymentReceipt:'رسید پرداخت',allowedInsuranceFiles:'PDF / JPG / PNG / WEBP · حداکثر 15MB',submitInsurance:'ارسال درخواست بیمه',insuranceNotEligible:'بیمه ترکیه برای حساب راننده، شرکت حمل‌ونقل یا واسطه قابل ثبت است.',insuranceRequestSent:'درخواست بیمه ثبت شد',trackingCode:'کد پیگیری',issuedPolicy:'بیمه‌نامه صادرشده',openPolicy:'مشاهده بیمه‌نامه',noInsuranceRequests:'هنوز درخواست بیمه‌ای ثبت نشده است.',bankName:'بانک',accountHolder:'صاحب حساب',businessType:'نوع حساب'
 },
 tr:{
 roadFreight:'Karayolu Taşımacılığı',home:'Ana Sayfa',loadBoard:'Yük İlanları',myShipments:'Taşımalarım',chat:'Sohbet',drivers:'Sürücü & Araç',services:'Hizmetler',secureTitle:'Güvenli Yoldash bağlantısı',secureText:'Veriler uygulama ve Supabase ile ortaktır',search:'Yük, şehir veya kullanıcı ara...',guest:'Misafir kullanıcı',login:'Giriş / Kayıt',livePlatform:'Canlı karayolu taşımacılık platformu',heroTitle:'Yük, sürücü ve rota;<br><em>hepsi tek Yoldash’ta.</em>',heroText:'Yük ilanı verin, teklifler alın ve taşımalarınızı hızlı, birleşik bir panelden yönetin.',createLoad:'Yeni Yük İlanı',viewLoads:'Yükleri Gör',online:'Çevrimiçi erişim',languages:'Dil',sharedAccount:'Web & uygulama ortak hesabı',origin:'Çıkış',destination:'Varış',truckOnRoute:'Araç yolda',activeLoads:'Aktif yükler',onlineDrivers:'Çevrimiçi sürücüler',inTransit:'Yolda',today:'bugün',completed:'Başarılı teslimat',marketplace:'Taşıma pazarı',freshLoads:'Yeni yayınlanan yükler',all:'Tümü',international:'Uluslararası',domestic:'Yurtiçi',seeAll:'Tümünü gör',quickAccess:'Hızlı erişim',actions:'İşlemler',newLoad:'Yeni yük ilanı',newLoadHint:'2 dakikadan kısa',findDriver:'Yükleri görüntüle',findDriverHint:'Sürücü ve taşıyıcı için',openChat:'Sohbeti aç',chatLoginHint:'Girişten sonra',liveRates:'Canlı kurlar',currency:'Döviz',live:'Canlı',ratesNote:'Döviz kuru bağlantısı sonraki aşamada etkinleştirilecek.',searchLoads:'Çıkış, varış veya yük türüne göre ara',shipmentsDesc:'Aktif, teslim edilmiş ve bekleyen tüm taşımalarınızı buradan yönetin.',transportManagement:'Taşıma yönetimi',refresh:'Yenile',loginRequired:'Giriş gerekli',loginForShipments:'Taşımalarınızı görmek için Yoldash hesabınıza giriş yapın.',communication:'İletişim',publicChat:'Yoldash genel sohbeti',sharedCommunity:'Web ve uygulama ortak topluluğu',shipmentChat:'Sevkiyat sohbeti',shipmentChatHint:'Teklif kabul edilince açılır',onlineNow:'Çevrimiçi',loginForChat:'Yoldash sohbetine katılmak için giriş yapın.',message:'Mesaj yazın...',driversDesc:'Sürücü, araç ve uygunluk verileri bu web uygulamasında ortak Yoldash verilerine bağlanır.',servicesDesc:'Türkiye sigortası, CMR, belgeler, masraflar ve sürücü araçları bu panelde birleşecek.',siteManager:'Site Yöneticisi',whatsappContact:'WhatsApp',privacy:'Gizlilik',terms:'Kullanım Şartları',cargoDetails:'Yük bilgileri',originCountry:'Çıkış ülkesi',originCity:'Çıkış şehri',originCustoms:'Çıkış gümrüğü',destinationCountry:'Varış ülkesi',destinationCity:'Varış şehri',destinationCustoms:'Varış gümrüğü',cargoType:'Yük türü',cargoTypeHint:'Örn. gıda',truckType:'Araç türü',truckCount:'Araç sayısı',weight:'Ağırlık (kg)',price:'Önerilen navlun',loadingAt:'Yükleme zamanı',validity:'İlan geçerliliği',exitBorder:'Çıkış sınırı',description:'Açıklama',sharedSupabase:'Bu form doğrudan Yoldash uygulamasıyla aynı Supabase’e kaydeder.',cancel:'İptal',publishLoad:'Yükü Yayınla',authSubtitle:'Uygulamadaki ortak hesabınızla giriş yapın',email:'E-posta',password:'Şifre',authNote:'Web ve uygulama aynı Supabase Auth hesabını kullanır.',signIn:'Giriş',register:'Kayıt',accountType:'Hesap türü',driver:'Sürücü',cargoOwner:'Yük sahibi',transportCompany:'Nakliye şirketi',broker:'Komisyoncu',forgotPassword:'Şifremi unuttum',signedInShared:'Ortak Yoldash hesabınızla giriş yaptınız.',completeProfile:'Profili tamamla',firstName:'Ad',lastName:'Soyad',phone:'Telefon',countryCode:'Ülke',whatsappPhone:'WhatsApp',tractorPlate:'Çekici transit plakası',containerPlate:'Dorse/konteyner transit plakası',driverCompany:'Sürücü şirketi',saveProfile:'Profili Kaydet',signOut:'Çıkış Yap',transportRequest:'Taşıma talebi',offerPrice:'Teklif fiyatı',requestedTruckCount:'İstenen araç sayısı',sendRequest:'Talebi Gönder',curtain:'Tenteli',flatbed:'Dorse',tanker:'Tanker',reefer:'Frigo',lightTruck:'Hafif kamyon',sharedData:'Uygulamayla ortak',details:'Detaylar',tons:'ton',trucks:'araç',owner:'İlan sahibi',requestTransport:'Taşıma talebi',yourLoad:'Sizin yükünüz',profileNeeded:'Devam etmek için işletme profilinizi tamamlayın.',noLoads:'Şu anda aktif yük bulunamadı.',noShipments:'Hesabınız için aktif taşıma veya yük bulunamadı.',noMessages:'Henüz mesaj yok.',authSuccess:'Giriş başarılı.',signupCheckEmail:'Kayıt tamamlandı. Hesabı doğrulamak için e-postanızı kontrol edin.',passwordResetSent:'Şifre sıfırlama bağlantısı gönderildi.',profileSaved:'Profil başarıyla kaydedildi.',loadPublished:'Yük başarıyla yayınlandı ve uygulamada da görülebilir.',offerSent:'Taşıma talebi gönderildi.',messageSent:'Mesaj gönderildi.',loading:'Yükleniyor...',companyName:'Şirket adı',organizationName:'Kurum / firma adı',licenseNumber:'Ehliyet numarası',registrationNumber:'Sicil numarası',optional:'İsteğe bağlı',accountInactive:'Bu hesap devre dışı.',driverCannotPost:'Sürücü hesabı yük ilanı veremez. Sürücüler yüklere taşıma talebi gönderebilir.',postOnlyBusiness:'Yalnızca yük sahibi, nakliye şirketi veya komisyoncu yük ilanı verebilir.',offerOnlyProvider:'Yalnızca sürücü veya nakliye şirketi taşıma talebi gönderebilir.',profileIncomplete:'İşletme profili henüz tamamlanmadı.',invalidPhone:'Telefon uluslararası formatta olmalı, örn. +905xxxxxxxxx.',requiredFields:'Lütfen zorunlu alanları doldurun.',networkError:'Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.',unexpectedError:'Bir hata oluştu. Tekrar deneyin.',verificationRequired:'E-posta henüz doğrulanmadıysa doğrulama bağlantısını açın.',onlineLabel:'Çevrimiçi',offlineLabel:'Çevrimdışı',quota:'Bugünkü kota',remaining:'kalan',unlimited:'Sınırsız',profile:'Profil',setNewPassword:'Yeni şifre',setNewPasswordHint:'Yoldash hesabınız için yeni ve güvenli bir şifre seçin.',newPassword:'Yeni şifre',confirmPassword:'Şifreyi tekrar girin',saveNewPassword:'Yeni şifreyi kaydet',passwordsMismatch:'Şifreler eşleşmiyor.',passwordUpdated:'Şifreniz başarıyla değiştirildi.',liveFreight:'Canlı karayolu yük pazarı',boardSubtitle:'Aktif Yoldash yüklerini hızlıca görün, rotaları karşılaştırın ve doğrudan taşıma talebi gönderin.',secureMarket:'Yoldash uygulamasıyla güvenli ve ortak veri',openLoads:'Açık yük',crossBorder:'Uluslararası',domesticLoads:'Yurtiçi',freshToday:'Bugün',liveFeed:'Canlı',availableLoads:'taşınabilir yük',syncedWithApp:'Uygulamayla senkron',capacity:'Kapasite',loadingDate:'Yükleme',openStatus:'Açık',businessType:'Hesap türü'
@@ -40,7 +40,9 @@ const state = {
   chatTimer: null,
   chatMode: 'public',
   shipmentRooms: [],
-  activeRoomId: null
+  activeRoomId: null,
+  sigortaSettings: null,
+  sigortaRequests: []
 };
 
 function t(key){ return translations[state.lang]?.[key] ?? translations.en[key] ?? key; }
@@ -106,6 +108,7 @@ function applyLanguage(next, persist=true){
   renderLoads();
   renderProfileUI();
   if (state.session) renderChatFromCache?.();
+  renderSigortaSettings?.(); renderSigortaRequests?.();
 }
 function page(name){
   $$('.page').forEach(p=>p.classList.remove('active'));
@@ -114,6 +117,7 @@ function page(name){
   $$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
   $('.sidebar')?.classList.remove('open');
   if(name==='shipments') loadShipments();
+  if(name==='services') loadServices();
   if(name==='chat'){ loadShipmentRooms(); loadChat(); }
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -659,6 +663,145 @@ async function loadUnread(){
   try{const {data,error}=await supabase.rpc('get_public_chat_unread_count'); if(error) throw error; const n=Number(data||0); $('#chatDot').style.display=n>0?'block':'none'; $('#chatHint').textContent=n?`${n} · ${t('publicChat')}`:t('publicChat');}catch{}
 }
 
+
+function sigortaEligible(){
+  return !!state.session && ['DRIVER','TRANSPORT_COMPANY','BROKER'].includes(state.profile?.business_user_type);
+}
+function renderSigortaSettings(){
+  const s=state.sigortaSettings;
+  const price=s ? `${Number(s.price_3_months||0).toLocaleString(localeMap[state.lang])} ${esc(s.currency||'')}` : '—';
+  if($('#sigortaPrice')) $('#sigortaPrice').textContent=price;
+  if($('#sigortaModalPrice')) $('#sigortaModalPrice').textContent=price;
+  if($('#sigortaAvailability')) $('#sigortaAvailability').textContent=!state.session?t('loginRequired'):(sigortaEligible()?t('availableNow'):t('insuranceNotEligible'));
+  if($('#sigortaPaymentDetails')){
+    if(!state.session||!s){
+      $('#sigortaPaymentDetails').innerHTML=`<span>${t('paymentInfo')}</span>`;
+    }else{
+      const rows=[];
+      if(s.bank_name) rows.push(`<span><small>${t('bankName')}</small><b>${esc(s.bank_name)}</b></span>`);
+      if(s.account_holder) rows.push(`<span><small>${t('accountHolder')}</small><b>${esc(s.account_holder)}</b></span>`);
+      if(s.iban) rows.push(`<span><small>IBAN</small><b dir="ltr">${esc(s.iban)}</b></span>`);
+      if(s.card_number) rows.push(`<span><small>Card</small><b dir="ltr">${esc(s.card_number)}</b></span>`);
+      if(s.payment_note) rows.push(`<p>${esc(s.payment_note)}</p>`);
+      $('#sigortaPaymentDetails').innerHTML=rows.join('')||`<span>${t('paymentInfo')}</span>`;
+    }
+  }
+}
+function renderSigortaRequests(){
+  const el=$('#insuranceRequestList'); if(!el) return;
+  if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('insuranceLoginHint'));return;}
+  if(!state.sigortaRequests.length){el.innerHTML=emptyBlock('noInsuranceRequests');return;}
+  el.innerHTML=`<div class="insurance-request-grid">${state.sigortaRequests.map(r=>`
+    <article class="insurance-request-card">
+      <div class="insurance-request-head"><span class="status-pill">${esc(r.status||'PENDING')}</span><time>${esc(relativeLabel(r.created_at))}</time></div>
+      <div><small>${t('trackingCode')}</small><b class="tracking-code">${esc(r.tracking_code||'—')}</b></div>
+      <div class="insurance-request-meta"><span><small>${t('price')}</small><b>${Number(r.quoted_amount||0).toLocaleString(localeMap[state.lang])} ${esc(r.quoted_currency||'')}</b></span><span><small>${t('plan')}</small><b>${esc(r.period_months||3)} months</b></span></div>
+      ${r.expires_at?`<div class="insurance-expiry"><small>${t('expires')}</small><b>${esc(String(r.expires_at))}</b></div>`:''}
+      ${r.admin_note?`<p class="insurance-note">${esc(r.admin_note)}</p>`:''}
+      ${r.status==='ISSUED'&&r.final_policy_path?`<button class="btn secondary wide policy-btn" data-policy-request="${esc(r.id)}">${t('openPolicy')} ↗</button>`:''}
+    </article>`).join('')}</div>`;
+  $$('[data-policy-request]').forEach(b=>b.onclick=()=>openInsurancePolicy(b.dataset.policyRequest));
+}
+async function loadServices(){
+  if(!state.session){
+    state.sigortaSettings=null; state.sigortaRequests=[];
+    renderSigortaSettings(); renderSigortaRequests(); return;
+  }
+  try{
+    const [{data:settings,error:se},{data:reqs,error:re}]=await Promise.all([
+      supabase.from('sigorta_settings').select('price_3_months,currency,account_holder,bank_name,iban,card_number,payment_note,whatsapp_number').eq('id','default').maybeSingle(),
+      supabase.from('sigorta_requests').select('id,tracking_code,status,quoted_amount,quoted_currency,period_months,final_policy_path,expires_at,admin_note,created_at').order('created_at',{ascending:false}).limit(20)
+    ]);
+    if(se) throw se;
+    if(re) throw re;
+    state.sigortaSettings=settings||null;
+    state.sigortaRequests=reqs||[];
+  }catch(err){
+    console.warn('sigorta services',err);
+  }
+  renderSigortaSettings(); renderSigortaRequests();
+}
+async function openInsuranceModal(){
+  if(!state.session){$('#authModal').showModal();toast(t('loginRequired'),'error');return;}
+  if(!sigortaEligible()){toast(t('insuranceNotEligible'),'error');return;}
+  if(!state.sigortaSettings) await loadServices();
+  const p=state.profile||{};
+  $('#sigortaApplicant').value=[p.first_name,p.last_name].filter(Boolean).join(' ').trim();
+  $('#sigortaPhone').value=p.phone||'';
+  $('#sigortaWhatsapp').value=p.whatsapp_phone||p.phone||'';
+  $('#sigortaStatus').textContent='';
+  renderSigortaSettings();
+  $('#sigortaModal').showModal();
+}
+function insuranceFileOkay(file){
+  if(!file||file.size<=0||file.size>15728640) return false;
+  return ['application/pdf','image/jpeg','image/png','image/webp'].includes(file.type);
+}
+function safeExt(file){
+  const byMime={'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
+  return byMime[file.type]||'bin';
+}
+async function uploadInsuranceFile(requestId,kind,file,uploaded){
+  if(!insuranceFileOkay(file)) throw new Error(t('allowedInsuranceFiles'));
+  const uid=state.session.user.id;
+  const path=`${uid}/application/${requestId}/${kind}.${safeExt(file)}`;
+  const {error}=await supabase.storage.from('yoldash-sigorta').upload(path,file,{cacheControl:'3600',upsert:false,contentType:file.type});
+  if(error) throw error;
+  uploaded.push(path);
+  return path;
+}
+async function submitSigorta(ev){
+  ev.preventDefault();
+  if(!state.session||!sigortaEligible()){toast(t('insuranceNotEligible'),'error');return;}
+  const btn=$('#submitSigorta'), status=$('#sigortaStatus');
+  const applicant=$('#sigortaApplicant').value.trim(), phone=$('#sigortaPhone').value.trim(), whatsapp=$('#sigortaWhatsapp').value.trim();
+  if(!applicant||!/^\+[1-9]\d{7,14}$/.test(phone)||!/^\+[1-9]\d{7,14}$/.test(whatsapp)){status.className='auth-status error';status.textContent=t('requiredFields');return;}
+  const files={
+    passport:$('#sigortaPassport').files[0],
+    tractor:$('#sigortaTractor').files[0],
+    container:$('#sigortaContainer').files[0],
+    receipt:$('#sigortaReceipt').files[0]
+  };
+  if(Object.values(files).some(f=>!insuranceFileOkay(f))){status.className='auth-status error';status.textContent=t('allowedInsuranceFiles');return;}
+  const requestId=crypto.randomUUID();
+  const uploaded=[];
+  btn.disabled=true; btn.textContent=t('loading'); status.className='auth-status';status.textContent=t('loading');
+  try{
+    const [passportPath,tractorPath,containerPath,receiptPath]=await Promise.all([
+      uploadInsuranceFile(requestId,'passport',files.passport,uploaded),
+      uploadInsuranceFile(requestId,'tractor-triptyque',files.tractor,uploaded),
+      uploadInsuranceFile(requestId,'container-triptyque',files.container,uploaded),
+      uploadInsuranceFile(requestId,'payment-receipt',files.receipt,uploaded)
+    ]);
+    const {data,error}=await supabase.rpc('create_sigorta_request',{
+      p_request_id:requestId,p_applicant_name:applicant,p_phone:phone,p_whatsapp:whatsapp,p_period_months:3,
+      p_passport_path:passportPath,p_tractor_triptyque_path:tractorPath,p_container_triptyque_path:containerPath,p_payment_receipt_path:receiptPath
+    });
+    if(error) throw error;
+    const row=Array.isArray(data)?data[0]:data;
+    status.className='auth-status ok';
+    status.textContent=`${t('insuranceRequestSent')} · ${t('trackingCode')}: ${row?.tracking_code||requestId}`;
+    toast(t('insuranceRequestSent'),'ok');
+    $('#sigortaForm').reset();
+    await loadServices();
+    setTimeout(()=>$('#sigortaModal')?.close(),1400);
+  }catch(err){
+    status.className='auth-status error'; status.textContent=humanError(err);
+    if(uploaded.length) supabase.storage.from('yoldash-sigorta').remove(uploaded).catch(()=>{});
+  }finally{
+    btn.disabled=false; btn.textContent=t('submitInsurance');
+  }
+}
+async function openInsurancePolicy(requestId){
+  const row=state.sigortaRequests.find(r=>r.id===requestId);
+  if(!row?.final_policy_path) return;
+  try{
+    const {data,error}=await supabase.storage.from('yoldash-sigorta').createSignedUrl(row.final_policy_path,300);
+    if(error) throw error;
+    window.open(data.signedUrl,'_blank','noopener,noreferrer');
+  }catch(err){toast(humanError(err),'error');}
+}
+
 function networkUI(){
   const online=navigator.onLine,node=$('#networkStatus');node.classList.toggle('offline',!online);node.querySelector('span').textContent=online?t('onlineLabel'):t('offlineLabel');
 }
@@ -677,7 +820,7 @@ function bindUI(){
   ['createLoadBtn','createLoadBtn2','quickLoad'].forEach(id=>$('#'+id)?.addEventListener('click',openLoadModal));
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('loads'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
-  $('#refreshShipments').onclick=loadShipments;
+  $('#refreshShipments').onclick=loadShipments; $('#openInsuranceBtn').onclick=openInsuranceModal; $('#openInsuranceBtn2').onclick=openInsuranceModal; $('#refreshInsurance').onclick=loadServices; $('#sigortaForm').addEventListener('submit',submitSigorta);
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=forgotPassword; $('#signOutBtn').onclick=async()=>{await supabase.auth.signOut();$('#authModal').close();toast(t('signOut'));};
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
@@ -703,7 +846,7 @@ async function init(){
       $('#recoveryStatus').textContent='';
       $('#recoveryModal')?.showModal();
     }
-    if($('#page-chat').classList.contains('active')){loadShipmentRooms();loadChat(true);}
+    if($('#page-chat').classList.contains('active')){loadShipmentRooms();loadChat(true);}if($('#page-services').classList.contains('active')) loadServices();
   },0));
 
   await Promise.all([refreshSession(),loadLoads()]);
