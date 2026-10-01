@@ -10,3 +10,31 @@
 .contact-card{margin:22px auto 4px;display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid rgba(255,168,0,.22);background:rgba(255,168,0,.055);border-radius:16px;max-width:520px;text-align:start}.contact-badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#ffab15;color:#15100a;font-weight:900}.contact-card div{min-width:0;flex:1}.contact-card small{display:block;color:#8295b4;font-size:9px}.contact-card b{display:block;color:#f6f8fc;margin:2px 0 4px}.contact-card a{color:#ffbd36;text-decoration:none;font-size:11px}.contact-card .contact-action{padding:9px 12px;border-radius:11px;border:1px solid rgba(0,201,141,.25);background:rgba(0,201,141,.08);color:#8df0d1;font-weight:800}
 .wa-float{position:fixed;z-index:120;inset-inline-end:22px;bottom:22px;display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:999px;background:#0bcf8f;color:#03130d;text-decoration:none;font:800 12px/1 Inter,"Segoe UI",sans-serif;box-shadow:0 16px 45px rgba(0,201,141,.3);border:1px solid rgba(255,255,255,.22);transition:transform .18s ease,box-shadow .18s ease}.wa-float:hover{transform:translateY(-2px);box-shadow:0 20px 52px rgba(0,201,141,.4)}.wa-float .wa-dot{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.17)}
 @media(max-width:560px){.contact-card{align-items:flex-start;flex-wrap:wrap}.contact-card .contact-action{margin-inline-start:52px}.wa-float{inset-inline-end:12px;bottom:12px;padding:11px 13px}}
+
+
+/* DESIGN.md-inspired typography: high-legibility dashboard hierarchy */
+html,body{font-family:"DM Sans","Segoe UI",Tahoma,Arial,sans-serif}
+html[lang="fa"] body,html[lang="fa"] button,html[lang="fa"] input,html[lang="fa"] select,html[lang="fa"] textarea{font-family:"Vazirmatn","Segoe UI",Tahoma,Arial,sans-serif}
+h1,h2,h3,.brand b,.page-title h1,.hero h1{font-family:"Inter","DM Sans","Segoe UI",sans-serif;font-weight:700}
+html[lang="fa"] h1,html[lang="fa"] h2,html[lang="fa"] h3,html[lang="fa"] .brand b,html[lang="fa"] .page-title h1,html[lang="fa"] .hero h1{font-family:"Vazirmatn","Segoe UI",Tahoma,Arial,sans-serif;font-weight:700}
+.kicker,.badge,.status,.fx-code b,.live-fx strong{letter-spacing:.01em}
+.live-fx strong,.fx-code b{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace}
+
+/* Live FX widget */
+.rate-panel{padding:17px}
+.live-fx{margin-top:6px}
+.live-fx .fx{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid #1c304c}
+.live-fx .fx:last-child{border-bottom:0}
+.fx-code{display:flex;flex-direction:column;min-width:0}
+.fx-code b{font-size:11px;color:#f5f8fc}
+.fx-code small{font-size:7px;color:#6e83a5;margin-top:2px}
+.live-fx strong{font-size:13px;color:#ffd16b;font-weight:600;text-align:end}
+.live-fx em{font-style:normal;font-size:8px;color:#788eae}
+.fx-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px solid rgba(42,64,98,.35)}
+.fx-footer .muted{font-size:7px;line-height:1.5}
+.fx-refresh{width:28px;height:28px;flex:0 0 auto;border:1px solid #28405f;background:#0b172a;color:#91a7c7;border-radius:9px;cursor:pointer;display:grid;place-items:center}
+.fx-refresh:hover{border-color:rgba(255,168,0,.4);color:var(--amber)}
+.fx-refresh.spinning{animation:fxspin .8s linear infinite}
+#fxStatus.fx-offline i{background:var(--danger);box-shadow:0 0 9px var(--danger)}
+#fxStatus.fx-stale i{background:var(--amber);box-shadow:0 0 9px var(--amber)}
+@keyframes fxspin{to{transform:rotate(360deg)}}
