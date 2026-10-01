@@ -50,3 +50,11 @@
 .details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.details-grid>div{padding:12px 13px;border-radius:14px;background:rgba(7,17,33,.58);border:1px solid rgba(66,92,132,.22)}.details-grid small,.details-owner-row small,.details-description small{display:block;color:#6f86a9;font-size:8px;margin-bottom:4px}.details-grid b{font-size:11px;color:#e3eaf5}.details-grid .detail-price{color:#ffd16b;font-size:14px}
 .details-owner-row{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 13px;border-radius:14px;background:rgba(0,201,141,.045);border:1px solid rgba(0,201,141,.13)}.details-owner-row b{font-size:11px}.details-description{margin-top:10px;padding:13px;border-radius:14px;background:rgba(7,17,33,.58);border:1px solid rgba(66,92,132,.22)}.details-description p{margin:0;color:#bac8dc;font-size:11px;line-height:1.8;white-space:pre-wrap}
 @media(max-width:620px){.freight-details-modal{padding:16px;border-radius:20px}.details-route-panel{grid-template-columns:minmax(0,1fr) 48px minmax(0,1fr);padding:12px;gap:6px}.details-city{display:block}.details-city>span{width:30px;height:30px;margin-bottom:6px}.details-city.destination>span{margin-inline-start:auto}.details-route-line{gap:2px}.details-grid{grid-template-columns:1fr 1fr}.details-grid>div{padding:10px}.details-grid b{font-size:9px}}
+
+
+/* Live dashboard refinements */
+.hero-visual .truck-chip small{display:block;color:#7488a8;font-size:7px;margin-top:3px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metrics .metric{position:relative;overflow:hidden;transition:transform .2s ease,border-color .2s ease;background:linear-gradient(145deg,rgba(18,33,58,.9),rgba(8,18,36,.86))}
+.metrics .metric:after{content:"";position:absolute;inset:auto -15px -26px auto;width:74px;height:74px;border-radius:50%;background:currentColor;opacity:.025}
+.metrics .metric:hover{transform:translateY(-2px);border-color:rgba(255,168,0,.18)}
+.metrics .metric b{letter-spacing:-.7px}
