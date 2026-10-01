@@ -107,7 +107,64 @@
       <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><div class="chat-person active"><span class="avatar green">YG</span><div><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></div><time id="chatTime">—</time></div><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green">YG</span><div><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
 
       <section class="generic-page page" id="page-drivers"><div class="empty-state glass"><div class="empty-icon">◉</div><h1 data-i18n="drivers">راننده و ماشین</h1><p data-i18n="driversDesc">پروفایل رانندگان، خودروها و وضعیت دسترسی آن‌ها در همین وب‌اپ به داده‌های مشترک Yoldash متصل می‌شود.</p><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div></section>
-      <section class="generic-page page" id="page-services"><div class="empty-state glass"><div class="empty-icon">◇</div><h1 data-i18n="services">خدمات</h1><p data-i18n="servicesDesc">بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.</p><div class="contact-card"><span class="contact-badge">YD</span><div><small data-i18n="siteManager">مدیر سایت</small><b>Hazar Deniz</b><a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a></div><a class="contact-action" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></div><div class="legal-links"><a href="/privacy" data-i18n="privacy">حریم خصوصی</a><a href="/terms" data-i18n="terms">شرایط استفاده</a></div></div></section>
+      <section class="generic-page page" id="page-services">
+        <div class="services-page">
+          <div class="services-intro glass">
+            <div>
+              <span class="kicker" data-i18n="serviceCenter">مرکز خدمات Yoldash</span>
+              <h1 data-i18n="services">خدمات</h1>
+              <p data-i18n="servicesDesc">بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.</p>
+            </div>
+            <a class="btn primary services-support" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer">
+              <span>◌</span><span data-i18n="serviceSupport">پشتیبانی خدمات</span>
+            </a>
+          </div>
+
+          <div class="services-grid">
+            <article class="service-tile glass service-featured">
+              <div class="service-top"><span class="service-icon amber">◇</span><span class="service-pill active" data-i18n="availableNow">فعال</span></div>
+              <h2 data-i18n="turkeyInsurance">بیمه ترکیه</h2>
+              <p data-i18n="insuranceServiceDesc">ثبت و پیگیری درخواست بیمه ترکیه برای رانندگان و ناوگان Yoldash.</p>
+              <a class="service-link" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer"><span data-i18n="requestService">درخواست خدمت</span> ↗</a>
+            </article>
+
+            <article class="service-tile glass">
+              <div class="service-top"><span class="service-icon green">▤</span><span class="service-pill" data-i18n="comingSoon">به‌زودی</span></div>
+              <h2>CMR</h2>
+              <p data-i18n="cmrServiceDesc">مدیریت و دسترسی سریع به اسناد CMR مرتبط با حمل‌های شما.</p>
+              <span class="service-note" data-i18n="sharedWithApp">با همان حساب اپ Yoldash</span>
+            </article>
+
+            <article class="service-tile glass">
+              <div class="service-top"><span class="service-icon blue">▣</span><span class="service-pill" data-i18n="comingSoon">به‌زودی</span></div>
+              <h2 data-i18n="transportDocuments">اسناد حمل</h2>
+              <p data-i18n="documentsServiceDesc">مرکز یکپارچه مدارک راننده، خودرو و محموله با دسترسی امن.</p>
+              <span class="service-note" data-i18n="sharedWithApp">با همان حساب اپ Yoldash</span>
+            </article>
+
+            <article class="service-tile glass">
+              <div class="service-top"><span class="service-icon violet">◎</span><span class="service-pill" data-i18n="comingSoon">به‌زودی</span></div>
+              <h2 data-i18n="tripExpenses">هزینه‌های سفر</h2>
+              <p data-i18n="expensesServiceDesc">ثبت و مدیریت هزینه‌های سفر، حمل و عملیات ناوگان در یک محل.</p>
+              <span class="service-note" data-i18n="sharedWithApp">با همان حساب اپ Yoldash</span>
+            </article>
+          </div>
+
+          <div class="services-contact glass">
+            <div class="contact-badge">YD</div>
+            <div class="services-contact-copy">
+              <small data-i18n="siteManager">مدیر سایت</small>
+              <b>Hazar Deniz</b>
+              <span data-i18n="serviceContactHint">برای خدمات، پشتیبانی و پیگیری درخواست‌ها مستقیم تماس بگیرید.</span>
+            </div>
+            <div class="services-contact-actions">
+              <a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a>
+              <a class="contact-action" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a>
+            </div>
+          </div>
+          <div class="legal-links"><a href="/privacy" data-i18n="privacy">حریم خصوصی</a><a href="/terms" data-i18n="terms">شرایط استفاده</a></div>
+        </div>
+      </section>
     </main>
   </div>
 
