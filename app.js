@@ -203,6 +203,15 @@ function renderLoads(){
   if($('#boardToday')) $('#boardToday').textContent=String(today);
   if($('#boardResultCount')) $('#boardResultCount').textContent=String(filtered.length);
 
+  const featured=state.loads[0];
+  if(featured){
+    if($('#heroOriginCity')) $('#heroOriginCity').textContent=cityName(featured,'origin');
+    if($('#heroDestinationCity')) $('#heroDestinationCity').textContent=cityName(featured,'destination');
+    if($('#heroOriginMeta')) $('#heroOriginMeta').textContent=[featured.origin_country_code, featured.origin_customs].filter(Boolean).join(' · ') || 'Yoldash';
+    if($('#heroDestinationMeta')) $('#heroDestinationMeta').textContent=[featured.destination_country_code, featured.destination_customs].filter(Boolean).join(' · ') || 'Yoldash';
+    if($('#heroCargoType')) $('#heroCargoType').textContent=featured.cargo_type || '';
+  }
+
   bindCargoActions();
 }
 function openCargoDetailsCard(c){
