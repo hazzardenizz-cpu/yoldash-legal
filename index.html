@@ -86,7 +86,44 @@
         </div>
       </section>
 
-      <section class="generic-page page" id="page-loads"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="marketplace">بازار حمل‌ونقل</span><h1 data-i18n="loadBoard">اعلام بار</h1></div><button class="btn primary" id="createLoadBtn2">＋ <span data-i18n="createLoad">اعلام بار جدید</span></button></div><div class="board-toolbar"><div class="search inline"><span>⌕</span><input id="loadSearch" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div><button class="chip active" data-filter="all" data-i18n="all">همه</button><button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button><button class="chip" data-filter="domestic" data-i18n="domestic">داخلی</button></div><div class="cargo-list expanded" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div></div></section>
+      <section class="generic-page page" id="page-loads">
+        <div class="loadboard-shell">
+          <section class="loadboard-hero glass">
+            <div class="lb-orb lb-orb-a"></div><div class="lb-orb lb-orb-b"></div>
+            <div class="lb-hero-copy">
+              <span class="eyebrow"><i class="live-dot"></i><span data-i18n="liveFreight">بازار زنده حمل جاده‌ای</span></span>
+              <h1 data-i18n="loadBoard">اعلام بار</h1>
+              <p data-i18n="boardSubtitle">بارهای فعال Yoldash را در یک نمای سریع ببینید، مسیرها را مقایسه کنید و مستقیم برای حمل درخواست بفرستید.</p>
+              <div class="lb-hero-actions">
+                <button class="btn primary" id="createLoadBtn2">＋ <span data-i18n="createLoad">اعلام بار جدید</span></button>
+                <span class="secure-market"><span>◆</span><span data-i18n="secureMarket">اطلاعات مشترک و امن با اپ Yoldash</span></span>
+              </div>
+            </div>
+            <div class="board-stats">
+              <article><span data-i18n="openLoads">بار باز</span><b id="boardOpen">—</b><small data-i18n="liveFeed">زنده</small></article>
+              <article><span data-i18n="crossBorder">بین‌المللی</span><b id="boardInternational">—</b><small>↗</small></article>
+              <article><span data-i18n="domesticLoads">داخلی</span><b id="boardDomestic">—</b><small>◎</small></article>
+              <article><span data-i18n="freshToday">امروز</span><b id="boardToday">—</b><small>24h</small></article>
+            </div>
+          </section>
+
+          <section class="board-workspace glass">
+            <div class="board-control-row">
+              <div class="search inline board-search"><span>⌕</span><input id="loadSearch" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div>
+              <div class="board-filters">
+                <button class="chip active" data-filter="all" data-i18n="all">همه</button>
+                <button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button>
+                <button class="chip" data-filter="domestic" data-i18n="domestic">داخلی</button>
+              </div>
+            </div>
+            <div class="board-meta-line">
+              <div><span class="board-pulse"></span><b id="boardResultCount">0</b> <span data-i18n="availableLoads">بار قابل حمل</span></div>
+              <span class="sync-pill">↻ <span data-i18n="syncedWithApp">همگام با اپ</span></span>
+            </div>
+            <div class="cargo-list expanded premium-board-list" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
+          </section>
+        </div>
+      </section>
 
       <section class="generic-page page" id="page-shipments"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="transportManagement">مدیریت حمل</span><h1 data-i18n="myShipments">حمل‌های من</h1></div><button class="btn secondary" id="refreshShipments">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div><p class="muted" data-i18n="shipmentsDesc">همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.</p><div class="cargo-list expanded" id="shipmentList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForShipments">برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.</span></div></div></div></section>
 
