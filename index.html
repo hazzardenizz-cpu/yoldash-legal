@@ -13,6 +13,7 @@
   <link rel="icon" href="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" />
   <link rel="apple-touch-icon" href="data:image/webp;base64,UklGRsYCAABXRUJQVlA4ILoCAACwFgCdASqAAIAAPp1On0wlpCKiphaooLATiUAaiaFf4zbWvarzF2/3hXkYjwdTf6DcAP0Z/Dvsu+YD7M/em9H3oAfsR1mHoZ+WH+4fwpfuL+xxbgTSGIospv24NGdUBIoPmMN1bnrZx0T7lOqgINZmB0nGOXqy/fFAiz0mwtla9o3Nvz9iFgmteclkRNblEzBqVk8touOYWQUoYPszvSiDlAmx9WednDc7/TwBdw0x5P0sfyh3KTPz0Rj9nFCAAP7viQcqN/65B/sYOBzyXPVhvYk7lkAdh4GQVhdXldu5+hcs0it64zQfXViYgzN+FaJ5RDU8Tl1uc9ER7vna7/uLS2cq5gvvuxNSUS/yLac3jGI5BrLezf7mJ28TyDHyUsvLLVaDNBGDugeN+B8Fz/aMvYcEbCiYiiK9Tt7tcDQv1BbfuWw5aOSiN8n8T66RAvZOuAhD150r2Ju3DKQ3M4Zi3O2NPrlXQ4/LCs19LdhdcHpnrjpurTqIpU5+qIdJEq12ZqUy33hh5b6QR7yeR32Z9fMfPNc0AQpf4oNJrWOSNZAQ3wfZRpE61nvwUjkTU23GtKbsEH8KJMRJ4cS4KbA/2P3Xag1PTu+hhM78gQuYwXqUzkU/0O0bkRJ2sfLNDo6YZpeemjw+OelY5tw7NHWgdbpM1U8kWAC59//xQLq5cWXa1waAUTnfydR6IUJdY6g/2usL5y8vbFyzDzq1M/lA9hiaGsqsCknbp3DMmJ79M3khPkIJR6UtVl+tMCT3PYLAWWNDt+RvXz8JXFo+Xzg4Kj2vG00zr43LYFrLmiElXD8hqs9UY5ot5o5vogJb9insJKOhWc7MOQ5yoJCWpztvrlrvBXcDzAZL6Ynf0ly5ZPVJ9VhLhBxTLI6wKc7+L4O18VniSQKVAGAUfgYwQIb3LdKA0EcAAAAAAA==" />
   <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3yn5v6YscgOUZbsGAkU5UYwroWjzM=" crossorigin="" />
   <link rel="stylesheet" href="styles.css?v=20261002-1526" />
   <title>Yoldash — Road Freight Platform</title>
   <style>
@@ -114,18 +115,21 @@
 
         </div>
 
-        <div class="panel glass quick-services-home">
-          <div class="section-head">
-            <div><span class="kicker" data-i18n="serviceCenter">مرکز خدمات Yoldash</span><h2>خدمات سریع</h2></div>
-            <button class="text-link" type="button" data-v2-action="services">مشاهده همه</button>
+        <div class="panel glass admin-user-map-panel hidden" id="adminUserMapPanel">
+          <div class="section-head admin-map-head">
+            <div>
+              <span class="kicker" data-i18n="superAdminOnly">فقط Super Admin</span>
+              <h2 data-i18n="yoldashUsersMap">نقشه کاربران Yoldash</h2>
+              <small data-i18n="mapPrivacyNote">فقط کاربرانی نمایش داده می‌شوند که موقعیت فعال و مجاز در سیستم دارند.</small>
+            </div>
+            <div class="admin-map-actions">
+              <span class="admin-map-count"><b id="adminMapUserCount">0</b> <span data-i18n="usersWithLocation">کاربر دارای موقعیت</span></span>
+              <button class="text-link" type="button" id="refreshAdminUserMap" data-i18n="refresh">به‌روزرسانی</button>
+            </div>
           </div>
-          <div class="quick-services-grid">
-            <article class="quick-service-card insurance"><span class="q-icon">◇</span><b data-i18n="turkeyInsurance">بیمه ترکیه</b><small data-i18n="insuranceServiceDesc">ثبت و پیگیری درخواست بیمه ترکیه برای رانندگان و ناوگان Yoldash.</small><button type="button" data-v2-action="services" data-i18n="requestService">درخواست خدمت</button></article>
-            <article class="quick-service-card cmr"><span class="q-icon">▤</span><b>CMR</b><small data-i18n="cmrServiceDesc">مدیریت و دسترسی سریع به اسناد CMR مرتبط با حمل‌های شما.</small><button type="button" data-v2-action="services">باز کردن</button></article>
-            <article class="quick-service-card docs"><span class="q-icon">▣</span><b data-i18n="transportDocuments">اسناد حمل</b><small data-i18n="documentsServiceDesc">مرکز یکپارچه مدارک راننده، خودرو و محموله با دسترسی امن.</small><button type="button" data-v2-action="services">مدیریت اسناد</button></article>
-            <article class="quick-service-card expense"><span class="q-icon">₺</span><b data-i18n="tripExpenses">هزینه‌های سفر</b><small data-i18n="expensesServiceDesc">ثبت و مدیریت هزینه‌های سفر، حمل و عملیات ناوگان در یک محل.</small><button type="button" data-v2-action="services">ثبت هزینه</button></article>
-            <article class="quick-service-card fxsvc"><span class="q-icon">⇄</span><b data-i18n="liveRates">نرخ لحظه‌ای</b><small data-i18n="ratesNote">نرخ بازار با به‌روزرسانی خودکار هر ۵ دقیقه.</small><button type="button" data-v2-action="refresh-fx" data-i18n="refresh">به‌روزرسانی</button></article>
-            <article class="quick-service-card support"><span class="q-icon">◉</span><b>پشتیبانی Yoldash</b><small data-i18n="serviceContactHint">برای خدمات، پشتیبانی و پیگیری درخواست‌ها مستقیم تماس بگیرید.</small><a href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></article>
+          <div class="admin-map-shell">
+            <div id="adminUserMap" class="admin-user-map" aria-label="Yoldash users map"></div>
+            <div id="adminMapEmpty" class="admin-map-empty hidden" data-i18n="noLocationUsers">فعلاً کاربری با موقعیت فعال وجود ندارد.</div>
           </div>
         </div>
       </section>
@@ -422,6 +426,7 @@
   </dialog>
 
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script type="module" src="app.js?v=20261002-1526"></script>
 <a class="wa-float" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp: +90 532 662 9800"><span class="wa-dot"></span><span>WhatsApp</span></a>
   <!-- YOLDASH V2.1 PRODUCTION ENHANCEMENTS -->
