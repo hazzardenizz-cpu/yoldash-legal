@@ -291,3 +291,31 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
 }
 .profile.is-signed-in .profile-txt b{color:var(--v2-text)!important;font-weight:850!important}
 .profile.is-signed-in .profile-txt small{color:var(--v2-success)!important;font-weight:750!important}
+
+
+/* === AUTH UX FINAL QA FIXES === */
+/* Keep authenticated identity visible on ordinary laptop widths. */
+@media (max-width:1100px) and (min-width:801px){
+  .topbar .profile{display:flex!important;min-width:165px!important;max-width:220px!important}
+  .topbar .profile-txt{display:block!important;min-width:0!important}
+  .topbar .profile-txt b{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar .profile-txt small{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+/* Mobile still shows a compact signed-in/user control instead of hiding identity completely. */
+@media (max-width:800px){
+  .topbar .top-status,.topbar>.top-actions>.icon-btn:not(.mobile-menu){display:none!important}
+  .topbar .profile{display:flex!important;height:42px!important;min-width:0!important;max-width:150px!important;padding:3px 7px!important;gap:7px!important}
+  .topbar .profile .avatar{width:32px!important;height:32px!important;flex:0 0 32px!important}
+  .topbar .profile-txt{display:block!important;min-width:0!important}
+  .topbar .profile-txt b{font-size:10px!important;max-width:93px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar .profile-txt small{display:none!important}
+  .topbar .profile>span:last-child{display:none!important}
+}
+@media (max-width:520px){
+  .topbar .lang-switch{display:none!important}
+  .topbar .theme-toggle{width:38px!important;height:38px!important}
+  .topbar .profile{max-width:155px!important}
+}
+#forgotPasswordPanel label{text-align:start!important;margin-bottom:12px!important}
+#forgotPasswordPanel input{width:100%!important}
+#forgotPasswordPanel .auth-step-actions{margin-top:8px}
