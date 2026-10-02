@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -33,12 +33,6 @@
     .city-wrap{position:relative}.city-results{position:absolute;z-index:20;inset-inline:0;top:calc(100% + 5px);background:#0b172b;border:1px solid #2a4062;border-radius:13px;box-shadow:0 18px 40px rgba(0,0,0,.35);max-height:220px;overflow:auto;display:none}.city-results.open{display:block}.city-results button{width:100%;border:0;background:transparent;color:#e8eef8;text-align:start;padding:10px 12px;border-bottom:1px solid rgba(73,102,148,.16);cursor:pointer}.city-results button:last-child{border-bottom:0}.city-results button:hover{background:rgba(255,168,0,.07)}.city-results small{display:block;color:#7488a9;margin-top:3px;font-size:9px}
     @media(max-width:720px){.form-grid.three{grid-template-columns:1fr}.auth-type{grid-template-columns:1fr 1fr}.profile-grid{grid-template-columns:1fr}.toast-wrap{inset-inline:12px;bottom:12px}.chat-shell.real-chat{min-height:580px}}
   </style>
-  <script>
-    try {
-      const savedTheme = localStorage.getItem('yoldash-web-theme');
-      document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
-    } catch (_) { document.documentElement.dataset.theme = 'light'; }
-  </script>
 </head>
 <body>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -108,14 +102,14 @@
         <div class="panel glass quick-services-home">
           <div class="section-head">
             <div><span class="kicker" data-i18n="serviceCenter">مرکز خدمات Yoldash</span><h2>خدمات سریع</h2></div>
-            <button class="text-link" type="button" onclick="document.querySelector('.nav-item[data-page=\'services\']')?.click()">مشاهده همه</button>
+            <button class="text-link" type="button" data-v2-action="services">مشاهده همه</button>
           </div>
           <div class="quick-services-grid">
-            <article class="quick-service-card insurance"><span class="q-icon">◇</span><b data-i18n="turkeyInsurance">بیمه ترکیه</b><small data-i18n="insuranceServiceDesc">ثبت و پیگیری درخواست بیمه ترکیه برای رانندگان و ناوگان Yoldash.</small><button type="button" onclick="document.querySelector('.nav-item[data-page=\'services\']')?.click()" data-i18n="requestService">درخواست خدمت</button></article>
-            <article class="quick-service-card cmr"><span class="q-icon">▤</span><b>CMR</b><small data-i18n="cmrServiceDesc">مدیریت و دسترسی سریع به اسناد CMR مرتبط با حمل‌های شما.</small><button type="button" onclick="document.querySelector('.nav-item[data-page=\'services\']')?.click()">باز کردن</button></article>
-            <article class="quick-service-card docs"><span class="q-icon">▣</span><b data-i18n="transportDocuments">اسناد حمل</b><small data-i18n="documentsServiceDesc">مرکز یکپارچه مدارک راننده، خودرو و محموله با دسترسی امن.</small><button type="button" onclick="document.querySelector('.nav-item[data-page=\'services\']')?.click()">مدیریت اسناد</button></article>
-            <article class="quick-service-card expense"><span class="q-icon">₺</span><b data-i18n="tripExpenses">هزینه‌های سفر</b><small data-i18n="expensesServiceDesc">ثبت و مدیریت هزینه‌های سفر، حمل و عملیات ناوگان در یک محل.</small><button type="button" onclick="document.querySelector('.nav-item[data-page=\'services\']')?.click()">ثبت هزینه</button></article>
-            <article class="quick-service-card fxsvc"><span class="q-icon">⇄</span><b data-i18n="liveRates">نرخ لحظه‌ای</b><small data-i18n="ratesNote">نرخ بازار با به‌روزرسانی خودکار هر ۵ دقیقه.</small><button type="button" onclick="document.getElementById('refreshFx')?.click();document.querySelector('#content-home')?.scrollIntoView({behavior:'smooth'})" data-i18n="refresh">به‌روزرسانی</button></article>
+            <article class="quick-service-card insurance"><span class="q-icon">◇</span><b data-i18n="turkeyInsurance">بیمه ترکیه</b><small data-i18n="insuranceServiceDesc">ثبت و پیگیری درخواست بیمه ترکیه برای رانندگان و ناوگان Yoldash.</small><button type="button" data-v2-action="services" data-i18n="requestService">درخواست خدمت</button></article>
+            <article class="quick-service-card cmr"><span class="q-icon">▤</span><b>CMR</b><small data-i18n="cmrServiceDesc">مدیریت و دسترسی سریع به اسناد CMR مرتبط با حمل‌های شما.</small><button type="button" data-v2-action="services">باز کردن</button></article>
+            <article class="quick-service-card docs"><span class="q-icon">▣</span><b data-i18n="transportDocuments">اسناد حمل</b><small data-i18n="documentsServiceDesc">مرکز یکپارچه مدارک راننده، خودرو و محموله با دسترسی امن.</small><button type="button" data-v2-action="services">مدیریت اسناد</button></article>
+            <article class="quick-service-card expense"><span class="q-icon">₺</span><b data-i18n="tripExpenses">هزینه‌های سفر</b><small data-i18n="expensesServiceDesc">ثبت و مدیریت هزینه‌های سفر، حمل و عملیات ناوگان در یک محل.</small><button type="button" data-v2-action="services">ثبت هزینه</button></article>
+            <article class="quick-service-card fxsvc"><span class="q-icon">⇄</span><b data-i18n="liveRates">نرخ لحظه‌ای</b><small data-i18n="ratesNote">نرخ بازار با به‌روزرسانی خودکار هر ۵ دقیقه.</small><button type="button" data-v2-action="refresh-fx" data-i18n="refresh">به‌روزرسانی</button></article>
             <article class="quick-service-card support"><span class="q-icon">◉</span><b>پشتیبانی Yoldash</b><small data-i18n="serviceContactHint">برای خدمات، پشتیبانی و پیگیری درخواست‌ها مستقیم تماس بگیرید.</small><a href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></article>
           </div>
         </div>
@@ -328,19 +322,5 @@
   <script type="module" src="app.js"></script>
 <a class="wa-float" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp: +90 532 662 9800"><span class="wa-dot"></span><span>WhatsApp</span></a>
   <!-- YOLDASH V2.1 PRODUCTION ENHANCEMENTS -->
-  <script>
-    (() => {
-      const btn = document.getElementById('themeToggle');
-      const root = document.documentElement;
-      const sync = () => { if (btn) btn.textContent = root.dataset.theme === 'dark' ? '☀' : '◐'; };
-      sync();
-      btn?.addEventListener('click', () => {
-        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        try { localStorage.setItem('yoldash-web-theme', next); } catch (_) {}
-        sync();
-      });
-    })();
-  </script>
 </body>
 </html>
