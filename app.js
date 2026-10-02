@@ -862,8 +862,7 @@ function renderFxRates(){
   if(statusText) statusText.textContent=d.stale?t('ratesStale'):t('live');
   if(updated){
     const when=d.fetched_at?dateLabel(d.fetched_at):'—';
-    const source=d.market_source||'Yoldash FX';
-    updated.textContent=`${t('ratesUpdated')}: ${when} · ${t('ratesSource')}: ${source}`;
+    updated.textContent=`${t('ratesUpdated')}: ${when}`;
   }
 }
 async function loadFxRates(silent=false){
