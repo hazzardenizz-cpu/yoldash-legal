@@ -967,89 +967,67 @@ function renderAdminUserMap(rows=[]){
 
   if(empty) empty.classList.add('hidden');
 
-  const candidates=valid.map(row=>({
+  const items=valid.map(row=>({
     row,
-    trueLatLng:L.latLng(Number(row.latitude),Number(row.longitude))
+    latlng:L.latLng(Number(row.latitude),Number(row.longitude))
   }));
 
-  // Group markers that visually collide at the current zoom level.
-  const groups=[];
-  const collisionPx=30;
-  for(const item of candidates){
-    const p=state.adminUserMap.latLngToLayerPoint(item.trueLatLng);
-    let group=groups.find(g=>{
-      const gp=state.adminUserMap.latLngToLayerPoint(g.anchor);
-      return gp.distanceTo(p)<=collisionPx;
-    });
-    if(!group){
-      group={anchor:item.trueLatLng,items:[]};
-      groups.push(group);
+  // Only labels are staggered when users are visually close.
+  // Marker centers always remain exactly on the real GPS coordinates.
+  const labelSlots=[];
+  const collisionPx=34;
+
+  items.forEach(item=>{
+    const p=state.adminUserMap.latLngToLayerPoint(item.latlng);
+    let slot=0;
+    for(const used of labelSlots){
+      if(used.point.distanceTo(p)<=collisionPx) slot++;
     }
-    group.items.push(item);
-  }
+    labelSlots.push({point:p,slot});
 
-  const bounds=[];
-  groups.forEach(group=>{
-    const basePoint=state.adminUserMap.latLngToLayerPoint(group.anchor);
-    const n=group.items.length;
+    const row=item.row;
+    const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+    const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
+    const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
+    const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
 
-    group.items.forEach((item,index)=>{
-      let displayLatLng=item.trueLatLng;
-
-      if(n>1){
-        const ring=Math.floor(index/8);
-        const pos=index%8;
-        const itemsInRing=Math.min(8,n-ring*8);
-        const angle=(Math.PI*2*pos/Math.max(1,itemsInRing))-(Math.PI/2);
-        const radius=26+(ring*22);
-        const offset=L.point(Math.cos(angle)*radius,Math.sin(angle)*radius);
-        displayLatLng=state.adminUserMap.layerPointToLatLng(basePoint.add(offset));
-
-        L.polyline([item.trueLatLng,displayLatLng],{
-          color:'#64748b',
-          weight:1,
-          opacity:.65,
-          dashArray:'3,4',
-          interactive:false
-        }).addTo(state.adminUserMapLayer);
-      }
-
-      const row=item.row;
-      const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-      const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
-      const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
-      const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
-
-      const marker=L.circleMarker(displayLatLng,{
-        radius:n>1?10:9,
-        weight:3,
-        color:'#ffffff',
-        fillColor:markerColor,
-        opacity:1,
-        fillOpacity:.95,
-        className:`yoldash-map-marker ${freshnessClass}`
-      });
-
-      marker.bindTooltip(label,{
-        permanent:true,
-        direction:'right',
-        offset:[10,0],
-        interactive:true,
-        className:'yoldash-map-label clickable'
-      });
-      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
-      const tooltip=marker.getTooltip();
-      if(tooltip){
-        tooltip.on('click',e=>{
-          L.DomEvent.stopPropagation(e);
-          marker.openPopup();
-        });
-      }
-      marker.addTo(state.adminUserMapLayer);
-      bounds.push(item.trueLatLng);
+    const marker=L.circleMarker(item.latlng,{
+      radius:9,
+      weight:3,
+      color:'#ffffff',
+      fillColor:markerColor,
+      opacity:1,
+      fillOpacity:.95,
+      className:\`yoldash-map-marker \${freshnessClass}\`
     });
+
+    const labelY=(slot%2===0 ? 1 : -1) * Math.ceil(slot/2) * 18;
+    marker.bindTooltip(label,{
+      permanent:true,
+      direction:'right',
+      offset:[10,labelY],
+      interactive:true,
+      className:'yoldash-map-label clickable'
+    });
+
+    marker.bindPopup(adminMapPopup(row),{
+      className:'yoldash-map-popup',
+      maxWidth:360,
+      minWidth:280
+    });
+
+    const tooltip=marker.getTooltip();
+    if(tooltip){
+      tooltip.on('click',e=>{
+        L.DomEvent.stopPropagation(e);
+        marker.openPopup();
+      });
+    }
+
+    marker.addTo(state.adminUserMapLayer);
   });
 
+  const bounds=items.map(x=>x.latlng);
   requestAnimationFrame(()=>{
     state.adminUserMap.invalidateSize();
     if(!state.adminMapHasInitialFit){
