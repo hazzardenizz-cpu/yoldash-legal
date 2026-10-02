@@ -554,3 +554,17 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
   .notification-panel{position:fixed;top:70px;left:12px;right:12px;width:auto;max-height:72vh;inset-inline-end:auto}
   .notification-btn{display:flex!important}
 }
+
+
+/* === HERO TITLE REFINEMENT === */
+.hero h1{
+  font-size:clamp(30px,3.45vw,52px)!important;
+  line-height:1.16!important;
+  letter-spacing:-1px!important;
+}
+.hero h1 em{
+  font-size:.92em!important;
+}
+@media(max-width:620px){
+  .hero h1{font-size:29px!important;line-height:1.22!important}
+}
