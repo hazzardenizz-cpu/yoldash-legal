@@ -908,6 +908,7 @@ function bindUI(){
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
   $('#refreshShipments').onclick=loadShipments;
+  $('#refreshFx')?.addEventListener('click',()=>loadFxRates(false));
   $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $$('[data-listing-type]').forEach(b=>b.onclick=()=>{$('#driverListingType').value=b.dataset.listingType;syncDriverListingSegments();}); $$('[data-employment-type]').forEach(b=>b.onclick=()=>{$('#driverEmploymentType').value=b.dataset.employmentType;syncDriverListingSegments();}); $$('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=signOutUser;
@@ -967,33 +968,45 @@ function handleAuthCallbackErrors(){
 }
 
 async function init(){
-  canonicalFallback(); bindUI(); networkUI(); applyLanguage(state.lang,false); setAuthMode('signin'); handleAuthCallbackErrors();
-  setupCitySearch('origin'); setupCitySearch('destination');
+  canonicalFallback();
 
-  supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
-    if(event==='INITIAL_SESSION' && !session){
-      const current=await supabase.auth.getSession();
-      session=current.data?.session||null;
-    }
-    state.session=session;
-    if(session) await loadProfile();
-    else {state.profile=null;state.businessProfile=null;chatCache=[];}
-    renderProfileUI();
-    loadUnread();
-    if(session && !isFullProfileReady() && event!=='PASSWORD_RECOVERY'){
-      if(!$('#authModal')?.open) $('#authModal')?.showModal();
-    }
-    if(event==='PASSWORD_RECOVERY'){
-      $('#recoveryStatus').textContent='';
-      $('#recoveryModal')?.showModal();
-    }
-    if($('#page-chat').classList.contains('active')) loadChat(true);
-    if($('#page-drivers').classList.contains('active')) loadDriverHub();
-  },0));
+  try{ bindUI(); }catch(err){ console.error('bindUI init',err); }
+  try{ networkUI(); }catch(err){ console.error('networkUI init',err); }
+  try{ applyLanguage(state.lang,false); }catch(err){ console.error('language init',err); }
+  try{ setAuthMode('signin'); handleAuthCallbackErrors(); }catch(err){ console.error('auth ui init',err); }
 
-  await Promise.all([refreshSession(),loadLoads()]);
-  startLiveLoads();
+  // FX must never depend on auth, profile, cargo or any other module.
   startFxRates();
+
+  try{ setupCitySearch('origin'); setupCitySearch('destination'); }catch(err){ console.error('city init',err); }
+
+  try{
+    supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
+      try{
+        if(event==='INITIAL_SESSION' && !session){
+          const current=await supabase.auth.getSession();
+          session=current.data?.session||null;
+        }
+        state.session=session;
+        if(session) await loadProfile();
+        else {state.profile=null;state.businessProfile=null;chatCache=[];}
+        renderProfileUI();
+        loadUnread();
+        if(session && !isFullProfileReady() && event!=='PASSWORD_RECOVERY'){
+          if(!$('#authModal')?.open) $('#authModal')?.showModal();
+        }
+        if(event==='PASSWORD_RECOVERY'){
+          $('#recoveryStatus').textContent='';
+          $('#recoveryModal')?.showModal();
+        }
+        if($('#page-chat')?.classList.contains('active')) loadChat(true);
+        if($('#page-drivers')?.classList.contains('active')) loadDriverHub();
+      }catch(err){ console.error('auth state change',err); }
+    },0));
+  }catch(err){ console.error('auth listener init',err); }
+
+  await Promise.allSettled([refreshSession(),loadLoads()]);
+  try{ startLiveLoads(); }catch(err){ console.error('live loads init',err); }
 }
 init();
 
