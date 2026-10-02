@@ -51,7 +51,8 @@ const state = {
   adminUserMap: null,
   adminUserMapLayer: null,
   adminMapRows: [],
-  adminMapRefreshTimer: null
+  adminMapRefreshTimer: null,
+  adminMapHasInitialFit: false
 };
 
 function t(key){ return translations[state.lang]?.[key] ?? translations.en[key] ?? key; }
@@ -867,7 +868,7 @@ async function syncSuperAdminMapAccess(){
   clearInterval(state.adminMapRefreshTimer);
   if(state.isSuperAdmin){
     requestAnimationFrame(()=>loadAdminUserMap(true));
-    state.adminMapRefreshTimer=setInterval(()=>loadAdminUserMap(true),60*1000);
+    state.adminMapRefreshTimer=setInterval(()=>loadAdminUserMap(true),15*1000);
   }
 }
 function adminMapPopup(row){
@@ -877,9 +878,9 @@ function adminMapPopup(row){
   const accuracy=Number(row.accuracy_meters);
   const accuracyText=Number.isFinite(accuracy)?`±${Math.round(accuracy)} m`:'—';
   const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-  const freshness=ageMs<=30*60*1000
+  const freshness=ageMs<=15*60*1000
     ? (state.lang==='fa'?'موقعیت تازه':state.lang==='tr'?'Güncel konum':'Fresh location')
-    : ageMs<=2*60*60*1000
+    : ageMs<=60*60*1000
       ? (state.lang==='fa'?'موقعیت نسبتاً قدیمی':state.lang==='tr'?'Konum biraz eski':'Location getting old')
       : (state.lang==='fa'?'موقعیت قدیمی':state.lang==='tr'?'Eski konum':'Stale location');
   const source=row.source==='SHIPMENT_LIVE'
@@ -923,6 +924,7 @@ function renderAdminUserMap(rows=[]){
     requestAnimationFrame(()=>{
       state.adminUserMap.invalidateSize();
       state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+      state.adminMapHasInitialFit=true;
     });
     return;
   }
@@ -933,7 +935,7 @@ function renderAdminUserMap(rows=[]){
   valid.forEach(row=>{
     const lat=Number(row.latitude), lng=Number(row.longitude);
     const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-    const freshnessClass=ageMs>2*60*60*1000?'stale':ageMs>30*60*1000?'aging':'fresh';
+    const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
     const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
 
     const marker=L.circleMarker([lat,lng],{
@@ -957,8 +959,11 @@ function renderAdminUserMap(rows=[]){
 
   requestAnimationFrame(()=>{
     state.adminUserMap.invalidateSize();
-    if(bounds.length===1) state.adminUserMap.setView(bounds[0],10);
-    else state.adminUserMap.fitBounds(bounds,{padding:[45,45],maxZoom:10});
+    if(!state.adminMapHasInitialFit){
+      if(bounds.length===1) state.adminUserMap.setView(bounds[0],10);
+      else state.adminUserMap.fitBounds(bounds,{padding:[45,45],maxZoom:10});
+      state.adminMapHasInitialFit=true;
+    }
   });
 }
 
@@ -970,6 +975,8 @@ async function loadAdminUserMap(silent=false){
     const {data,error}=await supabase.rpc('get_super_admin_user_map');
     if(error) throw error;
     renderAdminUserMap(Array.isArray(data)?data:[]);
+    const sync=$('#adminMapLastSync');
+    if(sync) sync.textContent=new Date().toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }catch(err){
     console.warn('admin user map',err);
     if(!silent) toast(humanError(err),'error');
