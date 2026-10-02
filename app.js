@@ -998,7 +998,7 @@ function renderAdminUserMap(rows=[]){
       fillColor:markerColor,
       opacity:1,
       fillOpacity:.95,
-      className:\`yoldash-map-marker \${freshnessClass}\`
+      className:`yoldash-map-marker ${freshnessClass}`
     });
 
     const labelY=(slot%2===0 ? 1 : -1) * Math.ceil(slot/2) * 18;
