@@ -268,3 +268,26 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
   #authModal .auth{padding:20px 16px!important}
   #authModal .auth-type{grid-template-columns:1fr!important}
 }
+
+
+/* === SIGNED IN HEADER IDENTITY === */
+.profile.is-signed-in{
+  border-color:color-mix(in srgb,var(--v2-success) 35%,var(--v2-line))!important;
+  background:linear-gradient(180deg,var(--v2-surface),color-mix(in srgb,var(--v2-success) 5%,var(--v2-surface)))!important;
+}
+.profile.is-signed-in .avatar{
+  position:relative;
+  background:linear-gradient(135deg,var(--v2-primary),var(--v2-primary2))!important;
+  color:#fff!important;
+}
+.profile.is-signed-in .avatar:after{
+  content:"";
+  position:absolute;
+  width:9px;height:9px;border-radius:50%;
+  inset:auto -1px -1px auto;
+  background:var(--v2-success);
+  border:2px solid var(--v2-surface);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--v2-success) 14%,transparent);
+}
+.profile.is-signed-in .profile-txt b{color:var(--v2-text)!important;font-weight:850!important}
+.profile.is-signed-in .profile-txt small{color:var(--v2-success)!important;font-weight:750!important}
