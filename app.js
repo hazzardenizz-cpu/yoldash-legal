@@ -307,6 +307,9 @@ function renderProfileUI(){
     $('#profileName').textContent=visibleName;
     $('#profileMeta').textContent=`${state.lang==='fa'?'وارد شده':state.lang==='tr'?'Giriş yapıldı':'Signed in'} · ${typeLabel(state.profile?.business_user_type)}`;
     $('#profileAvatar').textContent=initials(visibleName);
+    if($('#profileModalAvatar')) $('#profileModalAvatar').textContent=initials(visibleName);
+    if($('#profileModalName')) $('#profileModalName').textContent=visibleName;
+    if($('#profileModalType')) $('#profileModalType').textContent=typeLabel(state.profile?.business_user_type);
     $('#authBtn')?.classList.add('is-signed-in');
     $('#authBtn')?.setAttribute('title', visibleName);
     const items=[
@@ -320,7 +323,7 @@ function renderProfileUI(){
     if($('#profileStepHint')) $('#profileStepHint').textContent=basicDone?t('profileNeeded'):t('completeProfileHint');
     if($('#saveProfileBtn')) $('#saveProfileBtn').textContent=basicDone?t('saveProfile'):t('saveAndContinue');
   }else{
-    $('#profileName').textContent=t('guest'); $('#profileMeta').textContent=t('login'); $('#profileAvatar').textContent='YD'; $('#authBtn')?.classList.remove('is-signed-in'); $('#authBtn')?.removeAttribute('title'); $('#chatHint').textContent=t('chatLoginHint');
+    $('#profileName').textContent=t('guest'); $('#profileMeta').textContent=t('login'); $('#profileAvatar').textContent='YD'; if($('#profileModalAvatar')) $('#profileModalAvatar').textContent='YD'; if($('#profileModalName')) $('#profileModalName').textContent='Yoldash'; if($('#profileModalType')) $('#profileModalType').textContent='—'; $('#authBtn')?.classList.remove('is-signed-in'); $('#authBtn')?.removeAttribute('title'); $('#chatHint').textContent=t('chatLoginHint');
   }
 }
 function populateProfileEditor(){
