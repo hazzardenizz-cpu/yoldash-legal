@@ -528,9 +528,9 @@ function renderDriverHub(){
       <div class="driver-listing-actions">${r.status==='ACTIVE'?`<a class="btn secondary" href="tel:${esc(r.contact_phone)}">${t('call')} · <span dir="ltr">${esc(r.contact_phone)}</span></a>`:''}${own?`<button class="btn secondary edit-driver-listing" data-edit-driver-listing="${esc(r.id)}">${t('editListing')}</button><button class="btn secondary toggle-driver-listing" data-toggle-driver-listing="${esc(r.id)}" data-current-status="${esc(r.status)}">${r.status==='ACTIVE'?t('closeListing'):t('reopenListing')}</button><button class="btn delete-driver-listing" data-delete-driver-listing="${esc(r.id)}">${t('deleteListing')}</button>`:''}</div>
     </article>`;
   }).join('');
-  $('[data-edit-driver-listing]').forEach(b=>b.onclick=()=>openDriverListing(b.dataset.editDriverListing));
-  $('[data-toggle-driver-listing]').forEach(b=>b.onclick=()=>toggleDriverListing(b.dataset.toggleDriverListing,b.dataset.currentStatus));
-  $('[data-delete-driver-listing]').forEach(b=>b.onclick=()=>deleteDriverListing(b.dataset.deleteDriverListing));
+  $$('[data-edit-driver-listing]').forEach(b=>b.onclick=()=>openDriverListing(b.dataset.editDriverListing));
+  $$('[data-toggle-driver-listing]').forEach(b=>b.onclick=()=>toggleDriverListing(b.dataset.toggleDriverListing,b.dataset.currentStatus));
+  $$('[data-delete-driver-listing]').forEach(b=>b.onclick=()=>deleteDriverListing(b.dataset.deleteDriverListing));
 }
 async function loadDriverHub(){
   const session=state.session||await ensureSession();
@@ -867,7 +867,7 @@ function bindUI(){
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
   $('#refreshShipments').onclick=loadShipments;
-  $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
+  $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $$('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=signOutUser;
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
