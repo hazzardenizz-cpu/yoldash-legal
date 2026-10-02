@@ -413,7 +413,17 @@ async function submitAuth(ev){
       if(isFullProfileReady()) setTimeout(()=>$('#authModal').close(),500);
     }
   }catch(err){
-    status.className='auth-status error'; status.textContent=humanError(err);
+    const raw=String(err?.message||err||'').toLowerCase();
+    if(state.authMode==='signin' && raw.includes('email not confirmed')){
+      state.pendingSignupEmail=email;
+      showVerifyEmail(email);
+      if($('#verifyEmailStatus')){
+        $('#verifyEmailStatus').className='auth-status error';
+        $('#verifyEmailStatus').textContent=t('verificationRequired');
+      }
+    }else{
+      status.className='auth-status error'; status.textContent=humanError(err);
+    }
   }finally{
     btn.disabled=false;
   }
@@ -841,8 +851,27 @@ function bindUI(){
   window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
 }
 
+function handleAuthCallbackErrors(){
+  try{
+    const query=new URLSearchParams(location.search||'');
+    const hash=new URLSearchParams((location.hash||'').replace(/^#/,''));
+    const code=query.get('error_code')||hash.get('error_code')||query.get('error')||hash.get('error');
+    const description=query.get('error_description')||hash.get('error_description');
+    if(!code&&!description) return;
+    const msg=(description||code||t('unexpectedError')).replace(/\+/g,' ');
+    setTimeout(()=>{
+      if(!$('#authModal')?.open) $('#authModal')?.showModal();
+      showAuthEntry();
+      const status=$('#authStatus');
+      if(status){status.className='auth-status error';status.textContent=decodeURIComponent(msg);}
+    },0);
+    const clean=`${location.pathname}`;
+    history.replaceState({},document.title,clean);
+  }catch(err){console.warn('auth callback parse',err);}
+}
+
 async function init(){
-  canonicalFallback(); bindUI(); networkUI(); applyLanguage(state.lang,false); setAuthMode('signin');
+  canonicalFallback(); bindUI(); networkUI(); applyLanguage(state.lang,false); setAuthMode('signin'); handleAuthCallbackErrors();
   setupCitySearch('origin'); setupCitySearch('destination');
 
   supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
