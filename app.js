@@ -936,13 +936,16 @@ function renderAdminUserMap(rows=[]){
     const lat=Number(row.latitude), lng=Number(row.longitude);
     const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
     const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
+    const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
     const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
 
     const marker=L.circleMarker([lat,lng],{
       radius:9,
       weight:3,
+      color:'#ffffff',
+      fillColor:markerColor,
       opacity:1,
-      fillOpacity:.9,
+      fillOpacity:.95,
       className:`yoldash-map-marker ${freshnessClass}`
     });
 
