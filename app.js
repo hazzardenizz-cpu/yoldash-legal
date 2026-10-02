@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.2';
+import L from 'https://esm.sh/leaflet@1.9.4';
 
 const SUPABASE_URL = 'https://ubqrafuustkyenbbzhtg.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4rrohZA7Vsu76Fywpqg9Bg_ozmpPHeH';
@@ -47,6 +48,8 @@ const state = {
   loadRefreshTimer: null,
   loadRefreshDebounce: null,
   isSuperAdmin: false,
+  adminUserMap: null,
+  adminUserMapLayer: null,
   adminMapRows: [],
   adminMapRefreshTimer: null
 };
@@ -882,59 +885,80 @@ function adminMapPopup(row){
   const source=row.source==='SHIPMENT_LIVE'
     ? (state.lang==='fa'?'حمل زنده':state.lang==='tr'?'Canlı taşıma':'Live shipment')
     : (state.lang==='fa'?'موقعیت راننده':state.lang==='tr'?'Sürücü konumu':'Driver location');
-  return `<b>${name}</b><span>${type}</span><small>${esc(freshness)} · ${esc(source)}</small><small>${updated} · ${accuracyText}</small>`;
+  return `<div class="admin-map-popup"><b>${name}</b><span>${type}</span><small>${esc(freshness)} · ${esc(source)}</small><small>${updated} · ${accuracyText}</small></div>`;
 }
+
 function renderAdminUserMap(rows=[]){
   state.adminMapRows=rows;
-  const overlay=$('#adminUserMapOverlay');
+  const mapEl=$('#adminUserMap');
   const empty=$('#adminMapEmpty');
   const count=$('#adminMapUserCount');
   if(count) count.textContent=String(rows.length);
-  if(!overlay || !state.isSuperAdmin) return;
+  if(!mapEl || !state.isSuperAdmin) return;
 
-  const minLon=24.0, maxLon=63.5, minLat=25.0, maxLat=43.5;
-  overlay.innerHTML='';
+  if(!state.adminUserMap){
+    state.adminUserMap=L.map(mapEl,{
+      zoomControl:true,
+      attributionControl:true,
+      worldCopyJump:true,
+      preferCanvas:true
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18,
+      attribution:'&copy; OpenStreetMap contributors'
+    }).addTo(state.adminUserMap);
+    state.adminUserMapLayer=L.layerGroup().addTo(state.adminUserMap);
+    state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+  }
+
+  state.adminUserMapLayer.clearLayers();
 
   const valid=rows.filter(row=>{
-    const lat=Number(row.latitude), lon=Number(row.longitude);
-    return Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=minLat&&lat<=maxLat&&lon>=minLon&&lon<=maxLon;
+    const lat=Number(row.latitude), lng=Number(row.longitude);
+    return Number.isFinite(lat)&&Number.isFinite(lng)&&lat>=-90&&lat<=90&&lng>=-180&&lng<=180;
   });
 
   if(!valid.length){
     if(empty) empty.classList.remove('hidden');
+    requestAnimationFrame(()=>{
+      state.adminUserMap.invalidateSize();
+      state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+    });
     return;
   }
+
   if(empty) empty.classList.add('hidden');
+  const bounds=[];
 
   valid.forEach(row=>{
-    const lat=Number(row.latitude), lon=Number(row.longitude);
-    const mercY=v=>{
-      const clamped=Math.max(-85.05112878,Math.min(85.05112878,v));
-      const rad=clamped*Math.PI/180;
-      return Math.log(Math.tan(Math.PI/4+rad/2));
-    };
-    const x=((lon-minLon)/(maxLon-minLon))*100;
-    const top=mercY(maxLat), bottom=mercY(minLat), point=mercY(lat);
-    const y=((top-point)/(top-bottom))*100;
-    const pin=document.createElement('button');
-    pin.type='button';
+    const lat=Number(row.latitude), lng=Number(row.longitude);
     const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-    pin.className='admin-map-pin'+(ageMs>2*60*60*1000?' stale':ageMs>30*60*1000?' aging':' fresh');
-    pin.style.left=`${x}%`;
-    pin.style.top=`${y}%`;
+    const freshnessClass=ageMs>2*60*60*1000?'stale':ageMs>30*60*1000?'aging':'fresh';
     const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
-    pin.innerHTML=`<span class="admin-map-pin-dot"></span><strong>${label}</strong>`;
-    pin.setAttribute('aria-label', row.display_name||'Yoldash user');
-    pin.addEventListener('click',()=>{
-      $$('.admin-map-user-card').forEach(el=>el.remove());
-      const card=document.createElement('div');
-      card.className='admin-map-user-card';
-      card.innerHTML=adminMapPopup(row);
-      card.style.left=`${x}%`;
-      card.style.top=`${y}%`;
-      overlay.appendChild(card);
+
+    const marker=L.circleMarker([lat,lng],{
+      radius:9,
+      weight:3,
+      opacity:1,
+      fillOpacity:.9,
+      className:`yoldash-map-marker ${freshnessClass}`
     });
-    overlay.appendChild(pin);
+
+    marker.bindTooltip(label,{
+      permanent:true,
+      direction:'right',
+      offset:[10,0],
+      className:'yoldash-map-label'
+    });
+    marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup'});
+    marker.addTo(state.adminUserMapLayer);
+    bounds.push([lat,lng]);
+  });
+
+  requestAnimationFrame(()=>{
+    state.adminUserMap.invalidateSize();
+    if(bounds.length===1) state.adminUserMap.setView(bounds[0],10);
+    else state.adminUserMap.fitBounds(bounds,{padding:[45,45],maxZoom:10});
   });
 }
 
