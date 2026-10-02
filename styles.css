@@ -618,45 +618,57 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
   width:100%;
   height:430px;
   min-height:430px;
-  direction:ltr;
+  border:0;
+  display:block;
+  background:#e9eef4;
 }
-.admin-map-empty{
+.admin-user-map-overlay{
   position:absolute;
-  z-index:500;
-  inset:50% auto auto 50%;
-  transform:translate(-50%,-50%);
-  padding:12px 16px;
-  border-radius:12px;
-  background:rgba(6,15,30,.88);
-  border:1px solid rgba(255,255,255,.12);
-  color:#dce7f8;
-  font-size:11px;
+  inset:0;
+  z-index:5;
   pointer-events:none;
 }
-.admin-map-popup{
-  min-width:150px;
+.admin-map-pin{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  width:24px;
+  height:24px;
+  border:0;
+  background:transparent;
+  padding:0;
+  pointer-events:auto;
+  cursor:pointer;
+}
+.admin-map-pin span{
+  display:block;
+  width:14px;
+  height:14px;
+  border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);
+  background:#ffad08;
+  border:2px solid #fff;
+  box-shadow:0 5px 14px rgba(0,0,0,.35);
+}
+.admin-map-user-card{
+  position:absolute;
+  transform:translate(-50%,calc(-100% - 16px));
+  min-width:170px;
+  max-width:220px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#10213a;
+  border:1px solid #2d4567;
+  box-shadow:0 16px 36px rgba(0,0,0,.35);
+  color:#fff;
+  pointer-events:auto;
   display:flex;
   flex-direction:column;
   gap:4px;
-  font-family:inherit;
+  text-align:start;
 }
-.admin-map-popup b{font-size:12px}
-.admin-map-popup span{font-size:10px}
-.admin-map-popup small{font-size:9px;opacity:.7}
-.leaflet-container{
-  font-family:Vazirmatn,Inter,sans-serif;
-  background:#0a1528;
-}
-html[data-theme="dark"] .leaflet-control-zoom a{
-  background:#10213a;
-  color:#fff;
-  border-color:#28415f;
-}
-html[data-theme="dark"] .leaflet-popup-content-wrapper,
-html[data-theme="dark"] .leaflet-popup-tip{
-  background:#10213a;
-  color:#fff;
-}
+.admin-map-user-card b{font-size:11px}
+.admin-map-user-card span{font-size:10px;color:#a9bad3}
+.admin-map-user-card small{font-size:9px;color:#7f94b5}
 @media(max-width:800px){
   .admin-user-map-panel{padding:14px!important}
   .admin-map-head{align-items:flex-start!important;flex-direction:column}
