@@ -910,6 +910,15 @@ function renderAdminUserMap(rows=[]){
     }).addTo(state.adminUserMap);
     state.adminUserMapLayer=L.layerGroup().addTo(state.adminUserMap);
     state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+
+    let redrawTimer=null;
+    const redraw=()=>{
+      clearTimeout(redrawTimer);
+      redrawTimer=setTimeout(()=>{
+        if(state.adminMapRows?.length) renderAdminUserMap(state.adminMapRows);
+      },80);
+    };
+    state.adminUserMap.on('zoomend',redraw);
   }
 
   state.adminUserMapLayer.clearLayers();
@@ -923,41 +932,89 @@ function renderAdminUserMap(rows=[]){
     if(empty) empty.classList.remove('hidden');
     requestAnimationFrame(()=>{
       state.adminUserMap.invalidateSize();
-      state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
-      state.adminMapHasInitialFit=true;
+      if(!state.adminMapHasInitialFit){
+        state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+        state.adminMapHasInitialFit=true;
+      }
     });
     return;
   }
 
   if(empty) empty.classList.add('hidden');
+
+  const candidates=valid.map(row=>({
+    row,
+    trueLatLng:L.latLng(Number(row.latitude),Number(row.longitude))
+  }));
+
+  // Group markers that visually collide at the current zoom level.
+  const groups=[];
+  const collisionPx=30;
+  for(const item of candidates){
+    const p=state.adminUserMap.latLngToLayerPoint(item.trueLatLng);
+    let group=groups.find(g=>{
+      const gp=state.adminUserMap.latLngToLayerPoint(g.anchor);
+      return gp.distanceTo(p)<=collisionPx;
+    });
+    if(!group){
+      group={anchor:item.trueLatLng,items:[]};
+      groups.push(group);
+    }
+    group.items.push(item);
+  }
+
   const bounds=[];
+  groups.forEach(group=>{
+    const basePoint=state.adminUserMap.latLngToLayerPoint(group.anchor);
+    const n=group.items.length;
 
-  valid.forEach(row=>{
-    const lat=Number(row.latitude), lng=Number(row.longitude);
-    const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-    const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
-    const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
-    const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
+    group.items.forEach((item,index)=>{
+      let displayLatLng=item.trueLatLng;
 
-    const marker=L.circleMarker([lat,lng],{
-      radius:9,
-      weight:3,
-      color:'#ffffff',
-      fillColor:markerColor,
-      opacity:1,
-      fillOpacity:.95,
-      className:`yoldash-map-marker ${freshnessClass}`
+      if(n>1){
+        const ring=Math.floor(index/8);
+        const pos=index%8;
+        const itemsInRing=Math.min(8,n-ring*8);
+        const angle=(Math.PI*2*pos/Math.max(1,itemsInRing))-(Math.PI/2);
+        const radius=26+(ring*22);
+        const offset=L.point(Math.cos(angle)*radius,Math.sin(angle)*radius);
+        displayLatLng=state.adminUserMap.layerPointToLatLng(basePoint.add(offset));
+
+        L.polyline([item.trueLatLng,displayLatLng],{
+          color:'#64748b',
+          weight:1,
+          opacity:.65,
+          dashArray:'3,4',
+          interactive:false
+        }).addTo(state.adminUserMapLayer);
+      }
+
+      const row=item.row;
+      const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+      const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
+      const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
+      const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
+
+      const marker=L.circleMarker(displayLatLng,{
+        radius:n>1?10:9,
+        weight:3,
+        color:'#ffffff',
+        fillColor:markerColor,
+        opacity:1,
+        fillOpacity:.95,
+        className:`yoldash-map-marker ${freshnessClass}`
+      });
+
+      marker.bindTooltip(label,{
+        permanent:true,
+        direction:'right',
+        offset:[10,0],
+        className:'yoldash-map-label'
+      });
+      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup'});
+      marker.addTo(state.adminUserMapLayer);
+      bounds.push(item.trueLatLng);
     });
-
-    marker.bindTooltip(label,{
-      permanent:true,
-      direction:'right',
-      offset:[10,0],
-      className:'yoldash-map-label'
-    });
-    marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup'});
-    marker.addTo(state.adminUserMapLayer);
-    bounds.push([lat,lng]);
   });
 
   requestAnimationFrame(()=>{
