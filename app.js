@@ -879,10 +879,10 @@ function adminMapPopup(row){
   const accuracyText=Number.isFinite(accuracy)?`±${Math.round(accuracy)} m`:'—';
   const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
   const freshness=ageMs<=15*60*1000
-    ? (state.lang==='fa'?'موقعیت تازه':state.lang==='tr'?'Güncel konum':'Fresh location')
+    ? (state.lang==='fa'?'کمتر از ۱۵ دقیقه':state.lang==='tr'?'15 dakikadan yeni':'Under 15 minutes')
     : ageMs<=60*60*1000
-      ? (state.lang==='fa'?'موقعیت نسبتاً قدیمی':state.lang==='tr'?'Konum biraz eski':'Location getting old')
-      : (state.lang==='fa'?'موقعیت قدیمی':state.lang==='tr'?'Eski konum':'Stale location');
+      ? (state.lang==='fa'?'۱۵ تا ۶۰ دقیقه':state.lang==='tr'?'15–60 dakika':'15–60 minutes')
+      : (state.lang==='fa'?'بیشتر از ۱ ساعت':state.lang==='tr'?'1 saatten eski':'Over 1 hour');
   const source=row.source==='SHIPMENT_LIVE'
     ? (state.lang==='fa'?'حمل زنده':state.lang==='tr'?'Canlı taşıma':'Live shipment')
     : (state.lang==='fa'?'موقعیت راننده':state.lang==='tr'?'Sürücü konumu':'Driver location');
