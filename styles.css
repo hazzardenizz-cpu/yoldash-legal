@@ -619,3 +619,9 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
 .yoldash-map-marker.stale{fill:#7f8ca3;opacity:.55}
 .yoldash-map-marker.aging{fill:#ffad08}
 .yoldash-map-marker.fresh{fill:#19c37d}
+
+
+/* === ADMIN MAP LOCATION AGE COLORS === */
+.yoldash-map-marker.fresh{fill:#f6b817!important;stroke:#fff}
+.yoldash-map-marker.aging{fill:#2f80ed!important;stroke:#fff}
+.yoldash-map-marker.stale{fill:#ef4444!important;stroke:#fff;opacity:1!important}
