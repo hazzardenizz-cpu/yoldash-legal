@@ -58,7 +58,16 @@
         <div class="top-actions">
           <div class="top-status" id="networkStatus"><i></i><span data-i18n="onlineNow">آنلاین</span></div>
           <button type="button" class="theme-toggle" id="themeToggle" aria-label="Light / Dark mode" title="Light / Dark mode">◐</button><div class="lang-switch glass"><button data-lang="fa" class="active">FA</button><button data-lang="tr">TR</button><button data-lang="en">EN</button></div>
-          <button class="icon-btn glass" title="Notifications">♢<span class="pulse"></span></button>
+          <button class="icon-btn glass notification-btn" id="notificationBtn" type="button" title="Notifications" aria-label="Notifications">🔔<span class="notification-count hidden" id="notificationCount">0</span></button>
+          <div class="notification-panel hidden" id="notificationPanel">
+            <div class="notification-panel-head">
+              <div><b data-i18n="notifications">اعلان‌ها</b><small id="notificationUnreadLabel">—</small></div>
+              <button type="button" id="markAllNotificationsRead" data-i18n="markAllRead">همه خوانده شد</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <div class="notification-empty" data-i18n="noNotifications">اعلانی ندارید</div>
+            </div>
+          </div>
           <button class="profile glass" id="authBtn"><span class="avatar" id="profileAvatar">YD</span><span class="profile-txt"><b id="profileName" data-i18n="guest">کاربر مهمان</b><small id="profileMeta" data-i18n="login">ورود / ثبت‌نام</small></span><span>⌄</span></button>
         </div>
       </header>
