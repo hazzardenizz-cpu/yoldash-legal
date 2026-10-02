@@ -240,3 +240,31 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
 @media(max-width:900px){.shell{display:block!important}.sidebar{display:none!important}.topbar{height:66px!important;padding:0 14px!important}.hero{margin:16px 14px!important;padding:22px!important;border-radius:22px!important}.metrics,.content-grid{margin-inline:14px!important}.generic-page{padding:18px 14px 90px!important}}
 @media(max-width:620px){.quick-services-grid{grid-template-columns:1fr 1fr}.services-grid{grid-template-columns:1fr!important}.hero{min-height:auto!important}.hero h1{font-size:31px!important}.metrics{grid-template-columns:1fr 1fr!important}.theme-toggle{width:38px;height:38px}.topbar .search{display:none!important}}
 @media(max-width:430px){.quick-services-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr!important}}
+
+
+/* === AUTH FLOW V2: MATCH ANDROID === */
+#authModal .auth{max-width:520px!important}
+#authModal .auth-tabs{margin-top:16px!important}
+#authModal label{display:block;margin-top:12px}
+#authModal label>span{display:block;margin-bottom:7px;font-size:11px;color:var(--v2-muted)}
+.password-field{position:relative}
+.password-field input{padding-inline-end:46px!important}
+.password-toggle{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:var(--v2-muted);cursor:pointer;font-size:15px}
+.password-toggle:hover{background:var(--v2-primary-soft);color:var(--v2-primary)}
+.auth-step-card{margin-top:16px;padding:22px 18px;border:1px solid var(--v2-line);border-radius:20px;background:linear-gradient(180deg,var(--v2-surface2),var(--v2-surface));text-align:center}
+.auth-step-icon{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 14px;border-radius:18px;background:var(--v2-primary-soft);color:var(--v2-primary);font-size:24px}
+.auth-step-card h3{font-size:20px;color:var(--v2-text);margin:0 0 8px}
+.auth-step-card p{font-size:12px;line-height:1.85;color:var(--v2-muted);margin:0 auto 10px;max-width:380px}
+.auth-step-card>b{display:block;color:var(--v2-text);font-size:12px;margin:10px 0 16px;word-break:break-all}
+.auth-step-actions{display:grid;gap:8px}
+.auth-profile-hint{font-size:11px;line-height:1.7;margin:4px 0 10px}
+#businessProfileFields.hidden{display:none!important}
+#authModal .auth-status{margin-top:9px}
+#authModal .link-btn{width:100%;margin-top:5px;text-align:center}
+#authModal .auth-type{grid-template-columns:1fr 1fr!important}
+#authModal .type-btn{min-height:48px;border-radius:13px!important}
+@media(max-width:560px){
+  #authModal{width:min(100% - 18px,520px)}
+  #authModal .auth{padding:20px 16px!important}
+  #authModal .auth-type{grid-template-columns:1fr!important}
+}
