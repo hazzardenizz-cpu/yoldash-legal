@@ -759,3 +759,42 @@ async function init(){
   startFxRates();
 }
 init();
+
+
+// === YOLDASH WEB APP V2.1 PRODUCTION CONTROLS ===
+try {
+  const savedTheme = localStorage.getItem('yoldash-web-theme');
+  document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+} catch (_) {
+  document.documentElement.dataset.theme = 'light';
+}
+
+const v2ThemeButton = document.getElementById('themeToggle');
+const syncV2ThemeButton = () => {
+  if (!v2ThemeButton) return;
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  v2ThemeButton.textContent = isDark ? '☀' : '◐';
+  v2ThemeButton.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+};
+syncV2ThemeButton();
+
+v2ThemeButton?.addEventListener('click', () => {
+  const root = document.documentElement;
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next;
+  try { localStorage.setItem('yoldash-web-theme', next); } catch (_) {}
+  syncV2ThemeButton();
+});
+
+document.querySelectorAll('[data-v2-action="services"]').forEach((el) => {
+  el.addEventListener('click', () => {
+    document.querySelector('.nav-item[data-page="services"]')?.click();
+  });
+});
+
+document.querySelectorAll('[data-v2-action="refresh-fx"]').forEach((el) => {
+  el.addEventListener('click', () => {
+    document.getElementById('refreshFx')?.click();
+    document.getElementById('content-home')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -57,7 +57,7 @@
         <div class="search glass"><span>⌕</span><input id="globalSearch" data-i18n-placeholder="search" placeholder="جستجوی بار، شهر یا کاربر..."></div>
         <div class="top-actions">
           <div class="top-status" id="networkStatus"><i></i><span data-i18n="onlineNow">آنلاین</span></div>
-          <div class="lang-switch glass"><button data-lang="fa" class="active">FA</button><button data-lang="tr">TR</button><button data-lang="en">EN</button></div>
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="Light / Dark mode" title="Light / Dark mode">◐</button><div class="lang-switch glass"><button data-lang="fa" class="active">FA</button><button data-lang="tr">TR</button><button data-lang="en">EN</button></div>
           <button class="icon-btn glass" title="Notifications">♢<span class="pulse"></span></button>
           <button class="profile glass" id="authBtn"><span class="avatar" id="profileAvatar">YD</span><span class="profile-txt"><b id="profileName" data-i18n="guest">کاربر مهمان</b><small id="profileMeta" data-i18n="login">ورود / ثبت‌نام</small></span><span>⌄</span></button>
         </div>
@@ -96,6 +96,21 @@
               <div class="fx"><span class="fx-code"><b>TRY</b><small>Turkish Lira</small></span><strong id="fxTry">—</strong><em data-i18n="toman">تومان</em></div>
             </div>
             <div class="fx-footer"><small id="fxUpdated" class="muted" data-i18n="ratesLoading">در حال دریافت نرخ بازار...</small><button type="button" id="refreshFx" class="fx-refresh" aria-label="Refresh exchange rates">↻</button></div>
+          </div>
+        </div>
+
+        <div class="panel glass quick-services-home">
+          <div class="section-head">
+            <div><span class="kicker" data-i18n="serviceCenter">مرکز خدمات Yoldash</span><h2>خدمات سریع</h2></div>
+            <button class="text-link" type="button" data-v2-action="services">مشاهده همه</button>
+          </div>
+          <div class="quick-services-grid">
+            <article class="quick-service-card insurance"><span class="q-icon">◇</span><b data-i18n="turkeyInsurance">بیمه ترکیه</b><small data-i18n="insuranceServiceDesc">ثبت و پیگیری درخواست بیمه ترکیه برای رانندگان و ناوگان Yoldash.</small><button type="button" data-v2-action="services" data-i18n="requestService">درخواست خدمت</button></article>
+            <article class="quick-service-card cmr"><span class="q-icon">▤</span><b>CMR</b><small data-i18n="cmrServiceDesc">مدیریت و دسترسی سریع به اسناد CMR مرتبط با حمل‌های شما.</small><button type="button" data-v2-action="services">باز کردن</button></article>
+            <article class="quick-service-card docs"><span class="q-icon">▣</span><b data-i18n="transportDocuments">اسناد حمل</b><small data-i18n="documentsServiceDesc">مرکز یکپارچه مدارک راننده، خودرو و محموله با دسترسی امن.</small><button type="button" data-v2-action="services">مدیریت اسناد</button></article>
+            <article class="quick-service-card expense"><span class="q-icon">₺</span><b data-i18n="tripExpenses">هزینه‌های سفر</b><small data-i18n="expensesServiceDesc">ثبت و مدیریت هزینه‌های سفر، حمل و عملیات ناوگان در یک محل.</small><button type="button" data-v2-action="services">ثبت هزینه</button></article>
+            <article class="quick-service-card fxsvc"><span class="q-icon">⇄</span><b data-i18n="liveRates">نرخ لحظه‌ای</b><small data-i18n="ratesNote">نرخ بازار با به‌روزرسانی خودکار هر ۵ دقیقه.</small><button type="button" data-v2-action="refresh-fx" data-i18n="refresh">به‌روزرسانی</button></article>
+            <article class="quick-service-card support"><span class="q-icon">◉</span><b>پشتیبانی Yoldash</b><small data-i18n="serviceContactHint">برای خدمات، پشتیبانی و پیگیری درخواست‌ها مستقیم تماس بگیرید.</small><a href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a></article>
           </div>
         </div>
       </section>
@@ -184,7 +199,7 @@
               <span data-i18n="serviceContactHint">برای خدمات، پشتیبانی و پیگیری درخواست‌ها مستقیم تماس بگیرید.</span>
             </div>
             <div class="services-contact-actions">
-              <a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a>
+              <a href="tel:+905326629800" dir="ltr">+90 532 662 9800</a><a class="services-email" href="mailto:info@getyoldash.com">info@getyoldash.com</a>
               <a class="contact-action" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" data-i18n="whatsappContact">WhatsApp</a>
             </div>
           </div>
@@ -305,5 +320,7 @@
 
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
   <script type="module" src="app.js"></script>
-<a class="wa-float" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp: +90 532 662 9800"><span class="wa-dot"></span><span>WhatsApp</span></a></body>
+<a class="wa-float" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp: +90 532 662 9800"><span class="wa-dot"></span><span>WhatsApp</span></a>
+  <!-- YOLDASH V2.1 PRODUCTION ENHANCEMENTS -->
+</body>
 </html>
