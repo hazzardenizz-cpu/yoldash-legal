@@ -47,8 +47,6 @@ const state = {
   loadRefreshTimer: null,
   loadRefreshDebounce: null,
   isSuperAdmin: false,
-  adminUserMap: null,
-  adminUserMapLayer: null,
   adminMapRows: []
 };
 
@@ -872,53 +870,54 @@ function adminMapPopup(row){
   const updated=row.updated_at?esc(dateLabel(row.updated_at)):'—';
   const accuracy=Number(row.accuracy_meters);
   const accuracyText=Number.isFinite(accuracy)?`±${Math.round(accuracy)} m`:'—';
-  return `<div class="admin-map-popup"><b>${name}</b><span>${type}</span><small>${updated} · ${accuracyText}</small></div>`;
+  return `<b>${name}</b><span>${type}</span><small>${updated} · ${accuracyText}</small>`;
 }
 function renderAdminUserMap(rows=[]){
   state.adminMapRows=rows;
-  const mapEl=$('#adminUserMap');
+  const overlay=$('#adminUserMapOverlay');
   const empty=$('#adminMapEmpty');
   const count=$('#adminMapUserCount');
   if(count) count.textContent=String(rows.length);
-  if(!mapEl || !state.isSuperAdmin) return;
-  if(!window.L){
-    if(empty){empty.textContent='Map library unavailable';empty.classList.remove('hidden');}
-    return;
-  }
-  if(!state.adminUserMap){
-    state.adminUserMap=window.L.map(mapEl,{zoomControl:true,attributionControl:true,worldCopyJump:true}).fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[20,20]});
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      maxZoom:18,
-      attribution:'&copy; OpenStreetMap contributors'
-    }).addTo(state.adminUserMap);
-    state.adminUserMapLayer=window.L.layerGroup().addTo(state.adminUserMap);
-  }
-  state.adminUserMapLayer.clearLayers();
-  if(!rows.length){
+  if(!overlay || !state.isSuperAdmin) return;
+
+  const minLon=24.0, maxLon=63.5, minLat=25.0, maxLat=43.5;
+  overlay.innerHTML='';
+
+  const valid=rows.filter(row=>{
+    const lat=Number(row.latitude), lon=Number(row.longitude);
+    return Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=minLat&&lat<=maxLat&&lon>=minLon&&lon<=maxLon;
+  });
+
+  if(!valid.length){
     if(empty) empty.classList.remove('hidden');
-    setTimeout(()=>{
-      state.adminUserMap?.invalidateSize();
-      state.adminUserMap?.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[20,20]});
-    },0);
     return;
   }
   if(empty) empty.classList.add('hidden');
-  const bounds=[];
-  rows.forEach(row=>{
-    const lat=Number(row.latitude), lng=Number(row.longitude);
-    if(!Number.isFinite(lat)||!Number.isFinite(lng)) return;
-    bounds.push([lat,lng]);
-    const marker=window.L.circleMarker([lat,lng],{
-      radius:8,weight:3,opacity:1,fillOpacity:.82
-    }).bindPopup(adminMapPopup(row));
-    marker.addTo(state.adminUserMapLayer);
+
+  valid.forEach(row=>{
+    const lat=Number(row.latitude), lon=Number(row.longitude);
+    const x=((lon-minLon)/(maxLon-minLon))*100;
+    const y=((maxLat-lat)/(maxLat-minLat))*100;
+    const pin=document.createElement('button');
+    pin.type='button';
+    pin.className='admin-map-pin';
+    pin.style.left=`${x}%`;
+    pin.style.top=`${y}%`;
+    pin.innerHTML='<span></span>';
+    pin.setAttribute('aria-label', row.display_name||'Yoldash user');
+    pin.addEventListener('click',()=>{
+      $$('.admin-map-user-card').forEach(el=>el.remove());
+      const card=document.createElement('div');
+      card.className='admin-map-user-card';
+      card.innerHTML=adminMapPopup(row);
+      card.style.left=`${x}%`;
+      card.style.top=`${y}%`;
+      overlay.appendChild(card);
+    });
+    overlay.appendChild(pin);
   });
-  setTimeout(()=>{
-    state.adminUserMap?.invalidateSize();
-    if(bounds.length===1) state.adminUserMap.setView(bounds[0],11);
-    else if(bounds.length>1) state.adminUserMap.fitBounds(bounds,{padding:[35,35],maxZoom:12});
-  },0);
 }
+
 async function loadAdminUserMap(silent=false){
   if(!state.session||!state.isSuperAdmin) return;
   const btn=$('#refreshAdminUserMap');
