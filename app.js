@@ -955,100 +955,100 @@ function renderAdminUserMap(rows=[]){
 
   if(!valid.length){
     if(empty) empty.classList.remove('hidden');
+    requestAnimationFrame(()=>{
+      state.adminUserMap.invalidateSize();
+      if(!state.adminMapHasInitialFit){
+        state.adminUserMap.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[18,18]});
+        state.adminMapHasInitialFit=true;
+      }
+    });
     return;
   }
+
   if(empty) empty.classList.add('hidden');
 
-  const items=valid.map(row=>({
+  const candidates=valid.map(row=>({
     row,
-    latlng:L.latLng(Number(row.latitude),Number(row.longitude))
+    trueLatLng:L.latLng(Number(row.latitude),Number(row.longitude))
   }));
-  const bounds=items.map(x=>x.latlng);
-  const zoom=state.adminUserMap.getZoom();
 
-  const drawUser=item=>{
-    const row=item.row;
-    const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-    const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
-    const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
-    const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
-    const marker=L.circleMarker(item.latlng,{
-      radius:9,
-      weight:3,
-      color:'#ffffff',
-      fillColor:markerColor,
-      opacity:1,
-      fillOpacity:.95,
-      className:\`yoldash-map-marker \${freshnessClass}\`
+  // Group markers that visually collide at the current zoom level.
+  const groups=[];
+  const collisionPx=30;
+  for(const item of candidates){
+    const p=state.adminUserMap.latLngToLayerPoint(item.trueLatLng);
+    let group=groups.find(g=>{
+      const gp=state.adminUserMap.latLngToLayerPoint(g.anchor);
+      return gp.distanceTo(p)<=collisionPx;
     });
-    marker.bindTooltip(label,{
-      permanent:true,
-      direction:'right',
-      offset:[10,0],
-      interactive:true,
-      className:'yoldash-map-label clickable'
-    });
-    marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
-    const tooltip=marker.getTooltip();
-    if(tooltip){
-      tooltip.on('click',evt=>{
-        L.DomEvent.stopPropagation(evt);
-        marker.openPopup();
-      });
-    }
-    marker.addTo(state.adminUserMapLayer);
-  };
-
-  // At wider zoom levels, nearby users are shown as one exact-area cluster.
-  // No user's coordinates are moved.
-  if(zoom<14){
-    const remaining=[...items];
-    const groups=[];
-    const clusterPx=52;
-
-    while(remaining.length){
-      const seed=remaining.shift();
-      const seedPoint=state.adminUserMap.latLngToLayerPoint(seed.latlng);
-      const group=[seed];
-      for(let i=remaining.length-1;i>=0;i--){
-        const p=state.adminUserMap.latLngToLayerPoint(remaining[i].latlng);
-        if(seedPoint.distanceTo(p)<=clusterPx){
-          group.push(remaining[i]);
-          remaining.splice(i,1);
-        }
-      }
+    if(!group){
+      group={anchor:item.trueLatLng,items:[]};
       groups.push(group);
     }
-
-    groups.forEach(group=>{
-      if(group.length===1){
-        drawUser(group[0]);
-        return;
-      }
-      const groupBounds=L.latLngBounds(group.map(x=>x.latlng));
-      const center=groupBounds.getCenter();
-      const cluster=L.marker(center,{
-        icon:L.divIcon({
-          className:'admin-user-cluster-icon',
-          html:\`<span>\${group.length}</span>\`,
-          iconSize:[40,40],
-          iconAnchor:[20,20]
-        }),
-        title:\`\${group.length} users\`
-      });
-      cluster.on('click',()=>{
-        const nextZoom=Math.min(Math.max(zoom+2,14),17);
-        if(groupBounds.getNorthEast().equals(groupBounds.getSouthWest())){
-          state.adminUserMap.setView(center,nextZoom);
-        }else{
-          state.adminUserMap.fitBounds(groupBounds,{padding:[60,60],maxZoom:nextZoom});
-        }
-      });
-      cluster.addTo(state.adminUserMapLayer);
-    });
-  }else{
-    items.forEach(drawUser);
+    group.items.push(item);
   }
+
+  const bounds=[];
+  groups.forEach(group=>{
+    const basePoint=state.adminUserMap.latLngToLayerPoint(group.anchor);
+    const n=group.items.length;
+
+    group.items.forEach((item,index)=>{
+      let displayLatLng=item.trueLatLng;
+
+      if(n>1){
+        const ring=Math.floor(index/8);
+        const pos=index%8;
+        const itemsInRing=Math.min(8,n-ring*8);
+        const angle=(Math.PI*2*pos/Math.max(1,itemsInRing))-(Math.PI/2);
+        const radius=26+(ring*22);
+        const offset=L.point(Math.cos(angle)*radius,Math.sin(angle)*radius);
+        displayLatLng=state.adminUserMap.layerPointToLatLng(basePoint.add(offset));
+
+        L.polyline([item.trueLatLng,displayLatLng],{
+          color:'#64748b',
+          weight:1,
+          opacity:.65,
+          dashArray:'3,4',
+          interactive:false
+        }).addTo(state.adminUserMapLayer);
+      }
+
+      const row=item.row;
+      const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+      const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
+      const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
+      const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
+
+      const marker=L.circleMarker(displayLatLng,{
+        radius:n>1?10:9,
+        weight:3,
+        color:'#ffffff',
+        fillColor:markerColor,
+        opacity:1,
+        fillOpacity:.95,
+        className:`yoldash-map-marker ${freshnessClass}`
+      });
+
+      marker.bindTooltip(label,{
+        permanent:true,
+        direction:'right',
+        offset:[10,0],
+        interactive:true,
+        className:'yoldash-map-label clickable'
+      });
+      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
+      const tooltip=marker.getTooltip();
+      if(tooltip){
+        tooltip.on('click',e=>{
+          L.DomEvent.stopPropagation(e);
+          marker.openPopup();
+        });
+      }
+      marker.addTo(state.adminUserMapLayer);
+      bounds.push(item.trueLatLng);
+    });
+  });
 
   requestAnimationFrame(()=>{
     state.adminUserMap.invalidateSize();
