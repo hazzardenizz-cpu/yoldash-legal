@@ -972,18 +972,7 @@ function renderAdminUserMap(rows=[]){
     latlng:L.latLng(Number(row.latitude),Number(row.longitude))
   }));
 
-  // Only labels are staggered when users are visually close.
-  // Marker centers always remain exactly on the real GPS coordinates.
-  const labelSlots=[];
-  const collisionPx=34;
-
   items.forEach(item=>{
-    const p=state.adminUserMap.latLngToLayerPoint(item.latlng);
-    let slot=0;
-    for(const used of labelSlots){
-      if(used.point.distanceTo(p)<=collisionPx) slot++;
-    }
-    labelSlots.push({point:p,slot});
 
     const row=item.row;
     const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
@@ -1001,13 +990,13 @@ function renderAdminUserMap(rows=[]){
       className:`yoldash-map-marker ${freshnessClass}`
     });
 
-    const labelY=(slot%2===0 ? 1 : -1) * Math.ceil(slot/2) * 18;
     marker.bindTooltip(label,{
-      permanent:true,
-      direction:'right',
-      offset:[10,labelY],
-      interactive:true,
-      className:'yoldash-map-label clickable'
+      permanent:false,
+      sticky:true,
+      direction:'top',
+      offset:[0,-10],
+      opacity:0.96,
+      className:'yoldash-map-label'
     });
 
     marker.bindPopup(adminMapPopup(row),{
@@ -1015,14 +1004,6 @@ function renderAdminUserMap(rows=[]){
       maxWidth:360,
       minWidth:280
     });
-
-    const tooltip=marker.getTooltip();
-    if(tooltip){
-      tooltip.on('click',e=>{
-        L.DomEvent.stopPropagation(e);
-        marker.openPopup();
-      });
-    }
 
     marker.addTo(state.adminUserMapLayer);
   });
