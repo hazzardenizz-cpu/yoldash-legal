@@ -319,3 +319,105 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
 #forgotPasswordPanel label{text-align:start!important;margin-bottom:12px!important}
 #forgotPasswordPanel input{width:100%!important}
 #forgotPasswordPanel .auth-step-actions{margin-top:8px}
+
+
+/* === DRIVER / VEHICLE LISTING FORM — MATCH ANDROID APP === */
+.driver-listing-dialog{padding:0;border:0;background:transparent}
+.driver-listing-dialog::backdrop{background:rgba(1,6,16,.78)!important;backdrop-filter:blur(4px)!important}
+.driver-listing-modal{
+  width:min(655px,calc(100vw - 24px))!important;
+  max-height:min(88vh,980px)!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border-radius:30px!important;
+  background:#162844!important;
+  border:1px solid #29405f!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.42)!important;
+  color:#f3f7ff!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.driver-form-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  padding:28px 38px 20px;border-bottom:1px solid rgba(116,139,174,.14)
+}
+.driver-form-head h2{margin:0 0 14px;font-size:29px;color:#fff;font-weight:850}
+.driver-form-head span{color:#aab8cf;font-size:17px}
+.driver-form-close{color:#aab8cf!important;border-color:#314867!important;background:#12213a!important}
+.driver-form-scroll{padding:28px 38px 30px;overflow:auto;display:flex;flex-direction:column;gap:18px}
+.driver-segment{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.driver-segment button{
+  min-height:78px;border:2px solid #304867;border-radius:20px;background:#172b49;color:#bac7da;
+  font:inherit;font-size:20px;font-weight:750;cursor:pointer;transition:.18s ease;padding:13px 18px
+}
+.driver-segment button.active{
+  background:#ffad08;color:#1f1b11;border-color:#ffad08;box-shadow:0 10px 24px rgba(255,173,8,.18)
+}
+.driver-field-group{display:flex;flex-direction:column;gap:11px}
+.driver-field-title{font-size:18px;color:#fff;font-weight:750;text-align:start}
+.driver-app-field{
+  min-height:86px;border:2px solid #304867;border-radius:20px;background:#172b49;
+  display:flex;align-items:center;padding:0 20px
+}
+.driver-app-field input,.driver-app-field textarea,.driver-app-field select{
+  width:100%;border:0!important;outline:0!important;background:transparent!important;color:#f4f7fc!important;
+  font:inherit;font-size:19px!important;box-shadow:none!important;padding:0!important
+}
+.driver-app-field input::placeholder,.driver-app-field textarea::placeholder{color:#aab8cf!important;opacity:1}
+.driver-app-field textarea{resize:vertical;min-height:116px;padding:24px 0!important;line-height:1.8}
+.driver-app-textarea{align-items:stretch}
+.driver-country-city-row{display:grid;grid-template-columns:170px 1fr;gap:16px}
+.driver-country-field{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px}
+.driver-country-field span{font-size:12px;color:#aab8cf}
+.driver-country-field select{font-size:22px!important;font-weight:850!important}
+.driver-phone-help{color:#aab8cf;font-size:13px;text-align:start;margin-top:-8px;padding-inline:4px}
+.driver-identity-card{
+  display:grid;grid-template-columns:auto 1fr;grid-template-areas:"switch copy";gap:18px;align-items:center;
+  border-radius:22px;background:#0f2038;padding:22px 24px;cursor:pointer
+}
+.driver-identity-card>input{position:absolute;opacity:0;pointer-events:none}
+.driver-switch{
+  grid-area:switch;width:80px;height:42px;border-radius:999px;background:#344a67;padding:5px;display:flex;align-items:center;
+  transition:.18s ease;direction:ltr
+}
+.driver-switch i{width:32px;height:32px;border-radius:50%;background:#07111f;display:block;transition:.18s ease}
+.driver-identity-card>input:checked + .driver-switch{background:#ffad08}
+.driver-identity-card>input:checked + .driver-switch i{transform:translateX(38px)}
+[dir="rtl"] .driver-identity-card>input:checked + .driver-switch i{transform:translateX(38px)}
+.driver-identity-copy{grid-area:copy;display:flex;flex-direction:column;gap:7px}
+.driver-identity-copy b{font-size:17px;color:#fff}
+.driver-identity-copy small{font-size:12px;color:#aab8cf;line-height:1.8}
+.driver-form-footer{
+  flex:0 0 auto;display:grid;grid-template-columns:1fr 2fr;gap:18px;align-items:center;
+  padding:20px 38px 26px;border-top:1px solid rgba(116,139,174,.14);background:#162844
+}
+.driver-back-btn{
+  min-height:58px;border:0;background:transparent;color:#ffbd36;font:inherit;font-size:17px;font-weight:800;cursor:pointer
+}
+.driver-publish-btn{
+  min-height:58px!important;border-radius:20px!important;background:#ffad08!important;color:#221b0c!important;
+  box-shadow:none!important;font-size:18px!important
+}
+#driverListingStatus{min-height:20px}
+@media(max-width:680px){
+  .driver-listing-dialog{width:100%;max-width:none}
+  .driver-listing-modal{width:calc(100vw - 20px)!important;max-height:92vh!important;border-radius:26px!important}
+  .driver-form-head{padding:24px 24px 17px}
+  .driver-form-scroll{padding:22px 24px 26px}
+  .driver-form-footer{padding:17px 24px 22px;grid-template-columns:1fr 2fr}
+  .driver-segment{gap:12px}
+  .driver-segment button{min-height:68px;font-size:17px;border-radius:18px}
+  .driver-country-city-row{grid-template-columns:135px 1fr;gap:12px}
+  .driver-app-field{min-height:78px;border-radius:18px}
+  .driver-app-field input,.driver-app-field textarea,.driver-app-field select{font-size:17px!important}
+  .driver-identity-card{padding:18px 18px;gap:14px}
+}
+@media(max-width:430px){
+  .driver-form-head h2{font-size:25px}
+  .driver-form-head span{font-size:15px}
+  .driver-country-city-row{grid-template-columns:120px 1fr}
+  .driver-segment button{font-size:16px;padding:10px}
+  .driver-switch{width:70px;height:38px}
+  .driver-switch i{width:28px;height:28px}
+  .driver-identity-card>input:checked + .driver-switch i{transform:translateX(32px)}
+}
