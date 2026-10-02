@@ -270,6 +270,17 @@
           <button type="button" class="link-btn" id="forgotPassword" data-i18n="forgotPassword">رمز عبور را فراموش کرده‌ام</button>
           <small data-i18n="authNote">حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.</small>
         </div>
+        <div id="forgotPasswordPanel" class="auth-step-card hidden">
+          <span class="auth-step-icon">⌁</span>
+          <h3 data-i18n="forgotPasswordTitle">بازیابی رمز عبور</h3>
+          <p data-i18n="forgotPasswordText">ایمیل حساب Yoldash خود را وارد کنید تا لینک انتخاب رمز جدید برای شما ارسال شود.</p>
+          <label><span data-i18n="email">ایمیل</span><input id="forgotEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
+          <div class="auth-step-actions">
+            <button type="button" class="btn primary wide" id="sendResetLink" data-i18n="sendResetLink">ارسال لینک بازیابی</button>
+            <button type="button" class="btn secondary wide" id="backFromForgot" data-i18n="backToLogin">بازگشت به ورود</button>
+          </div>
+          <div class="auth-status" id="forgotStatus"></div>
+        </div>
         <div id="verifyEmailPanel" class="auth-step-card hidden">
           <span class="auth-step-icon">✉</span>
           <h3 data-i18n="checkEmailTitle">ایمیل خود را بررسی کنید</h3>
