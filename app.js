@@ -869,7 +869,7 @@ function bindUI(){
   $('#refreshShipments').onclick=loadShipments;
   $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
-  $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=async()=>{await supabase.auth.signOut();$('#authModal').close();toast(t('signOut'));};
+  $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=signOutUser;
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
   $$('[data-business-type]').forEach(b=>b.onclick=()=>{state.selectedBusinessType=b.dataset.businessType;$$('[data-business-type]').forEach(x=>x.classList.toggle('active',x===b));});
   $('#loadSearch').addEventListener('input',renderLoads);
@@ -877,6 +877,33 @@ function bindUI(){
   $$('[data-filter]').forEach(b=>b.onclick=()=>{state.loadFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLoads();});
   $('#sendChat').onclick=sendChat; $('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
+}
+
+async function signOutUser(){
+  const btn=$('#signOutBtn');
+  if(btn) btn.disabled=true;
+  try{
+    const {error}=await supabase.auth.signOut({scope:'local'});
+    if(error) throw error;
+    state.session=null;
+    state.profile=null;
+    state.businessProfile=null;
+    chatCache=[];
+    clearInterval(state.chatTimer);
+    renderProfileUI();
+    loadUnread();
+    if($('#page-chat')?.classList.contains('active')) loadChat(true);
+    if($('#page-shipments')?.classList.contains('active')) loadShipments();
+    if($('#page-drivers')?.classList.contains('active')) loadDriverHub();
+    if($('#authModal')?.open) $('#authModal').close();
+    setAuthMode('signin');
+    toast(t('signOut'),'ok');
+  }catch(err){
+    console.error('signOut',err);
+    toast(humanError(err),'error');
+  }finally{
+    if(btn) btn.disabled=false;
+  }
 }
 
 function handleAuthCallbackErrors(){
