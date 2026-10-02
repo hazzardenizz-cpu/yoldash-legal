@@ -886,7 +886,7 @@ function renderAdminUserMap(rows=[]){
     return;
   }
   if(!state.adminUserMap){
-    state.adminUserMap=window.L.map(mapEl,{zoomControl:true,attributionControl:true,worldCopyJump:true}).setView([39.0,35.0],5);
+    state.adminUserMap=window.L.map(mapEl,{zoomControl:true,attributionControl:true,worldCopyJump:true}).fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[20,20]});
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
       maxZoom:18,
       attribution:'&copy; OpenStreetMap contributors'
@@ -896,7 +896,10 @@ function renderAdminUserMap(rows=[]){
   state.adminUserMapLayer.clearLayers();
   if(!rows.length){
     if(empty) empty.classList.remove('hidden');
-    setTimeout(()=>state.adminUserMap?.invalidateSize(),0);
+    setTimeout(()=>{
+      state.adminUserMap?.invalidateSize();
+      state.adminUserMap?.fitBounds([[25.0,24.0],[43.5,63.5]],{padding:[20,20]});
+    },0);
     return;
   }
   if(empty) empty.classList.add('hidden');
