@@ -421,3 +421,42 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
   .driver-switch i{width:28px;height:28px}
   .driver-identity-card>input:checked + .driver-switch i{transform:translateX(32px)}
 }
+
+
+/* === HERO LIVE FX PANEL === */
+.hero-fx-panel{
+  position:relative!important;display:flex!important;flex-direction:column!important;gap:18px!important;
+  padding:24px!important;min-height:330px!important;justify-content:center!important;
+  background:
+    radial-gradient(circle at 88% 8%,rgba(37,99,235,.14),transparent 32%),
+    linear-gradient(145deg,var(--v2-surface2),color-mix(in srgb,var(--v2-primary) 6%,var(--v2-surface)))!important;
+}
+.hero-fx-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero-fx-head h2{margin:3px 0 0;color:var(--v2-text);font-size:30px}
+.hero-fx-head .status{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:var(--v2-success-soft);color:var(--v2-success);font-size:12px;font-weight:850}
+.hero-fx-head .status i{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 5px color-mix(in srgb,currentColor 12%,transparent)}
+.hero-fx-rates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hero-fx-card{
+  min-height:135px;padding:16px;border:1px solid var(--v2-line);border-radius:20px;
+  background:color-mix(in srgb,var(--v2-surface) 88%,transparent);display:flex;flex-direction:column;justify-content:center;gap:8px
+}
+.hero-fx-card>div{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hero-fx-card b{font-size:17px;color:var(--v2-text)}
+.hero-fx-card small{font-size:10px;color:var(--v2-muted)}
+.hero-fx-card strong{font-size:clamp(24px,2vw,34px);line-height:1;color:var(--v2-text);letter-spacing:-.5px}
+.hero-fx-card em{font-style:normal;font-size:11px;color:var(--v2-muted)}
+.hero-fx-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:4px}
+.hero-fx-foot small{font-size:10px;line-height:1.6}
+.hero-fx-refresh{flex:0 0 38px;height:38px}
+.hero-fx-panel .fx-stale{background:color-mix(in srgb,#e38b0a 12%,var(--v2-surface));color:#e38b0a}
+.hero-fx-panel .fx-offline{background:color-mix(in srgb,#e25555 12%,var(--v2-surface));color:#e25555}
+@media(max-width:980px){
+  .hero-fx-rates{grid-template-columns:1fr}
+  .hero-fx-card{min-height:94px}
+  .hero-fx-panel{min-height:auto!important}
+}
+@media(max-width:620px){
+  .hero-fx-panel{padding:18px!important}
+  .hero-fx-head h2{font-size:24px}
+  .hero-fx-card strong{font-size:26px}
+}
