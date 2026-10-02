@@ -47,7 +47,8 @@ const state = {
   loadRefreshTimer: null,
   loadRefreshDebounce: null,
   isSuperAdmin: false,
-  adminMapRows: []
+  adminMapRows: [],
+  adminMapRefreshTimer: null
 };
 
 function t(key){ return translations[state.lang]?.[key] ?? translations.en[key] ?? key; }
@@ -860,8 +861,10 @@ async function syncSuperAdminMapAccess(){
     state.isSuperAdmin=false;
   }
   panel.classList.toggle('hidden',!state.isSuperAdmin);
+  clearInterval(state.adminMapRefreshTimer);
   if(state.isSuperAdmin){
     requestAnimationFrame(()=>loadAdminUserMap(true));
+    state.adminMapRefreshTimer=setInterval(()=>loadAdminUserMap(true),60*1000);
   }
 }
 function adminMapPopup(row){
@@ -870,7 +873,16 @@ function adminMapPopup(row){
   const updated=row.updated_at?esc(dateLabel(row.updated_at)):'—';
   const accuracy=Number(row.accuracy_meters);
   const accuracyText=Number.isFinite(accuracy)?`±${Math.round(accuracy)} m`:'—';
-  return `<b>${name}</b><span>${type}</span><small>${updated} · ${accuracyText}</small>`;
+  const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+  const freshness=ageMs<=30*60*1000
+    ? (state.lang==='fa'?'موقعیت تازه':state.lang==='tr'?'Güncel konum':'Fresh location')
+    : ageMs<=2*60*60*1000
+      ? (state.lang==='fa'?'موقعیت نسبتاً قدیمی':state.lang==='tr'?'Konum biraz eski':'Location getting old')
+      : (state.lang==='fa'?'موقعیت قدیمی':state.lang==='tr'?'Eski konum':'Stale location');
+  const source=row.source==='SHIPMENT_LIVE'
+    ? (state.lang==='fa'?'حمل زنده':state.lang==='tr'?'Canlı taşıma':'Live shipment')
+    : (state.lang==='fa'?'موقعیت راننده':state.lang==='tr'?'Sürücü konumu':'Driver location');
+  return `<b>${name}</b><span>${type}</span><small>${esc(freshness)} · ${esc(source)}</small><small>${updated} · ${accuracyText}</small>`;
 }
 function renderAdminUserMap(rows=[]){
   state.adminMapRows=rows;
@@ -900,7 +912,8 @@ function renderAdminUserMap(rows=[]){
     const y=((maxLat-lat)/(maxLat-minLat))*100;
     const pin=document.createElement('button');
     pin.type='button';
-    pin.className='admin-map-pin';
+    const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+    pin.className='admin-map-pin'+(ageMs>2*60*60*1000?' stale':ageMs>30*60*1000?' aging':' fresh');
     pin.style.left=`${x}%`;
     pin.style.top=`${y}%`;
     pin.innerHTML='<span></span>';
@@ -1156,6 +1169,7 @@ async function signOutUser(){
     state.businessProfile=null;
     chatCache=[];
     clearInterval(state.chatTimer);
+    clearInterval(state.adminMapRefreshTimer);
     renderProfileUI();
     loadUnread();
     loadNotifications();
