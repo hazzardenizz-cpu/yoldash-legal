@@ -967,87 +967,124 @@ function renderAdminUserMap(rows=[]){
 
   if(empty) empty.classList.add('hidden');
 
-  const candidates=valid.map(row=>({
+  const collisionPx=34;
+  const unassigned=valid.map(row=>({
     row,
-    trueLatLng:L.latLng(Number(row.latitude),Number(row.longitude))
+    latlng:L.latLng(Number(row.latitude),Number(row.longitude))
   }));
-
-  // Group markers that visually collide at the current zoom level.
   const groups=[];
-  const collisionPx=30;
-  for(const item of candidates){
-    const p=state.adminUserMap.latLngToLayerPoint(item.trueLatLng);
-    let group=groups.find(g=>{
-      const gp=state.adminUserMap.latLngToLayerPoint(g.anchor);
-      return gp.distanceTo(p)<=collisionPx;
-    });
-    if(!group){
-      group={anchor:item.trueLatLng,items:[]};
-      groups.push(group);
+
+  while(unassigned.length){
+    const seed=unassigned.shift();
+    const seedPoint=state.adminUserMap.latLngToLayerPoint(seed.latlng);
+    const group=[seed];
+    for(let i=unassigned.length-1;i>=0;i--){
+      const p=state.adminUserMap.latLngToLayerPoint(unassigned[i].latlng);
+      if(seedPoint.distanceTo(p)<=collisionPx){
+        group.push(unassigned[i]);
+        unassigned.splice(i,1);
+      }
     }
-    group.items.push(item);
+    groups.push(group);
   }
 
   const bounds=[];
-  groups.forEach(group=>{
-    const basePoint=state.adminUserMap.latLngToLayerPoint(group.anchor);
-    const n=group.items.length;
 
-    group.items.forEach((item,index)=>{
-      let displayLatLng=item.trueLatLng;
+  const addUserMarker=(item)=>{
+    const row=item.row;
+    const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
+    const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
+    const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
+    const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
 
-      if(n>1){
-        const ring=Math.floor(index/8);
-        const pos=index%8;
-        const itemsInRing=Math.min(8,n-ring*8);
-        const angle=(Math.PI*2*pos/Math.max(1,itemsInRing))-(Math.PI/2);
-        const radius=26+(ring*22);
-        const offset=L.point(Math.cos(angle)*radius,Math.sin(angle)*radius);
-        displayLatLng=state.adminUserMap.layerPointToLatLng(basePoint.add(offset));
-
-        L.polyline([item.trueLatLng,displayLatLng],{
-          color:'#64748b',
-          weight:1,
-          opacity:.65,
-          dashArray:'3,4',
-          interactive:false
-        }).addTo(state.adminUserMapLayer);
-      }
-
-      const row=item.row;
-      const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
-      const freshnessClass=ageMs>60*60*1000?'stale':ageMs>15*60*1000?'aging':'fresh';
-      const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
-      const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
-
-      const marker=L.circleMarker(displayLatLng,{
-        radius:n>1?10:9,
-        weight:3,
-        color:'#ffffff',
-        fillColor:markerColor,
-        opacity:1,
-        fillOpacity:.95,
-        className:`yoldash-map-marker ${freshnessClass}`
-      });
-
-      marker.bindTooltip(label,{
-        permanent:true,
-        direction:'right',
-        offset:[10,0],
-        interactive:true,
-        className:'yoldash-map-label clickable'
-      });
-      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
-      const tooltip=marker.getTooltip();
-      if(tooltip){
-        tooltip.on('click',e=>{
-          L.DomEvent.stopPropagation(e);
-          marker.openPopup();
-        });
-      }
-      marker.addTo(state.adminUserMapLayer);
-      bounds.push(item.trueLatLng);
+    const marker=L.circleMarker(item.latlng,{
+      radius:9,
+      weight:3,
+      color:'#ffffff',
+      fillColor:markerColor,
+      opacity:1,
+      fillOpacity:.95,
+      className:\`yoldash-map-marker \${freshnessClass}\`
     });
+
+    marker.bindTooltip(label,{
+      permanent:true,
+      direction:'right',
+      offset:[10,0],
+      interactive:true,
+      className:'yoldash-map-label clickable'
+    });
+    marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
+    const tooltip=marker.getTooltip();
+    if(tooltip){
+      tooltip.on('click',e=>{
+        L.DomEvent.stopPropagation(e);
+        marker.openPopup();
+      });
+    }
+    marker.addTo(state.adminUserMapLayer);
+    bounds.push(item.latlng);
+  };
+
+  groups.forEach(group=>{
+    if(group.length===1){
+      addUserMarker(group[0]);
+      return;
+    }
+
+    group.forEach(item=>bounds.push(item.latlng));
+
+    const groupBounds=L.latLngBounds(group.map(x=>x.latlng));
+    const sameSpot=groupBounds.getNorthEast().equals(groupBounds.getSouthWest());
+
+    if(!sameSpot && state.adminUserMap.getZoom()<17){
+      const center=groupBounds.getCenter();
+      const cluster=L.marker(center,{
+        icon:L.divIcon({
+          className:'yoldash-user-cluster',
+          html:\`<span>\${group.length}</span>\`,
+          iconSize:[38,38],
+          iconAnchor:[19,19]
+        }),
+        keyboard:true,
+        title:\`\${group.length} users\`
+      });
+      cluster.on('click',()=>{
+        state.adminUserMap.fitBounds(groupBounds.pad(.7),{maxZoom:17});
+      });
+      cluster.addTo(state.adminUserMapLayer);
+      return;
+    }
+
+    if(sameSpot){
+      const center=group[0].latlng;
+      const names=group.map((item,index)=>{
+        const n=esc(item.row.display_name||typeLabel(item.row.business_user_type)||'Yoldash');
+        return \`<button type="button" class="cluster-user-row" data-cluster-user="\${index}">\${n}</button>\`;
+      }).join('');
+      const cluster=L.marker(center,{
+        icon:L.divIcon({
+          className:'yoldash-user-cluster exact',
+          html:\`<span>\${group.length}</span>\`,
+          iconSize:[38,38],
+          iconAnchor:[19,19]
+        })
+      });
+      cluster.bindPopup(\`<div class="cluster-user-list"><b>\${group.length} \${state.lang==='fa'?'کاربر در این نقطه':state.lang==='tr'?'kullanıcı bu noktada':'users at this point'}</b>\${names}</div>\`,{maxWidth:300});
+      cluster.on('popupopen',e=>{
+        const root=e.popup.getElement();
+        root?.querySelectorAll('[data-cluster-user]').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            const item=group[Number(btn.dataset.clusterUser)];
+            e.popup.setContent(adminMapPopup(item.row));
+          });
+        });
+      });
+      cluster.addTo(state.adminUserMapLayer);
+      return;
+    }
+
+    group.forEach(addUserMarker);
   });
 
   requestAnimationFrame(()=>{
