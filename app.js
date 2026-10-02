@@ -908,15 +908,22 @@ function renderAdminUserMap(rows=[]){
 
   valid.forEach(row=>{
     const lat=Number(row.latitude), lon=Number(row.longitude);
+    const mercY=v=>{
+      const clamped=Math.max(-85.05112878,Math.min(85.05112878,v));
+      const rad=clamped*Math.PI/180;
+      return Math.log(Math.tan(Math.PI/4+rad/2));
+    };
     const x=((lon-minLon)/(maxLon-minLon))*100;
-    const y=((maxLat-lat)/(maxLat-minLat))*100;
+    const top=mercY(maxLat), bottom=mercY(minLat), point=mercY(lat);
+    const y=((top-point)/(top-bottom))*100;
     const pin=document.createElement('button');
     pin.type='button';
     const ageMs=row.updated_at ? Date.now()-new Date(row.updated_at).getTime() : Infinity;
     pin.className='admin-map-pin'+(ageMs>2*60*60*1000?' stale':ageMs>30*60*1000?' aging':' fresh');
     pin.style.left=`${x}%`;
     pin.style.top=`${y}%`;
-    pin.innerHTML='<span></span>';
+    const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
+    pin.innerHTML=`<span class="admin-map-pin-dot"></span><strong>${label}</strong>`;
     pin.setAttribute('aria-label', row.display_name||'Yoldash user');
     pin.addEventListener('click',()=>{
       $$('.admin-map-user-card').forEach(el=>el.remove());
