@@ -235,22 +235,77 @@
     </form>
   </dialog>
 
-<dialog id="driverListingModal">
-    <form id="driverListingForm" class="modal glass" novalidate>
-      <div class="modal-head"><div><span class="kicker" data-i18n="driverHub">بازار راننده و خودرو</span><h2 id="driverListingModalTitle" data-i18n="newDriverListing">آگهی جدید</h2></div><button type="button" class="close" data-close="driverListingModal">×</button></div><input type="hidden" id="driverListingId">
-      <div class="form-grid">
-        <label><span data-i18n="listingType">نوع آگهی</span><select id="driverListingType"><option value="NEED_DRIVER" data-i18n="needDriver">راننده می‌خواهم</option><option value="NEED_VEHICLE" data-i18n="needVehicle">خودرو می‌خواهم</option></select></label>
-        <label><span data-i18n="employmentType">نوع همکاری</span><select id="driverEmploymentType"><option value="SERVICE" data-i18n="serviceWork">سرویسی</option><option value="PERMANENT" data-i18n="permanentWork">دائمی</option></select></label>
-        <label><span data-i18n="title">عنوان</span><input id="driverListingTitle" minlength="3" maxlength="120" required></label>
-        <label><span data-i18n="countryCode">کشور</span><select id="driverListingCountry"><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option></select></label>
-        <label><span data-i18n="city">شهر</span><input id="driverListingCity" minlength="2" maxlength="100" required></label>
-        <label><span data-i18n="truckType">نوع خودرو</span><input id="driverListingTruck" maxlength="80"></label>
-        <label><span data-i18n="phone">شماره تماس</span><input id="driverListingPhone" minlength="7" maxlength="32" required></label>
-        <label class="identity-check"><input id="driverListingIdentity" type="checkbox"><span data-i18n="showIdentity">نمایش نام من در آگهی</span></label>
+<dialog id="driverListingModal" class="driver-listing-dialog">
+    <form id="driverListingForm" class="modal driver-listing-modal glass" novalidate>
+      <input type="hidden" id="driverListingId">
+      <input type="hidden" id="driverListingType" value="NEED_VEHICLE">
+      <input type="hidden" id="driverEmploymentType" value="SERVICE">
+      <input type="hidden" id="driverListingTitle">
+
+      <div class="driver-form-head">
+        <div>
+          <h2 id="driverListingModalTitle" data-i18n="newDriverListing">ثبت آگهی</h2>
+          <span data-i18n="listingType">نوع آگهی</span>
+        </div>
+        <button type="button" class="close driver-form-close" data-close="driverListingModal">×</button>
       </div>
-      <label class="wide-field"><span data-i18n="description">توضیحات</span><textarea id="driverListingDescription" minlength="10" maxlength="1200" rows="5" required></textarea><small class="field-help" data-i18n="listingFormHint">عنوان حداقل ۳ حرف، شهر حداقل ۲ حرف و توضیحات حداقل ۱۰ حرف باشد.</small></label>
-      <div class="auth-status" id="driverListingStatus"></div>
-      <div class="modal-actions"><button type="button" class="btn secondary" data-close="driverListingModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="submitDriverListing" data-i18n="publishListing">انتشار آگهی</button></div>
+
+      <div class="driver-form-scroll">
+        <div class="driver-segment driver-listing-type-segment" role="group" aria-label="Listing type">
+          <button type="button" data-listing-type="NEED_DRIVER"><span data-i18n="needDriver">دنبال راننده هستم</span></button>
+          <button type="button" class="active" data-listing-type="NEED_VEHICLE"><span data-i18n="needVehicle">دنبال ماشین هستم</span></button>
+        </div>
+
+        <div class="driver-field-group">
+          <span class="driver-field-title" data-i18n="employmentType">نوع همکاری</span>
+          <div class="driver-segment driver-employment-segment" role="group" aria-label="Employment type">
+            <button type="button" class="active" data-employment-type="SERVICE"><span data-i18n="serviceWork">سرویسی</span></button>
+            <button type="button" data-employment-type="PERMANENT"><span data-i18n="permanentWork">دائمی</span></button>
+          </div>
+        </div>
+
+        <label class="driver-app-field driver-app-textarea">
+          <textarea id="driverListingDescription" minlength="3" maxlength="1200" rows="4" required data-i18n-placeholder="experienceRoutesPlaceholder" placeholder="سابقه و مسیرهای آشنا"></textarea>
+        </label>
+
+        <div class="driver-country-city-row">
+          <label class="driver-app-field driver-country-field">
+            <span data-i18n="countryCode">کشور</span>
+            <select id="driverListingCountry">
+              <option value="IR">IR</option>
+              <option value="TR">TR</option>
+            </select>
+          </label>
+          <label class="driver-app-field">
+            <input id="driverListingCity" minlength="2" maxlength="100" required data-i18n-placeholder="residenceCityPlaceholder" placeholder="شهر محل سکونت">
+          </label>
+        </div>
+
+        <label class="driver-app-field">
+          <input id="driverListingTruck" maxlength="120" data-i18n-placeholder="familiarVehiclesPlaceholder" placeholder="نوع ماشین‌هایی که با آن‌ها آشنا هستید">
+        </label>
+
+        <label class="driver-app-field">
+          <input id="driverListingPhone" inputmode="numeric" autocomplete="tel" maxlength="11" required data-i18n-placeholder="contactPhonePlaceholder" placeholder="شماره تماس">
+        </label>
+        <small class="driver-phone-help" data-i18n="phone11Hint">شماره تماس را دقیقاً با ۱۱ رقم وارد کنید.</small>
+
+        <label class="driver-identity-card">
+          <input id="driverListingIdentity" type="checkbox">
+          <span class="driver-switch" aria-hidden="true"><i></i></span>
+          <span class="driver-identity-copy">
+            <b data-i18n="showFullName">نمایش نام و نام خانوادگی من</b>
+            <small data-i18n="showFullNameHint">در صورت فعال بودن، نام و نام خانوادگی از پروفایل Yoldash گرفته می‌شود. برای انتشار ناشناس خاموش بگذارید.</small>
+          </span>
+        </label>
+
+        <div class="auth-status" id="driverListingStatus"></div>
+      </div>
+
+      <div class="driver-form-footer">
+        <button type="button" class="driver-back-btn" data-close="driverListingModal" data-i18n="back">بازگشت</button>
+        <button type="submit" class="btn primary driver-publish-btn" id="submitDriverListing" data-i18n="publishListing">انتشار آگهی</button>
+      </div>
     </form>
   </dialog>
 
