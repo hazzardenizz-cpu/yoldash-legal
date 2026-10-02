@@ -886,7 +886,32 @@ function adminMapPopup(row){
   const source=row.source==='SHIPMENT_LIVE'
     ? (state.lang==='fa'?'حمل زنده':state.lang==='tr'?'Canlı taşıma':'Live shipment')
     : (state.lang==='fa'?'موقعیت راننده':state.lang==='tr'?'Sürücü konumu':'Driver location');
-  return `<div class="admin-map-popup"><b>${name}</b><span>${type}</span><small>${esc(freshness)} · ${esc(source)}</small><small>${updated} · ${accuracyText}</small></div>`;
+  const company=row.company_name||row.organization_name||row.driver_company_name||'';
+  const active=row.is_active===false
+    ? (state.lang==='fa'?'غیرفعال':state.lang==='tr'?'Pasif':'Inactive')
+    : (state.lang==='fa'?'فعال':state.lang==='tr'?'Aktif':'Active');
+  const field=(label,value)=>value?`<div class="admin-profile-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`:'';
+  return `<div class="admin-map-popup admin-profile-popup">
+    <div class="admin-profile-head">
+      <div><b class="admin-profile-name">${name}</b><span>${type}</span></div>
+      <em class="${row.is_active===false?'is-off':'is-on'}">${esc(active)}</em>
+    </div>
+    <div class="admin-profile-grid">
+      ${field(state.lang==='fa'?'ایمیل':state.lang==='tr'?'E-posta':'Email',row.email)}
+      ${field(state.lang==='fa'?'تلفن':state.lang==='tr'?'Telefon':'Phone',row.phone)}
+      ${field('WhatsApp',row.whatsapp_phone)}
+      ${field(state.lang==='fa'?'شرکت / مجموعه':state.lang==='tr'?'Şirket / kurum':'Company / organization',company)}
+      ${field(state.lang==='fa'?'کشور':state.lang==='tr'?'Ülke':'Country',row.country_code)}
+      ${field(state.lang==='fa'?'پلاک کشنده':state.lang==='tr'?'Çekici plakası':'Tractor plate',row.tractor_transit_plate)}
+      ${field(state.lang==='fa'?'پلاک تریلر':state.lang==='tr'?'Dorse plakası':'Trailer plate',row.container_transit_plate)}
+      ${field(state.lang==='fa'?'شماره ثبت':state.lang==='tr'?'Sicil no':'Registration no.',row.registration_number)}
+      ${field(state.lang==='fa'?'شماره گواهینامه':state.lang==='tr'?'Ehliyet no':'License no.',row.license_number)}
+    </div>
+    <div class="admin-profile-location">
+      <small>${esc(freshness)} · ${esc(source)}</small>
+      <small>${updated} · ${accuracyText}</small>
+    </div>
+  </div>`;
 }
 
 function renderAdminUserMap(rows=[]){
@@ -1009,9 +1034,17 @@ function renderAdminUserMap(rows=[]){
         permanent:true,
         direction:'right',
         offset:[10,0],
-        className:'yoldash-map-label'
+        interactive:true,
+        className:'yoldash-map-label clickable'
       });
-      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup'});
+      marker.bindPopup(adminMapPopup(row),{className:'yoldash-map-popup',maxWidth:360,minWidth:280});
+      const tooltip=marker.getTooltip();
+      if(tooltip){
+        tooltip.on('click',e=>{
+          L.DomEvent.stopPropagation(e);
+          marker.openPopup();
+        });
+      }
       marker.addTo(state.adminUserMapLayer);
       bounds.push(item.trueLatLng);
     });
