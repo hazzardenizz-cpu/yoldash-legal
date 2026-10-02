@@ -261,34 +261,52 @@
       <p id="authSubtitle" data-i18n="authSubtitle">با حساب مشترک اپ وارد شوید</p>
       <div id="loggedOutAuth">
         <div class="auth-tabs"><button type="button" class="active" data-auth-mode="signin" data-i18n="signIn">ورود</button><button type="button" data-auth-mode="signup" data-i18n="register">ثبت‌نام</button></div>
-        <div class="stack hidden" id="accountTypeBlock"><span class="muted" data-i18n="accountType">نوع حساب</span><div class="auth-type"><button type="button" class="type-btn" data-business-type="DRIVER" data-i18n="driver">راننده</button><button type="button" class="type-btn" data-business-type="CARGO_OWNER" data-i18n="cargoOwner">صاحب بار</button><button type="button" class="type-btn" data-business-type="TRANSPORT_COMPANY" data-i18n="transportCompany">شرکت حمل‌ونقل</button><button type="button" class="type-btn" data-business-type="BROKER" data-i18n="broker">واسطه</button></div></div>
-        <label><span data-i18n="email">ایمیل</span><input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
-        <label><span data-i18n="password">رمز عبور</span><input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required></label>
-        <button class="btn primary wide" id="authSubmit" type="submit" data-i18n="signIn">ورود</button>
-        <div class="auth-status" id="authStatus"></div>
-        <button type="button" class="link-btn" id="forgotPassword" data-i18n="forgotPassword">رمز عبور را فراموش کرده‌ام</button>
-        <small data-i18n="authNote">حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.</small>
+        <div id="authEntryPanel">
+          <div class="stack hidden" id="accountTypeBlock"><span class="muted" data-i18n="accountType">نوع فعالیت / نوع حساب</span><div class="auth-type"><button type="button" class="type-btn" data-business-type="DRIVER" data-i18n="driver">راننده</button><button type="button" class="type-btn" data-business-type="CARGO_OWNER" data-i18n="cargoOwner">صاحب بار</button><button type="button" class="type-btn" data-business-type="TRANSPORT_COMPANY" data-i18n="transportCompany">شرکت حمل‌ونقل</button><button type="button" class="type-btn" data-business-type="BROKER" data-i18n="broker">واسطه</button></div></div>
+          <label><span data-i18n="email">ایمیل</span><input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+          <label><span data-i18n="password">رمز عبور</span><div class="password-field"><input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required><button type="button" class="password-toggle" id="authPasswordToggle" aria-label="Show password">◉</button></div></label>
+          <button class="btn primary wide" id="authSubmit" type="submit" data-i18n="signIn">ورود</button>
+          <div class="auth-status" id="authStatus"></div>
+          <button type="button" class="link-btn" id="forgotPassword" data-i18n="forgotPassword">رمز عبور را فراموش کرده‌ام</button>
+          <small data-i18n="authNote">حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.</small>
+        </div>
+        <div id="verifyEmailPanel" class="auth-step-card hidden">
+          <span class="auth-step-icon">✉</span>
+          <h3 data-i18n="checkEmailTitle">ایمیل خود را بررسی کنید</h3>
+          <p data-i18n="checkEmailText">لینک تأیید برای ایمیل شما ارسال شد. برای ادامه، ایمیل را باز کنید و حساب خود را تأیید کنید.</p>
+          <b id="verifyEmailAddress" dir="ltr"></b>
+          <div class="auth-step-actions">
+            <button type="button" class="btn primary wide" id="backToSignIn" data-i18n="backToLogin">بازگشت به ورود</button>
+            <button type="button" class="btn secondary wide" id="resendVerification" data-i18n="resendVerification">ارسال مجدد ایمیل</button>
+          </div>
+          <div class="auth-status" id="verifyEmailStatus"></div>
+        </div>
       </div>
       <div id="loggedInAuth" class="hidden">
         <div class="session-chip"><i></i><span data-i18n="signedInShared">شما با حساب مشترک Yoldash وارد شده‌اید.</span></div>
         <div class="profile-grid" id="profileGrid"></div>
         <div class="dialog-section">
           <h3 data-i18n="completeProfile">تکمیل پروفایل</h3>
+          <p class="muted auth-profile-hint" id="profileStepHint" data-i18n="completeProfileHint">اطلاعات پایه خود را وارد کنید.</p>
           <div class="form-grid">
             <label><span data-i18n="firstName">نام</span><input id="profileFirstName"></label>
             <label><span data-i18n="lastName">نام خانوادگی</span><input id="profileLastName"></label>
             <label><span data-i18n="phone">شماره تلفن</span><input id="profilePhone" placeholder="+905xxxxxxxxx"></label>
-            <label><span id="businessPrimaryLabel">—</span><input id="businessPrimary"></label>
-            <label><span data-i18n="countryCode">کشور</span><select id="profileCountry"><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
-            <label id="businessSecondaryLabelWrap"><span id="businessSecondaryLabel">—</span><input id="businessSecondary"></label>
           </div>
-          <div id="driverExtra" class="form-grid hidden" style="margin-top:9px">
-            <label><span data-i18n="whatsappPhone">واتساپ</span><input id="driverWhatsapp" placeholder="+905xxxxxxxxx"></label>
-            <label><span data-i18n="tractorPlate">پلاک ترانزیت کشنده</span><input id="tractorPlate"></label>
-            <label><span data-i18n="containerPlate">پلاک ترانزیت تریلر/کانتینر</span><input id="containerPlate"></label>
-            <label><span data-i18n="driverCompany">نام شرکت راننده</span><input id="driverCompany"></label>
+          <div id="businessProfileFields">
+            <div class="form-grid" style="margin-top:9px">
+              <label><span id="businessPrimaryLabel">—</span><input id="businessPrimary"></label>
+              <label><span data-i18n="countryCode">کشور</span><select id="profileCountry"><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+              <label id="businessSecondaryLabelWrap"><span id="businessSecondaryLabel">—</span><input id="businessSecondary"></label>
+            </div>
+            <div id="driverExtra" class="form-grid hidden" style="margin-top:9px">
+              <label><span data-i18n="whatsappPhone">واتساپ</span><input id="driverWhatsapp" placeholder="+905xxxxxxxxx"></label>
+              <label><span data-i18n="tractorPlate">پلاک ترانزیت کشنده</span><input id="tractorPlate"></label>
+              <label><span data-i18n="containerPlate">پلاک ترانزیت تریلر/کانتینر</span><input id="containerPlate"></label>
+              <label><span data-i18n="driverCompany">نام شرکت راننده</span><input id="driverCompany"></label>
+            </div>
           </div>
-          <button type="button" class="btn primary wide" id="saveProfileBtn" style="margin-top:10px" data-i18n="saveProfile">ذخیره پروفایل</button>
+          <button type="button" class="btn primary wide" id="saveProfileBtn" style="margin-top:10px" data-i18n="saveAndContinue">ذخیره و ادامه</button>
           <div class="auth-status" id="profileStatus"></div>
         </div>
         <div class="dialog-section"><button type="button" class="btn secondary wide" id="signOutBtn" data-i18n="signOut">خروج از حساب</button></div>
