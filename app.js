@@ -1,19 +1,7 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.2';
 import L from 'https://esm.sh/leaflet@1.9.4';
-
-const SUPABASE_URL = 'https://ubqrafuustkyenbbzhtg.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4rrohZA7Vsu76Fywpqg9Bg_ozmpPHeH';
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-});
-
-const $ = (q, root = document) => root.querySelector(q);
-const $$ = (q, root = document) => [...root.querySelectorAll(q)];
-const esc = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const uuidLike = v => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v || '');
-const localeMap = { fa: 'fa-IR', tr: 'tr-TR', en: 'en-US' };
-const canPostTypes = new Set(['CARGO_OWNER', 'TRANSPORT_COMPANY', 'BROKER']);
-const canOfferTypes = new Set(['DRIVER', 'TRANSPORT_COMPANY']);
+import { supabase } from './src/core/supabase.js';
+import { $, $, esc, uuidLike } from './src/core/dom.js';
+import { localeMap, canPostTypes, canOfferTypes } from './src/core/config.js';
 
 const translations = {
 fa:{
