@@ -165,12 +165,12 @@ function renderLoads(){
   bindCargoActions();
 }
 function bindCargoActions(){
-  $('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
-  $('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
+  $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
     const id=btn.dataset.cargoDetails;
     if(id) window.location.href=publicCargoUrl(id);
   });
-  $('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
+  $$('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
 async function loadLoads(query=''){
   try{
@@ -547,8 +547,8 @@ async function loadDriverHub(){
 function syncDriverListingSegments(){
   const listing=$('#driverListingType')?.value||'NEED_VEHICLE';
   const employment=$('#driverEmploymentType')?.value||'SERVICE';
-  $('[data-listing-type]').forEach(b=>b.classList.toggle('active',b.dataset.listingType===listing));
-  $('[data-employment-type]').forEach(b=>b.classList.toggle('active',b.dataset.employmentType===employment));
+  $$('[data-listing-type]').forEach(b=>b.classList.toggle('active',b.dataset.listingType===listing));
+  $$('[data-employment-type]').forEach(b=>b.classList.toggle('active',b.dataset.employmentType===employment));
 }
 function generatedDriverListingTitle(){
   const type=$('#driverListingType')?.value||'NEED_VEHICLE';
@@ -1099,7 +1099,7 @@ function renderNotifications(rows=[]){
       <span class="notification-copy"><b>${esc(tx.title)}</b><small>${esc(tx.detail)}</small><time>${esc(dateLabel(n.created_at))}</time></span>
     </button>`;
   }).join('');
-  $('[data-notification-id]').forEach(btn=>btn.onclick=()=>openNotification(btn));
+  $$('[data-notification-id]').forEach(btn=>btn.onclick=()=>openNotification(btn));
 }
 async function loadNotifications(){
   const count=$('#notificationCount');
@@ -1247,7 +1247,7 @@ function bindUI(){
   $('#refreshAdminUserMap')?.addEventListener('click',()=>loadAdminUserMap(false));
   document.addEventListener('click',e=>{const p=$('#notificationPanel');if(p&&!p.classList.contains('hidden')&&!p.contains(e.target)&&!$('#notificationBtn')?.contains(e.target))p.classList.add('hidden');});
   $('#refreshFx')?.addEventListener('click',()=>loadFxRates(false));
-  $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $$('[data-listing-type]').forEach(b=>b.onclick=()=>{$('#driverListingType').value=b.dataset.listingType;syncDriverListingSegments();}); $$('[data-employment-type]').forEach(b=>b.onclick=()=>{$('#driverEmploymentType').value=b.dataset.employmentType;syncDriverListingSegments();}); $$('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
+  $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $$$('[data-listing-type]').forEach(b=>b.onclick=()=>{$('#driverListingType').value=b.dataset.listingType;syncDriverListingSegments();}); $$$('[data-employment-type]').forEach(b=>b.onclick=()=>{$('#driverEmploymentType').value=b.dataset.employmentType;syncDriverListingSegments();}); $$('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=signOutUser;
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
