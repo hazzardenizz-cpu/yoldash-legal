@@ -71,3 +71,15 @@ function mountConsent(){
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountConsent,{once:true});
 else mountConsent();
+
+
+window.yoldashTrack=function(eventName,params={}){
+  try{
+    if(!eventName||typeof window.gtag!=='function')return;
+    window.gtag('event',eventName,{
+      ...params,
+      app_name:'Yoldash Web',
+      language:document.documentElement.lang||'en'
+    });
+  }catch(e){console.warn('analytics event',e);}
+};
