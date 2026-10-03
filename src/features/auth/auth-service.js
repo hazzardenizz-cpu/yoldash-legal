@@ -37,3 +37,11 @@ export async function sendPasswordReset(email) {
 export async function updatePassword(password) {
   return supabase.auth.updateUser({ password });
 }
+
+export async function signOutLocal() {
+  return supabase.auth.signOut({ scope: 'local' });
+}
+
+export function onAuthStateChange(callback) {
+  return supabase.auth.onAuthStateChange(callback);
+}
