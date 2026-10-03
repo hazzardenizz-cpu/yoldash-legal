@@ -9,13 +9,17 @@ import {
   signInWithEmail,
   resendSignupVerification,
   sendPasswordReset,
-  updatePassword
+  updatePassword,
+  signOutLocal,
+  onAuthStateChange
 } from './src/features/auth/auth-service.js';
 import {
   fetchOpenLoads,
   publishLoad,
   subscribeToOpenLoads,
-  unsubscribeFromOpenLoads
+  unsubscribeFromOpenLoads,
+  getCurrentCargoDailyQuota,
+  searchCities
 } from './src/features/loads/load-service.js';
 import {
   getCurrentSession,
@@ -29,6 +33,29 @@ import {
   submitCargoOffer,
   getMyTransportCargo
 } from './src/features/transport/transport-service.js';
+import {
+  listDriverHubListings,
+  upsertDriverHubListing,
+  setDriverHubListingStatus,
+  deleteDriverHubListing as removeDriverHubListing
+} from './src/features/drivers/driver-service.js';
+import {
+  getPublicChatMessages,
+  markPublicChatRead,
+  sendPublicChatMessage,
+  getPublicChatUnreadCount
+} from './src/features/chat/chat-service.js';
+import {
+  listUserNotifications,
+  markUserNotificationRead,
+  markAllUserNotificationsRead,
+  subscribeToUserNotifications,
+  unsubscribeFromUserNotifications
+} from './src/features/notifications/notification-service.js';
+import {
+  isSuperAdmin,
+  getSuperAdminUserMap
+} from './src/features/admin/admin-service.js';
 
 
 
@@ -554,7 +581,7 @@ async function loadDriverHub(){
   if(!session){state.driverListings=[];renderDriverHub();return;}
   if(!isFullProfileReady()){state.driverListings=[]; const el=$('#driverHubList'); if(el) el.innerHTML=emptyBlock('profileIncomplete',t('completeProfileRequired')); if($('#driverListingCount')) $('#driverListingCount').textContent='—'; return;}
   try{
-    const {data,error}=await supabase.from('driver_hub_listings').select('id,user_id,listing_type,title,description,country_code,city,truck_type,contact_phone,status,created_at,updated_at,show_identity,first_name,last_name,employment_type').order('created_at',{ascending:false}).limit(200);
+    const {data,error}=await listDriverHubListings(200);
     if(error) throw error;
     state.driverListings=data||[];
   }catch(err){state.driverListings=[];toast(humanError(err),'error');}
@@ -622,7 +649,7 @@ async function submitDriverListing(ev){
   btn.disabled=true;
   btn.textContent=t('loading');
   try{
-    const {data,error}=await supabase.rpc('upsert_driver_hub_listing',{
+    const {data,error}=await upsertDriverHubListing({
       p_id:id,
       p_listing_type:$('#driverListingType').value,
       p_title:title,
@@ -659,7 +686,7 @@ async function toggleDriverListing(id,currentStatus){
   if(!requireCompleteProfile()) return;
   const next=currentStatus==='ACTIVE'?'CLOSED':'ACTIVE';
   try{
-    const {error}=await supabase.from('driver_hub_listings').update({status:next,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',state.session.user.id);
+    const {error}=await setDriverHubListingStatus({id,userId:state.session.user.id,status:next});
     if(error) throw error;
     toast(next==='ACTIVE'?t('listingReopened'):t('listingClosed'));
     await loadDriverHub();
@@ -671,7 +698,7 @@ async function deleteDriverListing(id){
   if(!requireCompleteProfile()) return;
   if(!confirm(t('deleteListingConfirm'))) return;
   try{
-    const {error}=await supabase.from('driver_hub_listings').delete().eq('id',id).eq('user_id',state.session.user.id);
+    const {error}=await removeDriverHubListing({id,userId:state.session.user.id});
     if(error) throw error;
     toast(t('listingDeleted'));
     await loadDriverHub();
@@ -715,7 +742,7 @@ async function openLoadModal(){
   if(!canPostTypes.has(state.profile?.business_user_type)){ toast(state.profile?.business_user_type==='DRIVER'?t('driverCannotPost'):t('postOnlyBusiness'),'error'); return; }
   $('#loadModal').showModal();
   try{
-    const {data}=await supabase.rpc('get_current_cargo_daily_quota'); const q=Array.isArray(data)?data[0]:data;
+    const {data}=await getCurrentCargoDailyQuota(); const q=Array.isArray(data)?data[0]:data;
     if(q){ $('#quotaNote').innerHTML=`<span>✓</span><span>${t('quota')}: ${esc(q.used_count)} / ${esc(q.daily_limit)} · ${t('remaining')}: ${esc(q.remaining_count)}</span>`; }
   }catch{}
 }
@@ -766,7 +793,7 @@ async function setupCitySearch(which){
     state.city[which]=null; clearTimeout(timer); const q=input.value.trim();
     if(q.length<2){results.classList.remove('open');results.innerHTML='';return;}
     timer=setTimeout(async()=>{
-      const {data,error}=await supabase.rpc('search_cities_v3',{p_query:q,p_limit:8,p_country_code:country.value});
+      const {data,error}=await searchCities({query:q,limit:8,countryCode:country.value});
       if(error||!data?.length){results.classList.remove('open');return;}
       results.innerHTML=data.map((c,i)=>`<button type="button" data-city-index="${i}"><b>${esc(c.matched_name||c.name_en||'')}</b><small>${esc(c.country_code||'')} · ${esc(c.region_name||'')}</small></button>`).join('');
       results.classList.add('open');
@@ -858,9 +885,9 @@ async function loadChat(silent=false){
   if(!isFullProfileReady()){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
   input.disabled=false;send.disabled=false;
   try{
-    const {data,error}=await supabase.rpc('get_public_chat_messages',{p_limit:60,p_before:null}); if(error) throw error;
+    const {data,error}=await getPublicChatMessages(60); if(error) throw error;
     chatCache=(data||[]).slice().reverse(); renderChatFromCache(); $('#chatTime').textContent=chatCache.length?new Date(chatCache.at(-1).created_at).toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit'}):'—';
-    supabase.rpc('mark_public_chat_read').then(()=>loadUnread());
+    markPublicChatRead().then(()=>loadUnread());
   }catch(err){if(!silent) toast(humanError(err),'error');}
   clearInterval(state.chatTimer); state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},12000);
 }
@@ -870,14 +897,14 @@ async function sendChat(){
   const btn=$('#sendChat'); btn.disabled=true;
   try{
     const rid=crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
-    const {error}=await supabase.rpc('send_public_chat_message_idempotent',{p_request_id:rid,p_body:body,p_reply_to_id:null}); if(error) throw error;
+    const {error}=await sendPublicChatMessage({requestId:rid,body}); if(error) throw error;
     window.yoldashTrack?.('send_chat_message',{chat_type:'public'});
     input.value=''; await loadChat(true);
   }catch(err){toast(humanError(err),'error');} finally{btn.disabled=false;}
 }
 async function loadUnread(){
   if(!state.session){$('#chatDot').style.display='none';return;}
-  try{const {data,error}=await supabase.rpc('get_public_chat_unread_count'); if(error) throw error; const n=Number(data||0); $('#chatDot').style.display=n>0?'block':'none'; $('#chatHint').textContent=n?`${n} · ${t('publicChat')}`:t('publicChat');}catch{}
+  try{const {data,error}=await getPublicChatUnreadCount(); if(error) throw error; const n=Number(data||0); $('#chatDot').style.display=n>0?'block':'none'; $('#chatHint').textContent=n?`${n} · ${t('publicChat')}`:t('publicChat');}catch{}
 }
 
 
@@ -890,7 +917,7 @@ async function syncSuperAdminMapAccess(){
     return;
   }
   try{
-    const {data,error}=await supabase.rpc('yoldash_is_super_admin',{p_user_id:state.session.user.id});
+    const {data,error}=await isSuperAdmin(state.session.user.id);
     if(error) throw error;
     state.isSuperAdmin=data===true;
   }catch(err){
@@ -1057,7 +1084,7 @@ async function loadAdminUserMap(silent=false){
   const btn=$('#refreshAdminUserMap');
   if(btn) btn.disabled=true;
   try{
-    const {data,error}=await supabase.rpc('get_super_admin_user_map');
+    const {data,error}=await getSuperAdminUserMap();
     if(error) throw error;
     renderAdminUserMap(Array.isArray(data)?data:[]);
     const sync=$('#adminMapLastSync');
@@ -1133,11 +1160,7 @@ async function loadNotifications(){
     return;
   }
   try{
-    const {data,error}=await supabase.from('user_notifications')
-      .select('id,type,cargo_id,offer_id,assignment_id,room_id,actor_name,message_preview,origin_city,destination_city,read_at,created_at')
-      .eq('user_id',state.session.user.id)
-      .order('created_at',{ascending:false})
-      .limit(40);
+    const {data,error}=await listUserNotifications(state.session.user.id,40);
     if(error) throw error;
     const rows=data||[];
     const unread=rows.filter(n=>!n.read_at).length;
@@ -1153,11 +1176,7 @@ async function loadNotifications(){
 }
 async function markNotificationRead(id){
   if(!state.session||!id) return;
-  const {error}=await supabase.from('user_notifications')
-    .update({read_at:new Date().toISOString()})
-    .eq('id',id)
-    .eq('user_id',state.session.user.id)
-    .is('read_at',null);
+  const {error}=await markUserNotificationRead({userId:state.session.user.id,id});
   if(error) console.warn('mark notification read',error);
 }
 async function openNotification(btn){
@@ -1175,21 +1194,16 @@ async function openNotification(btn){
 async function markAllNotificationsRead(){
   if(!state.session) return;
   try{
-    const {error}=await supabase.from('user_notifications')
-      .update({read_at:new Date().toISOString()})
-      .eq('user_id',state.session.user.id)
-      .is('read_at',null);
+    const {error}=await markAllUserNotificationsRead(state.session.user.id);
     if(error) throw error;
     await loadNotifications();
   }catch(err){ console.warn('mark all notifications read',err); }
 }
 function startNotificationRealtime(){
   try{
-    if(notificationRealtimeChannel) supabase.removeChannel(notificationRealtimeChannel);
+    if(notificationRealtimeChannel) unsubscribeFromUserNotifications(notificationRealtimeChannel);
     if(!state.session) return;
-    notificationRealtimeChannel=supabase.channel('web-user-notifications')
-      .on('postgres_changes',{event:'*',schema:'public',table:'user_notifications',filter:`user_id=eq.${state.session.user.id}`},()=>loadNotifications())
-      .subscribe();
+    notificationRealtimeChannel=subscribeToUserNotifications(state.session.user.id,()=>loadNotifications());
   }catch(err){console.warn('notification realtime',err);}
 }
 
@@ -1285,7 +1299,7 @@ async function signOutUser(){
   const btn=$('#signOutBtn');
   if(btn) btn.disabled=true;
   try{
-    const {error}=await supabase.auth.signOut({scope:'local'});
+    const {error}=await signOutLocal();
     if(error) throw error;
     state.session=null;
     state.profile=null;
@@ -1345,10 +1359,10 @@ async function init(){
   try{ setupCitySearch('origin'); setupCitySearch('destination'); }catch(err){ console.error('city init',err); }
 
   try{
-    supabase.auth.onAuthStateChange((event,session)=>setTimeout(async()=>{
+    onAuthStateChange((event,session)=>setTimeout(async()=>{
       try{
         if(event==='INITIAL_SESSION' && !session){
-          const current=await supabase.auth.getSession();
+          const current=await getCurrentSession();
           session=current.data?.session||null;
         }
         state.session=session;
