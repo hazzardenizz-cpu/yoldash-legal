@@ -4,6 +4,19 @@ import { $, $, esc, uuidLike } from './src/core/dom.js';
 import { localeMap, canPostTypes, canOfferTypes } from './src/core/config.js';
 import { state } from './src/core/state.js';
 import { translations } from './src/i18n/translations.js';
+import {
+  signUpWithEmail,
+  signInWithEmail,
+  resendSignupVerification,
+  sendPasswordReset,
+  updatePassword
+} from './src/features/auth/auth-service.js';
+import {
+  fetchOpenLoads,
+  publishLoad,
+  subscribeToOpenLoads,
+  unsubscribeFromOpenLoads
+} from './src/features/loads/load-service.js';
 
 
 
@@ -173,15 +186,13 @@ function bindCargoActions(){
   $$('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
 async function loadLoads(query=''){
-  try{
-    const {data,error} = await supabase.rpc('get_open_cargo_posts',{p_query:query||'',p_offset:0,p_limit:50});
-    if(error) throw error;
-    state.loads = Array.isArray(data) ? data : [];
-  }catch(err){
-    console.warn('get_open_cargo_posts failed, trying public table fallback',err);
-    const {data,error} = await supabase.from('cargo_posts').select('*').eq('status','PUBLISHED').is('deleted_at',null).gt('expires_at',new Date().toISOString()).order('published_at',{ascending:false}).limit(50);
-    if(error){ state.loads=[]; toast(humanError(error),'error'); }
-    else state.loads=data||[];
+  const result = await fetchOpenLoads(query, 50);
+  if(result.rpcError) console.warn('get_open_cargo_posts failed, using public table fallback', result.rpcError);
+  if(result.error){
+    state.loads=[];
+    toast(humanError(result.error),'error');
+  }else{
+    state.loads=result.data;
   }
   renderLoads();
 }
@@ -192,11 +203,8 @@ function scheduleLoadRefresh(delay=500){
 }
 function startLiveLoads(){
   try{
-    if(state.loadRealtimeChannel) supabase.removeChannel(state.loadRealtimeChannel);
-    state.loadRealtimeChannel=supabase
-      .channel('web-live-cargo-posts')
-      .on('postgres_changes',{event:'*',schema:'public',table:'cargo_posts'},()=>scheduleLoadRefresh(350))
-      .subscribe();
+    if(state.loadRealtimeChannel) unsubscribeFromOpenLoads(state.loadRealtimeChannel);
+    state.loadRealtimeChannel=subscribeToOpenLoads(()=>scheduleLoadRefresh(350));
   }catch(err){
     console.warn('cargo realtime unavailable',err);
   }
@@ -400,10 +408,10 @@ async function submitAuth(ev){
 
     if(state.authMode==='signup'){
       if(!state.selectedBusinessType) throw new Error(t('accountType'));
-      const redirect = location.protocol.startsWith('http') ? `${location.origin}/` : 'https://www.getyoldash.com/';
-      const {data,error}=await supabase.auth.signUp({
-        email,password,
-        options:{emailRedirectTo:redirect,data:{business_user_type:state.selectedBusinessType}}
+      const {data,error}=await signUpWithEmail({
+        email,
+        password,
+        businessUserType: state.selectedBusinessType
       });
       if(error) throw error;
       window.yoldashTrack?.('sign_up',{method:'email',business_user_type:state.selectedBusinessType||'unknown'});
@@ -416,7 +424,7 @@ async function submitAuth(ev){
         showVerifyEmail(email);
       }
     }else{
-      const {data,error}=await supabase.auth.signInWithPassword({email,password});
+      const {data,error}=await signInWithEmail({email,password});
       if(error) throw error;
       window.yoldashTrack?.('login',{method:'email'});
       state.session=data.session; await loadProfile(); renderProfileUI();
@@ -444,8 +452,7 @@ async function resendVerification(){
   const status=$('#verifyEmailStatus');
   if(!email){ showAuthEntry(); setAuthMode('signup'); return; }
   status.className='auth-status'; status.textContent=t('loading');
-  const redirect=location.protocol.startsWith('http')?`${location.origin}/`:'https://www.getyoldash.com/';
-  const {error}=await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo:redirect}});
+  const {error}=await resendSignupVerification(email);
   if(error){ status.className='auth-status error'; status.textContent=humanError(error); }
   else { status.className='auth-status ok'; status.textContent=t('verificationResent'); }
 }
@@ -463,8 +470,7 @@ async function forgotPassword(){
   status.className='auth-status';
   status.textContent=t('loading');
   try{
-    const redirect=location.protocol.startsWith('http')?`${location.origin}/`:'https://www.getyoldash.com/';
-    const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:redirect});
+    const {error}=await sendPasswordReset(email);
     if(error) throw error;
     status.className='auth-status ok';
     status.textContent=t('passwordResetSent');
@@ -488,7 +494,7 @@ async function submitRecovery(ev){
   try{
     if(p1.length<8) throw new Error('Password must be at least 8 characters.');
     if(p1!==p2) throw new Error(t('passwordsMismatch'));
-    const {error}=await supabase.auth.updateUser({password:p1});
+    const {error}=await updatePassword(p1);
     if(error) throw error;
     status.className='auth-status ok';
     status.textContent=t('passwordUpdated');
@@ -725,7 +731,7 @@ async function submitLoad(ev){
       for(const l of ['en','fa','tr']) if(c[`name_${l}`]) payload[`${which}_city_name_${l}`]=c[`name_${l}`];
     }
     if(!payload.cargo_type||!payload.origin_city||!payload.destination_city) throw new Error(t('requiredFields'));
-    const {data:created,error}=await supabase.from('cargo_posts').insert(payload).select('id').single(); if(error) throw error;
+    const {data:created,error}=await publishLoad(payload); if(error) throw error;
     $('#loadModal').close(); $('#loadForm').reset(); state.city={origin:null,destination:null}; toast(t('loadPublished')); await loadLoads();
     if(created?.id){
       const url=publicCargoUrl(created.id);
