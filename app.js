@@ -137,16 +137,28 @@ function applyLanguage(next, persist=true){
   if (state.session) renderChatFromCache?.();
 }
 function page(name){
-  $$('.page').forEach(p=>p.classList.remove('active'));
-  if(name==='home') ['page-home','metrics-home','content-home'].forEach(id=>$('#'+id)?.classList.add('active'));
-  else $('#page-'+name)?.classList.add('active');
-  $$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
-  $('.sidebar')?.classList.remove('open');
+  const target=$('#page-'+name);
+  $('.page').forEach(p=>p.classList.remove('active'));
+  target?.classList.add('active');
+
+  $('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+
+  const sidebar=$('.sidebar');
+  sidebar?.classList.remove('open');
+
   if(name==='shipments') loadShipments();
   if(name==='home'||name==='loads') loadLoads();
   if(name==='chat') loadChat();
   if(name==='drivers') loadDriverHub();
-  window.scrollTo({top:0,behavior:'smooth'});
+
+  requestAnimationFrame(()=>{
+    const main=$('.main');
+    if(window.matchMedia('(max-width: 900px)').matches){
+      main?.scrollIntoView({block:'start',inline:'nearest'});
+    }else{
+      window.scrollTo({top:0,left:0,behavior:'smooth'});
+    }
+  });
 }
 
 
