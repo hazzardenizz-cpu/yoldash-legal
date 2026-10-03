@@ -26,3 +26,4 @@ User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://www.getyoldash.com/sitemap.xml
+Sitemap: https://www.getyoldash.com/load-sitemap.xml

@@ -33,5 +33,15 @@
     "deploymentEnabled": {
       "main": true
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/load/:id",
+      "destination": "/api/public-load?id=:id"
+    },
+    {
+      "source": "/load-sitemap.xml",
+      "destination": "/api/load-sitemap"
+    }
+  ]
 }

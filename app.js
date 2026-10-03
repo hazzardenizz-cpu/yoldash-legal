@@ -145,6 +145,35 @@ function page(name){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+
+function publicCargoUrl(id){
+  return `${window.location.origin}/load/${encodeURIComponent(id)}`;
+}
+function shareCargoLabel(){
+  return state.lang==='fa' ? 'اشتراک‌گذاری' : state.lang==='tr' ? 'Paylaş' : 'Share';
+}
+function shareCopiedMessage(){
+  return state.lang==='fa' ? 'لینک بار کپی شد.' : state.lang==='tr' ? 'Yük bağlantısı kopyalandı.' : 'Load link copied.';
+}
+async function shareCargo(id){
+  const cargo=state.loads.find(x=>x.id===id);
+  const url=publicCargoUrl(id);
+  const route=cargo ? `${cityName(cargo,'origin')} → ${cityName(cargo,'destination')}` : 'Yoldash';
+  const title=`Yoldash · ${route}`;
+  try{
+    if(navigator.share){
+      await navigator.share({title,text:route,url});
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    toast(shareCopiedMessage(),'ok');
+  }catch(err){
+    if(err?.name!=='AbortError') {
+      try{ await navigator.clipboard.writeText(url); toast(shareCopiedMessage(),'ok'); }catch{}
+    }
+  }
+}
+
 function cargoCard(c, shipment=false){
   const from = cityName(c,'origin');
   const to = cityName(c,'destination');
@@ -153,9 +182,12 @@ function cargoCard(c, shipment=false){
   const weight = kg ? (kg/1000).toLocaleString(localeMap[state.lang],{maximumFractionDigits:2}) : '—';
   const price = c.freight_price != null ? `${Number(c.freight_price).toLocaleString(localeMap[state.lang])} ${esc(c.currency_code||'')}` : '—';
   const own = state.session?.user?.id && state.session.user.id === c.owner_id;
-  let action = `<button class="btn secondary" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>`;
-  if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) action = `<button class="btn secondary offer-btn" data-offer="${esc(c.id)}">${t('requestTransport')} ↗</button>`;
-  else if (!shipment && own) action = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
+  const detailAction = `<button class="btn secondary" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>`;
+  const shareAction = `<button class="btn secondary cargo-share-btn" data-share-cargo="${esc(c.id)}">${shareCargoLabel()}</button>`;
+  let primaryAction = '';
+  if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) primaryAction = `<button class="btn secondary offer-btn" data-offer="${esc(c.id)}">${t('requestTransport')} ↗</button>`;
+  else if (!shipment && own) primaryAction = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
+  const action = `<div class="cargo-actions">${primaryAction}${detailAction}${shareAction}</div>`;
   return `<article class="cargo-card" data-cargo-id="${esc(c.id)}">
     <div class="route"><div class="city"><b>${esc(from)}</b><small>${esc(c.origin_country_code||'')}</small></div><span class="route-arrow">→</span><div class="city"><b>${esc(to)}</b><small>${esc(c.destination_country_code||'')}</small></div></div>
     <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
@@ -179,11 +211,12 @@ function renderLoads(){
   bindCargoActions();
 }
 function bindCargoActions(){
-  $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
-  $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
-    const c=state.loads.find(x=>x.id===btn.dataset.cargoDetails);
-    if(c) toast(`${cityName(c,'origin')} → ${cityName(c,'destination')} · ${c.cargo_type || ''}`,'ok');
+  $('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
+    const id=btn.dataset.cargoDetails;
+    if(id) window.location.href=publicCargoUrl(id);
   });
+  $('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
 async function loadLoads(query=''){
   try{
@@ -736,8 +769,12 @@ async function submitLoad(ev){
       for(const l of ['en','fa','tr']) if(c[`name_${l}`]) payload[`${which}_city_name_${l}`]=c[`name_${l}`];
     }
     if(!payload.cargo_type||!payload.origin_city||!payload.destination_city) throw new Error(t('requiredFields'));
-    const {error}=await supabase.from('cargo_posts').insert(payload).select('id').single(); if(error) throw error;
+    const {data:created,error}=await supabase.from('cargo_posts').insert(payload).select('id').single(); if(error) throw error;
     $('#loadModal').close(); $('#loadForm').reset(); state.city={origin:null,destination:null}; toast(t('loadPublished')); await loadLoads();
+    if(created?.id){
+      const url=publicCargoUrl(created.id);
+      console.info('Public cargo URL:',url);
+    }
   }catch(err){ toast(humanError(err),'error'); }
   finally{ btn.disabled=false; btn.textContent=t('publishLoad'); }
 }
