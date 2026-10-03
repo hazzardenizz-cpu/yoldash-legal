@@ -163,9 +163,11 @@ async function shareCargo(id){
   try{
     if(navigator.share){
       await navigator.share({title,text:route,url});
+      window.yoldashTrack?.('share',{method:'web_share',content_type:'cargo',item_id:id});
       return;
     }
     await navigator.clipboard.writeText(url);
+    window.yoldashTrack?.('share',{method:'copy_link',content_type:'cargo',item_id:id});
     toast(shareCopiedMessage(),'ok');
   }catch(err){
     if(err?.name!=='AbortError') {
@@ -452,6 +454,7 @@ async function submitAuth(ev){
         options:{emailRedirectTo:redirect,data:{business_user_type:state.selectedBusinessType}}
       });
       if(error) throw error;
+      window.yoldashTrack?.('sign_up',{method:'email',business_user_type:state.selectedBusinessType||'unknown'});
       state.pendingSignupEmail=email;
       if(data.session){
         state.session=data.session; await loadProfile(); renderProfileUI();
@@ -463,6 +466,7 @@ async function submitAuth(ev){
     }else{
       const {data,error}=await supabase.auth.signInWithPassword({email,password});
       if(error) throw error;
+      window.yoldashTrack?.('login',{method:'email'});
       state.session=data.session; await loadProfile(); renderProfileUI();
       status.className='auth-status ok'; status.textContent=t('authSuccess');
       if(isFullProfileReady()) setTimeout(()=>$('#authModal').close(),500);
@@ -773,6 +777,15 @@ async function submitLoad(ev){
     $('#loadModal').close(); $('#loadForm').reset(); state.city={origin:null,destination:null}; toast(t('loadPublished')); await loadLoads();
     if(created?.id){
       const url=publicCargoUrl(created.id);
+      window.yoldashTrack?.('publish_load',{
+        item_id:created.id,
+        origin_country:payload.origin_country_code||'',
+        destination_country:payload.destination_country_code||'',
+        truck_type:payload.required_truck_type||'',
+        truck_count:payload.truck_count||1,
+        value:payload.freight_price||0,
+        currency:payload.currency_code||undefined
+      });
       console.info('Public cargo URL:',url);
     }
   }catch(err){ toast(humanError(err),'error'); }
@@ -825,7 +838,15 @@ async function submitOffer(ev){
   try{
     const price=$('#offerPrice').value?Number($('#offerPrice').value):null;
     const {error}=await supabase.rpc('submit_cargo_offer',{p_cargo_id:$('#offerCargoId').value,p_proposed_price:price,p_currency_code:price?$('#offerCurrency').value:null,p_message:$('#offerMessage').value.trim()||null,p_requested_truck_count:Number($('#offerTruckCount').value||1)});
-    if(error) throw error; $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent'));
+    if(error) throw error;
+    window.yoldashTrack?.('submit_transport_offer',{
+      cargo_id:$('#offerCargoId').value,
+      requested_truck_count:Number($('#offerTruckCount').value||1),
+      value:price||0,
+      currency:price?$('#offerCurrency').value:undefined
+    });
+    window.yoldashTrack?.('generate_lead',{lead_source:'cargo_offer'});
+    $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent'));
   }catch(err){
     const msg=humanError(err);
     toast(msg,'error');
@@ -876,6 +897,7 @@ async function sendChat(){
   try{
     const rid=crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     const {error}=await supabase.rpc('send_public_chat_message_idempotent',{p_request_id:rid,p_body:body,p_reply_to_id:null}); if(error) throw error;
+    window.yoldashTrack?.('send_chat_message',{chat_type:'public'});
     input.value=''; await loadChat(true);
   }catch(err){toast(humanError(err),'error');} finally{btn.disabled=false;}
 }
