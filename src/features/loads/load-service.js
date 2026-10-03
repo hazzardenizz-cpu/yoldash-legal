@@ -54,3 +54,15 @@ export function subscribeToOpenLoads(onChange) {
 export function unsubscribeFromOpenLoads(channel) {
   if (channel) return supabase.removeChannel(channel);
 }
+
+export async function getCurrentCargoDailyQuota() {
+  return supabase.rpc('get_current_cargo_daily_quota');
+}
+
+export async function searchCities({ query, limit = 8, countryCode }) {
+  return supabase.rpc('search_cities_v3', {
+    p_query: query,
+    p_limit: limit,
+    p_country_code: countryCode
+  });
+}
