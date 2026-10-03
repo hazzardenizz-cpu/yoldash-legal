@@ -364,3 +364,34 @@ dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
   .driver-hub-hero,.services-intro{padding:20px!important;border-radius:22px!important}
   .sidebar{background:var(--yd-surface)!important;box-shadow:var(--yd-shadow-lg)!important}
 }
+
+
+/* V3 navigation/layout hardening */
+@media (max-width:900px){
+  .shell{display:block!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .main{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important}
+  .sidebar{
+    display:flex!important;
+    position:fixed!important;
+    top:10px!important;
+    bottom:10px!important;
+    width:min(286px,calc(100vw - 28px))!important;
+    height:auto!important;
+    z-index:100!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+    transition:transform .22s ease,opacity .22s ease,visibility .22s ease!important;
+  }
+  html[dir="rtl"] .sidebar{right:10px!important;left:auto!important;transform:translateX(115%)!important}
+  html[dir="ltr"] .sidebar{left:10px!important;right:auto!important;transform:translateX(-115%)!important}
+  .sidebar.open{
+    visibility:visible!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+    transform:translateX(0)!important;
+  }
+  .mobile-menu{display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  .page{width:100%!important;min-width:0!important}
+  .page.active{display:grid!important}
+}
