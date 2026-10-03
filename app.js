@@ -1377,22 +1377,40 @@ async function signOutUser(){
   try{
     const {error}=await signOutLocal();
     if(error) throw error;
+
     state.session=null;
     state.profile=null;
     state.businessProfile=null;
+    state.isSuperAdmin=false;
     chatCache=[];
+
     clearInterval(state.chatTimer);
     clearInterval(state.adminMapRefreshTimer);
+
+    try{
+      if(notificationRealtimeChannel){
+        unsubscribeFromUserNotifications(notificationRealtimeChannel);
+        notificationRealtimeChannel=null;
+      }
+    }catch(err){
+      console.warn('notification cleanup after sign out',err);
+    }
+
     renderProfileUI();
-    loadUnread();
-    loadNotifications();
-    startNotificationRealtime();
-    syncSuperAdminMapAccess();
-    if($('#page-chat')?.classList.contains('active')) loadChat(true);
-    if($('#page-shipments')?.classList.contains('active')) loadShipments();
-    if($('#page-drivers')?.classList.contains('active')) loadDriverHub();
     if($('#authModal')?.open) $('#authModal').close();
     setAuthMode('signin');
+
+    try{ await loadUnread(); }catch{}
+    try{ await loadNotifications(); }catch{}
+    try{ await syncSuperAdminMapAccess(); }catch{}
+    try{
+      if($('#page-chat')?.classList.contains('active')) await loadChat(true);
+      if($('#page-shipments')?.classList.contains('active')) await loadShipments();
+      if($('#page-drivers')?.classList.contains('active')) await loadDriverHub();
+    }catch(err){
+      console.warn('post sign-out refresh',err);
+    }
+
     toast(t('signOut'),'ok');
   }catch(err){
     console.error('signOut',err);
