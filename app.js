@@ -1374,9 +1374,23 @@ function bindUI(){
 async function signOutUser(){
   const btn=$('#signOutBtn');
   if(btn) btn.disabled=true;
+
+  // Make logout deterministic on this device even if the network or Supabase
+  // sign-out request is slow/unavailable. The app will reload with no saved session.
   try{
-    const {error}=await signOutLocal();
-    if(error) throw error;
+    const projectRef='ubqrafuustkyenbbzhtg';
+    const exactKey=`sb-${projectRef}-auth-token`;
+    const removeAuthKeys=(storage)=>{
+      if(!storage) return;
+      const keys=[];
+      for(let i=0;i<storage.length;i++){
+        const key=storage.key(i);
+        if(key && (key===exactKey || key.startsWith(exactKey+'.') || key.startsWith(exactKey+'-'))) keys.push(key);
+      }
+      keys.forEach(key=>storage.removeItem(key));
+    };
+    try{ removeAuthKeys(window.localStorage); }catch{}
+    try{ removeAuthKeys(window.sessionStorage); }catch{}
 
     state.session=null;
     state.profile=null;
@@ -1392,31 +1406,24 @@ async function signOutUser(){
         unsubscribeFromUserNotifications(notificationRealtimeChannel);
         notificationRealtimeChannel=null;
       }
-    }catch(err){
-      console.warn('notification cleanup after sign out',err);
-    }
+    }catch{}
 
     renderProfileUI();
     if($('#authModal')?.open) $('#authModal').close();
     setAuthMode('signin');
 
-    try{ await loadUnread(); }catch{}
-    try{ await loadNotifications(); }catch{}
-    try{ await syncSuperAdminMapAccess(); }catch{}
-    try{
-      if($('#page-chat')?.classList.contains('active')) await loadChat(true);
-      if($('#page-shipments')?.classList.contains('active')) await loadShipments();
-      if($('#page-drivers')?.classList.contains('active')) await loadDriverHub();
-    }catch(err){
-      console.warn('post sign-out refresh',err);
-    }
+    // Best-effort SDK cleanup. Local storage is already cleared, so failure here
+    // must never keep the user signed in on this device.
+    try{ await Promise.race([
+      signOutLocal(),
+      new Promise(resolve=>setTimeout(()=>resolve({error:null}),1200))
+    ]); }catch(err){ console.warn('supabase signOut cleanup',err); }
 
-    toast(t('signOut'),'ok');
+    location.replace('/');
   }catch(err){
     console.error('signOut',err);
-    toast(humanError(err),'error');
-  }finally{
     if(btn) btn.disabled=false;
+    toast(humanError(err),'error');
   }
 }
 
