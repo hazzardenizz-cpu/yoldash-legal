@@ -183,22 +183,74 @@ async function shareCargo(id){
 function cargoCard(c, shipment=false){
   const from = cityName(c,'origin');
   const to = cityName(c,'destination');
-  const tt = truckKey(c.required_truck_type);
+  const truckTranslationKey = truckKey(c.required_truck_type);
+  const truck = truckTranslationKey ? t(truckTranslationKey) : (c.required_truck_type || '—');
   const kg = Number(c.weight_kg || 0);
-  const weight = kg ? (kg/1000).toLocaleString(localeMap[state.lang],{maximumFractionDigits:2}) : '—';
-  const price = c.freight_price != null ? `${Number(c.freight_price).toLocaleString(localeMap[state.lang])} ${esc(c.currency_code||'')}` : '—';
+  const weight = kg ? `${(kg/1000).toLocaleString(localeMap[state.lang],{maximumFractionDigits:2})} ${t('tons')}` : '—';
+  const trucks = c.remaining_truck_count ?? c.truck_count ?? 1;
+  const price = c.freight_price != null
+    ? `${Number(c.freight_price).toLocaleString(localeMap[state.lang])} ${esc(c.currency_code||'')}`
+    : '—';
+  const owner = c.owner_display_name || 'Yoldash';
+  const cargoType = c.cargo_type || '—';
+  const published = relativeLabel(c.published_at || c.announced_at || c.created_at);
+  const loading = c.loading_at ? dateLabel(c.loading_at) : '—';
   const own = state.session?.user?.id && state.session.user.id === c.owner_id;
-  const detailAction = `<button class="btn secondary" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>`;
-  const shareAction = `<button class="btn secondary cargo-share-btn" data-share-cargo="${esc(c.id)}">${shareCargoLabel()}</button>`;
+  const international = c.origin_country_code && c.destination_country_code && c.origin_country_code !== c.destination_country_code;
+  const scopeLabel = international ? t('international') : t('domestic');
+
   let primaryAction = '';
-  if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) primaryAction = `<button class="btn secondary offer-btn" data-offer="${esc(c.id)}">${t('requestTransport')} ↗</button>`;
-  else if (!shipment && own) primaryAction = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
-  const action = `<div class="cargo-actions">${primaryAction}${detailAction}${shareAction}</div>`;
-  return `<article class="cargo-card" data-cargo-id="${esc(c.id)}">
-    <div class="route"><div class="city"><b>${esc(from)}</b><small>${esc(c.origin_country_code||'')}</small></div><span class="route-arrow">→</span><div class="city"><b>${esc(to)}</b><small>${esc(c.destination_country_code||'')}</small></div></div>
-    <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
-    <div class="cargo-meta"><div><span>${t('truckType')}</span><b>${tt?t(tt):esc(c.required_truck_type||'—')}</b></div><div><span>${t('weight')}</span><b>${weight} ${kg?t('tons'):''}</b></div><div><span>${t('trucks')}</span><b>${esc(c.remaining_truck_count ?? c.truck_count ?? 1)}</b></div></div>
-    <div class="price"><span>${t('price')}</span><b>${price}</b><span>${esc(relativeLabel(c.published_at||c.announced_at||c.created_at))}</span><small class="owner">${t('owner')}: ${esc(c.owner_display_name||'Yoldash')}</small></div>${action}</article>`;
+  if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) {
+    primaryAction = `<button class="btn primary cargo-primary-action" data-offer="${esc(c.id)}">${t('requestTransport')}</button>`;
+  } else if (!shipment && own) {
+    primaryAction = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
+  }
+
+  return `<article class="cargo-card marketplace-card" data-cargo-id="${esc(c.id)}">
+    <div class="cargo-card-top">
+      <div class="cargo-route-block">
+        <div class="cargo-route-city">
+          <span>${t('origin')}</span>
+          <b>${esc(from)}</b>
+          <small>${esc(c.origin_country_code||'—')}</small>
+        </div>
+        <div class="cargo-route-line">
+          <span></span><i>→</i><span></span>
+        </div>
+        <div class="cargo-route-city">
+          <span>${t('destination')}</span>
+          <b>${esc(to)}</b>
+          <small>${esc(c.destination_country_code||'—')}</small>
+        </div>
+      </div>
+      <div class="cargo-card-badges">
+        <span class="cargo-scope-pill">${esc(scopeLabel)}</span>
+        <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
+      </div>
+    </div>
+
+    <div class="cargo-card-core">
+      <div class="cargo-core-item cargo-core-main"><span>${t('cargoType')}</span><b>${esc(cargoType)}</b></div>
+      <div class="cargo-core-item"><span>${t('truckType')}</span><b>${esc(truck)}</b></div>
+      <div class="cargo-core-item"><span>${t('weight')}</span><b>${esc(weight)}</b></div>
+      <div class="cargo-core-item"><span>${t('trucks')}</span><b>${esc(trucks)}</b></div>
+      <div class="cargo-core-item"><span>${t('loadingAt')}</span><b>${esc(loading)}</b></div>
+      <div class="cargo-core-item cargo-price-item"><span>${t('price')}</span><b>${esc(price)}</b></div>
+    </div>
+
+    <div class="cargo-card-foot">
+      <div class="cargo-publisher">
+        <span class="cargo-publisher-avatar">${esc(initials(owner))}</span>
+        <div><span>${t('owner')}</span><b>${esc(owner)}</b></div>
+      </div>
+      <div class="cargo-published-time"><span>◷</span><b>${esc(published)}</b></div>
+      <div class="cargo-actions">
+        ${primaryAction}
+        <button class="btn secondary cargo-detail-action" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>
+        <button class="btn secondary cargo-share-btn" data-share-cargo="${esc(c.id)}" aria-label="${shareCargoLabel()}">↗</button>
+      </div>
+    </div>
+  </article>`;
 }
 function emptyBlock(titleKey, body='') { return `<div class="empty-inline"><b>${t(titleKey)}</b>${body?`<span>${esc(body)}</span>`:''}</div>`; }
 function renderLoads(){
@@ -207,13 +259,37 @@ function renderLoads(){
     if(state.loadFilter==='international' && c.origin_country_code===c.destination_country_code) return false;
     if(state.loadFilter==='domestic' && c.origin_country_code!==c.destination_country_code) return false;
     if(!q) return true;
-    return [cityName(c,'origin'),cityName(c,'destination'),c.cargo_type,c.required_truck_type,c.owner_display_name].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+    return [
+      cityName(c,'origin'),
+      cityName(c,'destination'),
+      c.cargo_type,
+      c.required_truck_type,
+      c.owner_display_name,
+      c.origin_country_code,
+      c.destination_country_code
+    ].some(v=>String(v||'').toLocaleLowerCase().includes(q));
   });
-  const home = $('#cargoList'), all = $('#cargoListAll');
-  if(home) home.innerHTML = state.loads.length ? state.loads.slice(0,3).map(c=>cargoCard(c)).join('') : emptyBlock('noLoads');
-  if(all) all.innerHTML = filtered.length ? filtered.map(c=>cargoCard(c)).join('') : emptyBlock('noLoads');
-  $('#loadCountBadge').textContent = state.loads.length ? String(state.loads.length) : '0';
-  $('#metricLoads').textContent = state.loads.length ? String(state.loads.length) : '0';
+
+  const internationalCount = state.loads.filter(c=>c.origin_country_code!==c.destination_country_code).length;
+  const domesticCount = state.loads.length - internationalCount;
+  const home = $('#cargoList');
+  const all = $('#cargoListAll');
+
+  if(home) home.innerHTML = state.loads.length
+    ? state.loads.slice(0,3).map(c=>cargoCard(c)).join('')
+    : emptyBlock('noLoads');
+
+  if(all) all.innerHTML = filtered.length
+    ? filtered.map(c=>cargoCard(c)).join('')
+    : emptyBlock('noLoads');
+
+  if($('#loadCountBadge')) $('#loadCountBadge').textContent = String(state.loads.length);
+  if($('#metricLoads')) $('#metricLoads').textContent = String(state.loads.length);
+  if($('#loadBoardTotal')) $('#loadBoardTotal').textContent = String(state.loads.length);
+  if($('#loadBoardInternational')) $('#loadBoardInternational').textContent = String(internationalCount);
+  if($('#loadBoardDomestic')) $('#loadBoardDomestic').textContent = String(domesticCount);
+  if($('#loadBoardResultCount')) $('#loadBoardResultCount').textContent = `${filtered.length} / ${state.loads.length}`;
+
   bindCargoActions();
 }
 function bindCargoActions(){
