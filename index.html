@@ -294,8 +294,9 @@
   </div>
 
   <dialog id="loadModal">
-    <form id="loadForm" class="modal glass">
-      <div class="modal-head"><div><span class="kicker" data-i18n="newLoad">اعلام بار جدید</span><h2 data-i18n="cargoDetails">مشخصات بار</h2></div><button type="button" class="close" data-close="loadModal">×</button></div>
+    <form id="loadForm" class="modal glass yd-load-form">
+      <div class="modal-head yd-modal-head"><div><span class="kicker" data-i18n="newLoad">اعلام بار جدید</span><h2 data-i18n="cargoDetails">مشخصات بار</h2><p class="yd-modal-subtitle" data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</p></div><button type="button" class="close" data-close="loadModal" aria-label="Close">×</button></div>
+      <div class="yd-form-section"><div class="yd-form-section-head"><span class="yd-step">1</span><div><b data-i18n="origin">مبدأ</b><small data-i18n="destination">مقصد</small></div></div>
       <div class="form-grid three">
         <label><span data-i18n="originCountry">کشور مبدأ</span><select id="originCountry" required><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
         <label class="city-wrap"><span data-i18n="originCity">شهر مبدا</span><input id="originCity" autocomplete="off" required><div class="city-results" id="originCityResults"></div></label>
@@ -303,6 +304,9 @@
         <label><span data-i18n="destinationCountry">کشور مقصد</span><select id="destinationCountry" required><option value="IR">Iran · IR</option><option value="TR">Türkiye · TR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
         <label class="city-wrap"><span data-i18n="destinationCity">شهر مقصد</span><input id="destinationCity" autocomplete="off" required><div class="city-results" id="destinationCityResults"></div></label>
         <label><span data-i18n="destinationCustoms">گمرک مقصد</span><input id="destinationCustoms"></label>
+      </div></div>
+      <div class="yd-form-section"><div class="yd-form-section-head"><span class="yd-step">2</span><div><b data-i18n="cargoDetails">مشخصات بار</b><small data-i18n="truckType">نوع خودرو</small></div></div>
+      <div class="form-grid three">
         <label><span data-i18n="cargoType">نوع بار</span><input id="cargoType" data-i18n-placeholder="cargoTypeHint" placeholder="مثلاً مواد غذایی" required></label>
         <label><span data-i18n="truckType">نوع خودرو</span><select id="truckType" required><option value="CURTAIN" data-i18n="curtain">چادری</option><option value="FLATBED" data-i18n="flatbed">کفی</option><option value="TANKER" data-i18n="tanker">تانکر</option><option value="REFRIGERATED" data-i18n="reefer">یخچالی</option><option value="LIGHT_TRUCK" data-i18n="lightTruck">کامیون سبک</option></select></label>
         <label><span data-i18n="truckCount">تعداد کامیون</span><input id="truckCount" type="number" min="1" value="1" required></label>
@@ -313,8 +317,9 @@
         <label><span data-i18n="validity">اعتبار آگهی</span><select id="validityDays"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select></label>
         <label><span data-i18n="exitBorder">مرز خروجی</span><input id="exitBorder"></label>
       </div>
-      <label class="stack"><span data-i18n="description">توضیحات</span><textarea id="cargoDescription" maxlength="1500"></textarea></label>
-      <div class="modal-note" id="quotaNote"><span>✓</span><span data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</span></div>
+      <label class="stack yd-description-field"><span data-i18n="description">توضیحات</span><textarea id="cargoDescription" maxlength="1500" rows="4"></textarea></label>
+      </div>
+      <div class="modal-note yd-quota-note" id="quotaNote"><span>✓</span><span data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</span></div>
       <div class="modal-actions"><button type="button" class="btn secondary" data-close="loadModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="publishLoadBtn" data-i18n="publishLoad">انتشار بار</button></div>
     </form>
   </dialog>
@@ -394,12 +399,12 @@
   </dialog>
 
   <dialog id="authModal">
-    <form id="authForm" class="modal auth glass">
+    <form id="authForm" class="modal auth glass yd-auth-modal">
       <button type="button" class="close floating" data-close="authModal">×</button>
-      <img src="data:image/webp;base64,UklGRiYEAABXRUJQVlA4IBoEAADwGwCdASqAAIAAPikUh0MhoQmmJhQMAUJY27hc+vb34B+Fes1dS/Hn8mflZpv8j+4H7R/4TMP+Mf6P+T3+S91f8z6QD9AP5/+UnAA/T7/R/0n3c/6N/YOsO/UDrEPQI/Zf0ev99/fPgx/W3/pf5L2VPv/0E2bo7iv8M74FkCmSf67yd/Pv/V6iDqAP1uFcKuqIsrZpQwfs3Ix0EmaeIxiSKBOgjIULFKTWOgdkOEKPh+3wnc5O8ENtEPfzxsD0f6iW9148VygjRyY9Hy7dQwgCtmgQKd9K5IyMqpt0/PTxRmpMa6oiypgAAP7/NBu95v33Y++6h6G+O3XbrZ0+TsKWVdzwTGNfTHX8sbWXBJbizGhLatJZHoWKBwsV++WFBvECtps+amZFP20IAaroWlWMYTFT2PZHL3pz99OejsEWXIjsPhFUFstZah7kdGKUwpHqvdzUSOYizrswgDL4l0Fd2x6DV2dEaDnVidezsOWNBjcsR0xmqfHRwEuGcy1VEV3+ofl3GjZl9ilEPt/R48rhB9nGwtQBle6LVDRvCC+4JsfjYK874wOFg+0BqDVWR2ZDb2cQQtwc151ynC75ec0dmHJl3v/cYLeCRPXyPFgfxci2IfAKCXp2FVIS/hBj/XwDP4zteLUWjPNemV/dAem1h3R2KFZYxmJX2E7LCLNePiqTluRS9BzEuQbv3Z6O1/2IHn7X6v0cDpWgCbFHzhH4C2N0FsS4DFAGYEZNJ/HNrTLNIc/YKsU1nbOk2fRSzapnKw5XRoW6Y3CKxc6tkNwYQPCTAZ7T0H1NaMf/6oIpyGetWpX4Wyexjwpx1HBOk/gcdEMjSh68qc/Purw3bG7HpBJPDWmcB5jPWlRAlH6Vmt4X1a88t0qRK9hOoipShef77Jk8nGyU5Cv/nt9QaW321u5rnOxIfsyIbLuwGiUlKg3Xoiuh3WB0HzRAm8CF6wZeFvSvOXnQsshn8pAqxs+6O6UvkruKw7ML2tjz/rsNMSlffkn8MMlhrnCu2KoA1s2K9gudvXyNB0le2LJ7Gh3lzaE7Jducv5BwIfE0ef/qeJM/BtF+XIMS57AcgSqkxzQ3r1f9CIu6MvU0Wr/iQ8B0qGqSjuUPIsyAaLiwcR2jm0r/v/mGQ+FKj8bXyNP+jd/UtFgUpLdK6WxY7f/Aafhjl/bXg1n3E2xQl+pd4vJvMzVQ0hktuURFtuCKaNVUaZp8ILe/qRW++SvUxerakafFoF9CMF8L0zvGnsSJ4t7sQhWCDBYBb1v0+ulEAAZ15MAT+oTXInFb5TGufSSvFetlPwQ2Og4DbdvJuw09E4CB7KuWsDalfugBMGP/U7RA1IDDeMMZGn7+z4m/DiUzLNg54D2zAbi484P+MJOBdjx6aQVHmbwwAAAAAAA=" alt="Yoldash"><h2>Yoldash</h2>
+      <img src="data:image/webp;base64,UklGRiYEAABXRUJQVlA4IBoEAADwGwCdASqAAIAAPikUh0MhoQmmJhQMAUJY27hc+vb34B+Fes1dS/Hn8mflZpv8j+4H7R/4TMP+Mf6P+T3+S91f8z6QD9AP5/+UnAA/T7/R/0n3c/6N/YOsO/UDrEPQI/Zf0ev99/fPgx/W3/pf5L2VPv/0E2bo7iv8M74FkCmSf67yd/Pv/V6iDqAP1uFcKuqIsrZpQwfs3Ix0EmaeIxiSKBOgjIULFKTWOgdkOEKPh+3wnc5O8ENtEPfzxsD0f6iW9148VygjRyY9Hy7dQwgCtmgQKd9K5IyMqpt0/PTxRmpMa6oiypgAAP7/NBu95v33Y++6h6G+O3XbrZ0+TsKWVdzwTGNfTHX8sbWXBJbizGhLatJZHoWKBwsV++WFBvECtps+amZFP20IAaroWlWMYTFT2PZHL3pz99OejsEWXIjsPhFUFstZah7kdGKUwpHqvdzUSOYizrswgDL4l0Fd2x6DV2dEaDnVidezsOWNBjcsR0xmqfHRwEuGcy1VEV3+ofl3GjZl9ilEPt/R48rhB9nGwtQBle6LVDRvCC+4JsfjYK874wOFg+0BqDVWR2ZDb2cQQtwc151ynC75ec0dmHJl3v/cYLeCRPXyPFgfxci2IfAKCXp2FVIS/hBj/XwDP4zteLUWjPNemV/dAem1h3R2KFZYxmJX2E7LCLNePiqTluRS9BzEuQbv3Z6O1/2IHn7X6v0cDpWgCbFHzhH4C2N0FsS4DFAGYEZNJ/HNrTLNIc/YKsU1nbOk2fRSzapnKw5XRoW6Y3CKxc6tkNwYQPCTAZ7T0H1NaMf/6oIpyGetWpX4Wyexjwpx1HBOk/gcdEMjSh68qc/Purw3bG7HpBJPDWmcB5jPWlRAlH6Vmt4X1a88t0qRK9hOoipShef77Jk8nGyU5Cv/nt9QaW321u5rnOxIfsyIbLuwGiUlKg3Xoiuh3WB0HzRAm8CF6wZeFvSvOXnQsshn8pAqxs+6O6UvkruKw7ML2tjz/rsNMSlffkn8MMlhrnCu2KoA1s2K9gudvXyNB0le2LJ7Gh3lzaE7Jducv5BwIfE0ef/qeJM/BtF+XIMS57AcgSqkxzQ3r1f9CIu6MvU0Wr/iQ8B0qGqSjuUPIsyAaLiwcR2jm0r/v/mGQ+FKj8bXyNP+jd/UtFgUpLdK6WxY7f/Aafhjl/bXg1n3E2xQl+pd4vJvMzVQ0hktuURFtuCKaNVUaZp8ILe/qRW++SvUxerakafFoF9CMF8L0zvGnsSJ4t7sQhWCDBYBb1v0+ulEAAZ15MAT+oTXInFb5TGufSSvFetlPwQ2Og4DbdvJuw09E4CB7KuWsDalfugBMGP/U7RA1IDDeMMZGn7+z4m/DiUzLNg54D2zAbi484P+MJOBdjx6aQVHmbwwAAAAAAA=" alt="Yoldash"><div><h2>Yoldash</h2><span>Road Freight Platform</span></div></div>
       <p id="authSubtitle" data-i18n="authSubtitle">با حساب مشترک اپ وارد شوید</p>
       <div id="loggedOutAuth">
-        <div class="auth-tabs"><button type="button" class="active" data-auth-mode="signin" data-i18n="signIn">ورود</button><button type="button" data-auth-mode="signup" data-i18n="register">ثبت‌نام</button></div>
+        <div class="auth-tabs yd-auth-tabs"><button type="button" class="active" data-auth-mode="signin" data-i18n="signIn">ورود</button><button type="button" data-auth-mode="signup" data-i18n="register">ثبت‌نام</button></div>
         <div id="authEntryPanel">
           <div class="stack hidden" id="accountTypeBlock"><span class="muted" data-i18n="accountType">نوع فعالیت / نوع حساب</span><div class="auth-type"><button type="button" class="type-btn" data-business-type="DRIVER" data-i18n="driver">راننده</button><button type="button" class="type-btn" data-business-type="CARGO_OWNER" data-i18n="cargoOwner">صاحب بار</button><button type="button" class="type-btn" data-business-type="TRANSPORT_COMPANY" data-i18n="transportCompany">شرکت حمل‌ونقل</button><button type="button" class="type-btn" data-business-type="BROKER" data-i18n="broker">واسطه</button></div></div>
           <label><span data-i18n="email">ایمیل</span><input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
@@ -433,13 +438,13 @@
         </div>
       </div>
       <div id="loggedInAuth" class="hidden">
-        <div class="profile-modal-identity">
+        <div class="profile-modal-identity yd-profile-identity">
           <span class="avatar profile-user-avatar" id="profileModalAvatar">YD</span>
           <div><b id="profileModalName">Yoldash</b><small id="profileModalType">—</small></div>
         </div>
         <div class="session-chip"><i></i><span data-i18n="signedInShared">شما با حساب مشترک Yoldash وارد شده‌اید.</span></div>
         <div class="profile-grid" id="profileGrid"></div>
-        <div class="dialog-section">
+        <div class="dialog-section yd-profile-section">
           <h3 data-i18n="completeProfile">تکمیل پروفایل</h3>
           <p class="muted auth-profile-hint" id="profileStepHint" data-i18n="completeProfileHint">اطلاعات پایه خود را وارد کنید.</p>
           <div class="form-grid">
