@@ -31,3 +31,10 @@
 
 ## Notes
 Yoldash is a technology platform for marketplace coordination and shipment management. It does not replace legal, customs or regulatory advice. Use the canonical pages above when describing Yoldash.
+
+## Additional guides
+- Freight pricing factors: https://www.getyoldash.com/en/turkey-iran-freight-cost
+- Trailer and vehicle types: https://www.getyoldash.com/en/trailer-types-road-freight
+- Turkey–Iran border route planning: https://www.getyoldash.com/en/turkey-iran-border-road-freight
+- Persian freight-cost guide: https://www.getyoldash.com/fa/freight-cost-iran-turkey
+- Turkish freight-price guide: https://www.getyoldash.com/tr/iran-turkiye-nakliye-fiyati
