@@ -164,3 +164,88 @@ body{line-height:1.5}
   .home-metrics{grid-template-columns:1fr}
   .home-hero-actions{display:grid;grid-template-columns:1fr}
 }
+
+
+/* === V3 AUTH / PROFILE / LOAD FORM === */
+dialog{max-width:none}
+dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
+.yd-load-form{width:min(1040px,calc(100vw - 28px));max-height:min(90vh,920px);overflow:auto;padding:0!important;border-radius:28px!important}
+.yd-modal-head{position:sticky;top:0;z-index:5;padding:24px 26px 18px;background:color-mix(in srgb,var(--yd-surface) 94%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--yd-border);margin:0!important}
+.yd-modal-head h2{font-size:26px;margin:3px 0 5px}
+.yd-modal-subtitle{margin:0;color:var(--yd-muted);font-size:11px;line-height:1.6}
+.yd-form-section{padding:22px 26px 0}
+.yd-form-section+.yd-form-section{margin-top:6px}
+.yd-form-section-head{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.yd-form-section-head>div{display:flex;flex-direction:column;gap:2px}
+.yd-form-section-head b{font-size:13px}.yd-form-section-head small{font-size:9px;color:var(--yd-muted)}
+.yd-step{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--yd-primary-soft);color:var(--yd-primary);font-size:11px;font-weight:900}
+.yd-load-form .form-grid.three{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.yd-load-form label>span,.yd-auth-modal label>span{display:block;font-size:10px;font-weight:700;color:var(--yd-muted);margin:0 2px 6px}
+.yd-load-form input,.yd-load-form select,.yd-load-form textarea,
+.yd-auth-modal input,.yd-auth-modal select{
+  width:100%;min-height:44px;border-radius:13px;border:1px solid var(--yd-border);background:var(--yd-surface-subtle);color:var(--yd-text);padding:11px 12px;outline:none;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease
+}
+.yd-load-form textarea{min-height:96px;resize:vertical}
+.yd-load-form input:focus,.yd-load-form select:focus,.yd-load-form textarea:focus,
+.yd-auth-modal input:focus,.yd-auth-modal select:focus{
+  border-color:color-mix(in srgb,var(--yd-primary) 62%,var(--yd-border));box-shadow:0 0 0 4px color-mix(in srgb,var(--yd-primary) 10%,transparent);background:var(--yd-surface)
+}
+.yd-description-field{display:block;margin-top:12px}
+.yd-quota-note{margin:20px 26px 0!important;border-radius:14px!important;background:var(--yd-success-soft)!important;border:1px solid color-mix(in srgb,var(--yd-success) 20%,var(--yd-border))!important;color:var(--yd-success)!important}
+.yd-load-form .modal-actions{position:sticky;bottom:0;z-index:5;margin:22px 0 0!important;padding:16px 26px 22px;background:color-mix(in srgb,var(--yd-surface) 96%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--yd-border)}
+.city-results{border-radius:13px!important;border:1px solid var(--yd-border)!important;background:var(--yd-surface)!important;box-shadow:var(--yd-shadow-md)!important}
+.city-results button{color:var(--yd-text)!important;border-bottom:1px solid var(--yd-border)!important}
+.city-results button:hover{background:var(--yd-primary-soft)!important}
+
+.yd-auth-modal{width:min(520px,calc(100vw - 28px))!important;padding:26px!important;border-radius:28px!important;text-align:initial!important}
+.yd-auth-brand{display:flex;align-items:center;gap:13px;margin-bottom:8px}
+.yd-auth-brand img{width:54px!important;height:54px!important;margin:0!important;border-radius:16px!important}
+.yd-auth-brand h2{margin:0!important;font-size:24px!important;color:var(--yd-text)!important}
+.yd-auth-brand span{display:block;margin-top:2px;font-size:9px;color:var(--yd-muted);letter-spacing:.03em}
+.yd-auth-modal>p{margin:6px 0 18px;color:var(--yd-muted)!important;font-size:12px;line-height:1.6}
+.yd-auth-tabs{display:grid!important;grid-template-columns:1fr 1fr;gap:5px;padding:4px;border:1px solid var(--yd-border);background:var(--yd-surface-subtle);border-radius:14px;margin-bottom:16px}
+.yd-auth-tabs button{min-height:40px;border:0;border-radius:10px;background:transparent;color:var(--yd-muted);font-weight:800;cursor:pointer}
+.yd-auth-tabs button.active{background:var(--yd-surface);color:var(--yd-primary);box-shadow:var(--yd-shadow-sm)}
+.yd-auth-modal #authEntryPanel>label{display:block;margin-top:12px}
+.yd-auth-modal .auth-type{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.yd-auth-modal .type-btn{min-height:42px;border-radius:12px;border:1px solid var(--yd-border);background:var(--yd-surface-subtle);color:var(--yd-text);cursor:pointer;font-size:11px;font-weight:750}
+.yd-auth-modal .type-btn.active{background:var(--yd-primary-soft);border-color:color-mix(in srgb,var(--yd-primary) 28%,var(--yd-border));color:var(--yd-primary)}
+.yd-auth-modal .password-field{display:grid;grid-template-columns:1fr auto;align-items:center;border:1px solid var(--yd-border);border-radius:13px;background:var(--yd-surface-subtle);overflow:hidden}
+.yd-auth-modal .password-field input{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.yd-auth-modal .password-toggle{width:44px;height:44px;border:0;background:transparent;color:var(--yd-muted);cursor:pointer}
+.yd-auth-modal .wide{width:100%}
+.yd-auth-modal .link-btn{display:block;margin:12px auto 0;border:0;background:transparent;color:var(--yd-primary);font-size:10px;font-weight:800;cursor:pointer}
+.yd-auth-modal #authEntryPanel>small{display:block;margin-top:12px;color:var(--yd-muted);font-size:9px;line-height:1.6;text-align:center}
+.auth-status{min-height:20px;margin-top:8px;font-size:10px;line-height:1.5}
+.auth-status.ok{color:var(--yd-success)}.auth-status.error{color:var(--yd-danger)}
+.auth-step-card{padding:16px;border-radius:18px;background:var(--yd-surface-subtle);border:1px solid var(--yd-border);text-align:center}
+.auth-step-card h3{margin:10px 0 6px}.auth-step-card p{color:var(--yd-muted);font-size:11px;line-height:1.7}
+.auth-step-icon{width:44px;height:44px;margin:auto;border-radius:14px;display:grid;place-items:center;background:var(--yd-primary-soft);color:var(--yd-primary);font-size:20px}
+.auth-step-actions{display:grid;gap:8px;margin-top:12px}
+.yd-profile-identity{display:flex;align-items:center;gap:11px;padding:12px;border-radius:16px;background:var(--yd-surface-subtle);border:1px solid var(--yd-border)}
+.yd-profile-identity b{display:block;font-size:13px}.yd-profile-identity small{display:block;color:var(--yd-muted);font-size:9px;margin-top:3px}
+.session-chip{margin:10px 0 12px!important;border-radius:12px!important;background:var(--yd-success-soft)!important;border:1px solid color-mix(in srgb,var(--yd-success) 18%,var(--yd-border))!important;color:var(--yd-success)!important}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px!important}
+.profile-grid>div{padding:10px 11px!important;border-radius:12px!important;background:var(--yd-surface-subtle)!important;border:1px solid var(--yd-border)!important}
+.profile-grid span{color:var(--yd-muted)!important;font-size:8px!important}.profile-grid b{font-size:10px!important}
+.yd-profile-section{margin-top:14px;padding:16px;border:1px solid var(--yd-border);border-radius:18px;background:var(--yd-surface)}
+.yd-profile-section h3{margin:0 0 4px}
+.yd-profile-section .form-grid{gap:10px}
+.yd-auth-modal .dialog-section:last-of-type{padding-top:12px;border-top:1px solid var(--yd-border);margin-top:14px}
+.close{border-radius:11px!important;background:var(--yd-surface-subtle)!important;border:1px solid var(--yd-border)!important;color:var(--yd-muted)!important}
+.close:hover{color:var(--yd-text)!important;border-color:var(--yd-border-strong)!important}
+
+@media(max-width:760px){
+  .yd-load-form{width:calc(100vw - 14px);max-height:94vh;border-radius:22px!important}
+  .yd-modal-head{padding:18px 16px 14px}.yd-modal-head h2{font-size:22px}
+  .yd-form-section{padding:18px 16px 0}
+  .yd-load-form .form-grid.three{grid-template-columns:1fr 1fr}
+  .yd-quota-note{margin:16px 16px 0!important}
+  .yd-load-form .modal-actions{padding:13px 16px 16px}
+  .yd-auth-modal{width:calc(100vw - 14px)!important;padding:20px!important;border-radius:22px!important}
+}
+@media(max-width:480px){
+  .yd-load-form .form-grid.three,.yd-profile-section .form-grid,.profile-grid{grid-template-columns:1fr}
+  .yd-load-form .modal-actions{display:grid;grid-template-columns:1fr 1fr}
+  .yd-auth-modal .auth-type{grid-template-columns:1fr}
+}
