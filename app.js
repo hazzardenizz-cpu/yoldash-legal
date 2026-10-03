@@ -17,6 +17,18 @@ import {
   subscribeToOpenLoads,
   unsubscribeFromOpenLoads
 } from './src/features/loads/load-service.js';
+import {
+  getCurrentSession,
+  getProfile,
+  getBusinessProfile,
+  updateBaseProfile,
+  upsertBusinessProfile
+} from './src/features/profile/profile-service.js';
+import {
+  getCargoOfferSnapshot,
+  submitCargoOffer,
+  getMyTransportCargo
+} from './src/features/transport/transport-service.js';
 
 
 
@@ -224,7 +236,7 @@ function startLiveLoads(){
 
 async function ensureSession(){
   try{
-    const {data,error}=await supabase.auth.getSession();
+    const {data,error}=await getCurrentSession();
     if(error) throw error;
     const session=data?.session||null;
     if(session){
@@ -252,16 +264,14 @@ async function refreshSession(){
 async function loadProfile(){
   if(!state.session) return;
   const uid=state.session.user.id;
-  const {data,error}=await supabase.from('profiles').select('id,email,first_name,last_name,phone,is_active,business_user_type,whatsapp_phone,tractor_transit_plate,container_transit_plate,driver_company_name').eq('id',uid).single();
+  const {data,error}=await getProfile(uid);
   if(error){ console.error(error); return; }
   state.profile=data;
   state.businessProfile = await fetchBusinessProfile(data.business_user_type,uid);
   populateProfileEditor();
 }
 async function fetchBusinessProfile(type,uid){
-  const tables={DRIVER:'driver_profiles',CARGO_OWNER:'cargo_owner_profiles',TRANSPORT_COMPANY:'transport_companies',BROKER:'broker_profiles'};
-  const table=tables[type]; if(!table) return null;
-  const {data,error}=await supabase.from(table).select('*').eq('user_id',uid).maybeSingle();
+  const {data,error}=await getBusinessProfile(type,uid);
   return error ? null : data;
 }
 function displayName(){
@@ -353,7 +363,7 @@ async function saveProfile(){
     const base={first_name:first,last_name:last,phone};
 
     if(completingBasic){
-      const {error}=await supabase.from('profiles').update(base).eq('id',uid);
+      const {error}=await updateBaseProfile(uid,base);
       if(error) throw error;
       await loadProfile(); renderProfileUI();
       status.className='auth-status ok'; status.textContent=t('profileSaved'); toast(t('profileSaved'));
@@ -369,14 +379,14 @@ async function saveProfile(){
       if(!/^\+[1-9]\d{7,14}$/.test(whatsapp)||!tractor||!container||!company){ throw new Error(t('requiredFields')); }
       Object.assign(base,{whatsapp_phone:whatsapp,tractor_transit_plate:tractor,container_transit_plate:container,driver_company_name:company});
     }
-    let {error}=await supabase.from('profiles').update(base).eq('id',uid); if(error) throw error;
+    let {error}=await updateBaseProfile(uid,base); if(error) throw error;
     const payloadMap={
       DRIVER:{user_id:uid,country_code:country,license_number:primary,license_country_code:country},
       CARGO_OWNER:{user_id:uid,country_code:country,organization_name:primary},
       TRANSPORT_COMPANY:{user_id:uid,company_name:primary,country_code:country,registration_number:secondary||null},
       BROKER:{user_id:uid,country_code:country,organization_name:primary}
     };
-    ({error}=await supabase.from(({DRIVER:'driver_profiles',CARGO_OWNER:'cargo_owner_profiles',TRANSPORT_COMPANY:'transport_companies',BROKER:'broker_profiles'})[type]).upsert(payloadMap[type],{onConflict:'user_id'})); if(error) throw error;
+    ({error}=await upsertBusinessProfile(type,payloadMap[type])); if(error) throw error;
     await loadProfile(); renderProfileUI(); status.className='auth-status ok'; status.textContent=t('profileSaved'); toast(t('profileSaved')); if(isFullProfileReady()) setTimeout(()=>$('#authModal')?.close(),650);
   }catch(err){ status.className='auth-status error'; status.textContent=humanError(err); }
 }
@@ -772,7 +782,7 @@ async function openOffer(id){
   if(!canOfferTypes.has(state.profile?.business_user_type)){ toast(t('offerOnlyProvider'),'error'); return; }
 
   try{
-    const {data,error}=await supabase.rpc('get_cargo_offer_snapshot',{p_cargo_id:id});
+    const {data,error}=await getCargoOfferSnapshot(id);
     if(error) throw error;
     const rows=Array.isArray(data)?data:[];
     const pending=rows.find(r=>r.offer_id && r.offer_status==='PENDING');
@@ -795,7 +805,13 @@ async function submitOffer(ev){
   ev.preventDefault(); const btn=$('#submitOffer');btn.disabled=true;btn.textContent=t('loading');
   try{
     const price=$('#offerPrice').value?Number($('#offerPrice').value):null;
-    const {error}=await supabase.rpc('submit_cargo_offer',{p_cargo_id:$('#offerCargoId').value,p_proposed_price:price,p_currency_code:price?$('#offerCurrency').value:null,p_message:$('#offerMessage').value.trim()||null,p_requested_truck_count:Number($('#offerTruckCount').value||1)});
+    const {error}=await submitCargoOffer({
+      cargoId: $('#offerCargoId').value,
+      proposedPrice: price,
+      currencyCode: price ? $('#offerCurrency').value : null,
+      message: $('#offerMessage').value.trim() || null,
+      requestedTruckCount: Number($('#offerTruckCount').value || 1)
+    });
     if(error) throw error;
     window.yoldashTrack?.('submit_transport_offer',{
       cargo_id:$('#offerCargoId').value,
@@ -821,7 +837,7 @@ async function loadShipments(){
   if(!isFullProfileReady()){el.innerHTML=emptyBlock('profileIncomplete',t('completeProfileRequired'));$('#metricShipments').textContent='—';return;}
   el.innerHTML='<div class="loading-card"></div><div class="loading-card"></div>';
   try{
-    const {data,error}=await supabase.rpc('get_my_transport_cargo'); if(error) throw error;
+    const {data,error}=await getMyTransportCargo(); if(error) throw error;
     const rows=Array.isArray(data)?data:[]; el.innerHTML=rows.length?rows.map(c=>cargoCard(c,true)).join(''):emptyBlock('noShipments'); $('#metricShipments').textContent=String(rows.length); bindCargoActions();
   }catch(err){el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
 }
