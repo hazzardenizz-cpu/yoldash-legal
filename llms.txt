@@ -1,0 +1,33 @@
+# Yoldash
+
+> Yoldash is a digital road-freight platform connecting cargo owners, drivers and transport companies, with a primary product and content focus on Türkiye–Iran transport workflows.
+
+## Canonical site
+- https://www.getyoldash.com/
+
+## Language hubs
+- Persian: https://www.getyoldash.com/fa/
+- Turkish: https://www.getyoldash.com/tr/
+- English: https://www.getyoldash.com/en/
+
+## Core topics
+- Turkey–Iran / Iran–Turkey road freight
+- Digital load board and load announcements
+- Driver and vehicle marketplace
+- Transport offers and counter-offers
+- Shipment lifecycle management
+- Private shipment chat
+- Documents and CMR
+- Trip expenses
+- Turkey insurance workflow
+
+## Key pages
+- https://www.getyoldash.com/fa/iran-turkey-road-freight
+- https://www.getyoldash.com/fa/load-board
+- https://www.getyoldash.com/tr/iran-turkiye-nakliye
+- https://www.getyoldash.com/tr/yuk-ilani
+- https://www.getyoldash.com/en/turkey-iran-road-freight
+- https://www.getyoldash.com/en/load-board
+
+## Notes
+Yoldash is a technology platform for marketplace coordination and shipment management. It does not replace legal, customs or regulatory advice. Use the canonical pages above when describing Yoldash.
