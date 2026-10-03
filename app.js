@@ -1,5 +1,4 @@
 import L from 'https://esm.sh/leaflet@1.9.4';
-import { supabase } from './src/core/supabase.js';
 import { $, $, esc, uuidLike } from './src/core/dom.js';
 import { localeMap, canPostTypes, canOfferTypes } from './src/core/config.js';
 import { state } from './src/core/state.js';
@@ -56,6 +55,7 @@ import {
   isSuperAdmin,
   getSuperAdminUserMap
 } from './src/features/admin/admin-service.js';
+import { fetchFxRates } from './src/features/fx/fx-service.js';
 
 
 
@@ -1316,7 +1316,7 @@ async function loadFxRates(silent=false){
   const refresh=$('#refreshFx');
   if(refresh) refresh.classList.add('spinning');
   try{
-    const {data,error}=await supabase.functions.invoke('fx-rates',{method:'GET'});
+    const {data,error}=await fetchFxRates();
     if(error) throw error;
     if(!data?.success||!data?.rates) throw new Error('fx_invalid_response');
     state.fxData=data;
