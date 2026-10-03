@@ -39,7 +39,7 @@ export async function updatePassword(password) {
 }
 
 export async function signOutLocal() {
-  return supabase.auth.signOut({ scope: 'local' });
+  return supabase.auth.signOut();
 }
 
 export function onAuthStateChange(callback) {
