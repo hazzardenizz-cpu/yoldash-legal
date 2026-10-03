@@ -1,5 +1,5 @@
 import L from 'https://esm.sh/leaflet@1.9.4';
-import { $, $, esc, uuidLike } from './src/core/dom.js';
+import { $, $$, esc, uuidLike } from './src/core/dom.js';
 import { localeMap, canPostTypes, canOfferTypes } from './src/core/config.js';
 import { state } from './src/core/state.js';
 import { translations } from './src/i18n/translations.js';
