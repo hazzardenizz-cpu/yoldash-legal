@@ -38,3 +38,10 @@ Yoldash is a technology platform for marketplace coordination and shipment manag
 - Turkey–Iran border route planning: https://www.getyoldash.com/en/turkey-iran-border-road-freight
 - Persian freight-cost guide: https://www.getyoldash.com/fa/freight-cost-iran-turkey
 - Turkish freight-price guide: https://www.getyoldash.com/tr/iran-turkiye-nakliye-fiyati
+
+## Specialized freight guides
+- Refrigerated freight guide: https://www.getyoldash.com/en/refrigerated-road-freight
+- Curtainsider freight guide: https://www.getyoldash.com/en/curtainsider-road-freight
+- Container road freight guide: https://www.getyoldash.com/en/container-road-freight
+- Transit driver guide: https://www.getyoldash.com/en/turkey-iran-transit-driver
+- Road freight documents: https://www.getyoldash.com/en/road-freight-documents
