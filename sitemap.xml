@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.getyoldash.com/</loc></url>
-  <url><loc>https://www.getyoldash.com/privacy</loc></url>
-  <url><loc>https://www.getyoldash.com/terms</loc></url>
-  <url><loc>https://www.getyoldash.com/delete-account.html</loc></url>
+  <url><loc>https://www.getyoldash.com/</loc><lastmod>2026-10-03</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.getyoldash.com/fa/</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/fa/iran-turkey-road-freight</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/fa/load-board</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/tr/</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/tr/iran-turkiye-nakliye</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/tr/yuk-ilani</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/en/</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/en/turkey-iran-road-freight</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/en/load-board</loc><lastmod>2026-10-03</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.getyoldash.com/privacy</loc><lastmod>2026-10-03</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.getyoldash.com/terms</loc><lastmod>2026-10-03</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.getyoldash.com/delete-account.html</loc><lastmod>2026-10-03</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>
