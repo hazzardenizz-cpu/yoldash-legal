@@ -666,8 +666,8 @@ async function loadDriverHub(){
 function syncDriverListingSegments(){
   const listing=$('#driverListingType')?.value||'NEED_VEHICLE';
   const employment=$('#driverEmploymentType')?.value||'SERVICE';
-  $$('[data-listing-type]').forEach(b=>b.classList.toggle('active',b.dataset.listingType===listing));
-  $$('[data-employment-type]').forEach(b=>b.classList.toggle('active',b.dataset.employmentType===employment));
+  $$$('[data-listing-type]').forEach(b=>b.classList.toggle('active',b.dataset.listingType===listing));
+  $$$('[data-employment-type]').forEach(b=>b.classList.toggle('active',b.dataset.employmentType===employment));
 }
 function generatedDriverListingTitle(){
   const type=$('#driverListingType')?.value||'NEED_VEHICLE';
