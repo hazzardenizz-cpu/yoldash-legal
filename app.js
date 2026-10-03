@@ -1540,3 +1540,5 @@ document.querySelectorAll('[data-v2-action="refresh-fx"]').forEach((el) => {
     document.getElementById('content-home')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+// production-sync: navfix6
