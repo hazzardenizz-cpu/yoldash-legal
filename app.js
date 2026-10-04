@@ -288,6 +288,47 @@ function cargoCard(c, shipment=false){
     </div>
   </article>`;
 }
+function cargoDetailValue(value){
+  return value === null || value === undefined || value === '' ? '—' : esc(value);
+}
+function openCargoDetails(id){
+  const cargo=state.loads.find(item=>item.id===id);
+  const dialog=$('#cargoDetailsModal');
+  const content=$('#cargoDetailsContent');
+  if(!cargo || !dialog || !content) return;
+
+  const from=cityName(cargo,'origin');
+  const to=cityName(cargo,'destination');
+  const truckKeyName=truckKey(cargo.required_truck_type);
+  const truck=truckKeyName ? t(truckKeyName) : (cargo.required_truck_type||'—');
+  const weight=Number(cargo.weight_kg||0)
+    ? `${(Number(cargo.weight_kg)/1000).toLocaleString(localeMap[state.lang],{maximumFractionDigits:2})} ${t('tons')}`
+    : '—';
+  const trucks=cargo.remaining_truck_count ?? cargo.truck_count ?? '—';
+  const price=cargo.freight_price != null
+    ? `${Number(cargo.freight_price).toLocaleString(localeMap[state.lang])} ${cargo.currency_code||''}`.trim()
+    : '—';
+  const loading=cargo.loading_at ? dateLabel(cargo.loading_at) : '—';
+  const customs=[cargo.origin_customs,cargo.destination_customs].filter(Boolean).join(' · ');
+
+  content.innerHTML=`
+    <div class="cargo-detail-route">
+      <div><span>${t('origin')}</span><b>${esc(from)}</b><small>${cargoDetailValue(cargo.origin_country_code)}</small></div>
+      <i>→</i>
+      <div><span>${t('destination')}</span><b>${esc(to)}</b><small>${cargoDetailValue(cargo.destination_country_code)}</small></div>
+    </div>
+    <div class="cargo-detail-grid">
+      <div><span>${t('cargoType')}</span><b>${cargoDetailValue(cargo.cargo_type)}</b></div>
+      <div><span>${t('truckType')}</span><b>${cargoDetailValue(truck)}</b></div>
+      <div><span>${t('weight')}</span><b>${cargoDetailValue(weight)}</b></div>
+      <div><span>${t('trucks')}</span><b>${cargoDetailValue(trucks)}</b></div>
+      <div><span>${t('loadingAt')}</span><b>${cargoDetailValue(loading)}</b></div>
+      <div class="cargo-detail-price"><span>${t('price')}</span><b>${cargoDetailValue(price)}</b></div>
+    </div>
+    ${customs ? `<div class="cargo-detail-note"><span>${t('originCustoms')} / ${t('destinationCustoms')}</span><b>${esc(customs)}</b></div>` : ''}
+    ${cargo.description ? `<div class="cargo-detail-description"><span>${t('description')}</span><p>${esc(cargo.description)}</p></div>` : ''}`;
+  dialog.showModal();
+}
 function emptyBlock(titleKey, body='') { return `<div class="empty-inline"><b>${t(titleKey)}</b>${body?`<span>${esc(body)}</span>`:''}</div>`; }
 function renderLoads(){
   const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
@@ -332,7 +373,7 @@ function bindCargoActions(){
   $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
   $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
     const id=btn.dataset.cargoDetails;
-    if(id) window.location.href=publicCargoUrl(id);
+    if(id) openCargoDetails(id);
   });
   $$('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
