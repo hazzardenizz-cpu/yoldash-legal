@@ -310,23 +310,42 @@ function openCargoDetails(id){
     : '—';
   const loading=cargo.loading_at ? dateLabel(cargo.loading_at) : '—';
   const customs=[cargo.origin_customs,cargo.destination_customs].filter(Boolean).join(' · ');
+  const owner=cargo.owner_display_name||'Yoldash';
+  const announced=relativeLabel(cargo.published_at||cargo.announced_at||cargo.created_at);
+  const expires=cargo.expires_at ? dateLabel(cargo.expires_at) : '—';
+  const contactPhone=String(cargo.contact_phone||cargo.owner_contact_phone||cargo.phone||'').trim();
+  const whatsappPhone=String(cargo.whatsapp_phone||cargo.owner_whatsapp_phone||contactPhone).replace(/\D/g,'');
+  const row=(label,value,accent=false)=>`<div class="cargo-detail-row"><span>${label}</span><b class="${accent?'accent':''}">${cargoDetailValue(value)}</b></div>`;
+  const contactActions=contactPhone ? `<div class="cargo-detail-actions">
+    <a class="btn secondary" href="tel:${esc(contactPhone)}">${t('call')}</a>
+    ${whatsappPhone ? `<a class="btn primary" href="https://wa.me/${esc(whatsappPhone)}" target="_blank" rel="noopener noreferrer">${t('whatsappContact')}</a>` : ''}
+  </div>` : '';
 
   content.innerHTML=`
-    <div class="cargo-detail-route">
-      <div><span>${t('origin')}</span><b>${esc(from)}</b><small>${cargoDetailValue(cargo.origin_country_code)}</small></div>
-      <i>→</i>
-      <div><span>${t('destination')}</span><b>${esc(to)}</b><small>${cargoDetailValue(cargo.destination_country_code)}</small></div>
-    </div>
-    <div class="cargo-detail-grid">
-      <div><span>${t('cargoType')}</span><b>${cargoDetailValue(cargo.cargo_type)}</b></div>
-      <div><span>${t('truckType')}</span><b>${cargoDetailValue(truck)}</b></div>
-      <div><span>${t('weight')}</span><b>${cargoDetailValue(weight)}</b></div>
-      <div><span>${t('trucks')}</span><b>${cargoDetailValue(trucks)}</b></div>
-      <div><span>${t('loadingAt')}</span><b>${cargoDetailValue(loading)}</b></div>
-      <div class="cargo-detail-price"><span>${t('price')}</span><b>${cargoDetailValue(price)}</b></div>
-    </div>
-    ${customs ? `<div class="cargo-detail-note"><span>${t('originCustoms')} / ${t('destinationCustoms')}</span><b>${esc(customs)}</b></div>` : ''}
-    ${cargo.description ? `<div class="cargo-detail-description"><span>${t('description')}</span><p>${esc(cargo.description)}</p></div>` : ''}`;
+    <section class="cargo-detail-card">
+      <div class="cargo-detail-route">
+        <div><span>${t('origin')}</span><b>${esc(from)}, ${cargoDetailValue(cargo.origin_country_code)}</b></div>
+        <i>→</i>
+        <div><span>${t('destination')}</span><b>${esc(to)}, ${cargoDetailValue(cargo.destination_country_code)}</b></div>
+      </div>
+      <div class="cargo-detail-status"><span>${esc(cargo.status||'PUBLISHED')}</span><small>◷ ${esc(announced)}</small></div>
+      <div class="cargo-detail-rows">
+        ${row(t('owner'),owner)}
+        ${row(t('truckType'),truck,true)}
+        ${row(t('truckCount'),trucks)}
+        ${row(t('weight'),weight)}
+        ${row(t('origin'),`${from}, ${cargo.origin_country_code||'—'}`)}
+        ${cargo.origin_customs ? row(t('originCustoms'),cargo.origin_customs) : ''}
+        ${cargo.exit_border ? row(t('exitBorder'),cargo.exit_border) : ''}
+        ${row(t('destination'),`${to}, ${cargo.destination_country_code||'—'}`)}
+        ${cargo.destination_customs ? row(t('destinationCustoms'),cargo.destination_customs) : ''}
+        ${row(t('price'),price,true)}
+        ${row(t('loadingAt'),loading)}
+        ${row(t('validity'),expires)}
+      </div>
+      ${cargo.description ? `<div class="cargo-detail-description"><span>${t('description')}</span><p>${esc(cargo.description)}</p></div>` : ''}
+      ${contactActions}
+    </section>`;
   dialog.showModal();
 }
 function emptyBlock(titleKey, body='') { return `<div class="empty-inline"><b>${t(titleKey)}</b>${body?`<span>${esc(body)}</span>`:''}</div>`; }

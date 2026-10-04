@@ -726,6 +726,19 @@ html[dir="rtl"] .cargo-detail-route>i{transform:rotate(180deg)}
 .cargo-detail-note,.cargo-detail-description{margin-top:14px;padding:15px 16px;border-radius:15px;background:var(--v2-surface2);border:1px solid var(--v2-line)}
 .cargo-detail-description p{margin:0;color:var(--v2-text);font-size:13px;line-height:1.9;white-space:pre-wrap}
 @media(max-width:600px){.cargo-details-content{padding:16px}.cargo-detail-route{padding:14px;gap:9px}.cargo-detail-route b{font-size:15px}.cargo-detail-grid{grid-template-columns:1fr 1fr}.cargo-detail-grid>div:nth-child(3n){border-inline-end:1px solid var(--v2-line)}.cargo-detail-grid>div:nth-child(2n){border-inline-end:0}.cargo-detail-grid>div:nth-last-child(-n+3){border-bottom:1px solid var(--v2-line)}.cargo-detail-grid>div:nth-last-child(-n+2){border-bottom:0}}
+
+/* Vertical, app-like detail card */
+.cargo-detail-card{border:1px solid var(--v2-line);border-radius:22px;overflow:hidden;background:var(--v2-surface2)}
+.cargo-detail-card .cargo-detail-route{border:0;border-radius:0;background:var(--v2-surface);padding:20px 20px 15px}
+.cargo-detail-card .cargo-detail-route>div:last-child{text-align:end}.cargo-detail-card .cargo-detail-route b{font-size:17px}
+.cargo-detail-status{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 20px 14px;background:var(--v2-surface);border-bottom:1px solid var(--v2-line)}
+.cargo-detail-status span{color:var(--v2-primary);font-weight:900;font-size:12px}.cargo-detail-status small{color:var(--v2-muted);font-size:10px}
+.cargo-detail-rows{padding:0 20px;background:var(--v2-surface2)}
+.cargo-detail-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid var(--v2-line)}
+.cargo-detail-row:last-child{border-bottom:0}.cargo-detail-row span{color:var(--v2-muted);font-size:12px;flex:0 0 auto}.cargo-detail-row b{color:var(--v2-text);font-size:13px;text-align:end;line-height:1.55;overflow-wrap:anywhere}.cargo-detail-row b.accent{color:var(--v2-primary);font-size:15px}
+.cargo-detail-card .cargo-detail-description{margin:0;border:0;border-top:1px solid var(--v2-line);border-radius:0;background:var(--v2-surface);padding:16px 20px 18px}.cargo-detail-card .cargo-detail-description>span{font-weight:800;font-size:12px}.cargo-detail-card .cargo-detail-description p{font-size:13px;line-height:2;color:var(--v2-text)}
+.cargo-detail-actions{display:flex;gap:9px;padding:16px 20px 20px;border-top:1px solid var(--v2-line);background:var(--v2-surface)}.cargo-detail-actions .btn{flex:1;min-height:46px}
+@media(max-width:600px){.cargo-detail-card .cargo-detail-route{padding:16px}.cargo-detail-card .cargo-detail-route b{font-size:14px}.cargo-detail-status,.cargo-detail-rows{padding-inline:16px}.cargo-detail-row{gap:12px;padding:11px 0}.cargo-detail-row span{font-size:11px}.cargo-detail-row b{font-size:12px}.cargo-detail-card .cargo-detail-description{padding-inline:16px}.cargo-detail-actions{padding:14px 16px 16px}}
 .marketplace-card .cargo-actions .btn{min-height:38px;padding:9px 13px!important;font-size:10px!important}
 .marketplace-card .cargo-share-btn{width:38px;padding:0!important}
 .marketplace-card .cargo-detail-action{border-color:var(--v2-line2)!important}
