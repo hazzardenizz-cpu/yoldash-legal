@@ -650,6 +650,14 @@ dialog::backdrop{background:rgba(8,17,31,.56)!important;backdrop-filter:blur(6px
 /* === PUBLIC CARGO ACTIONS === */
 .cargo-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.cargo-actions .btn{white-space:nowrap}.cargo-share-btn{opacity:.92}@media(max-width:680px){.cargo-actions{width:100%}.cargo-actions .btn{flex:1;min-width:110px}}
 
+/* Transport requests and private shipment chat use the same guarded server
+   commands as the mobile app. */
+.shipment-offers{margin:-2px 0 16px;padding:15px 18px;border:1px solid var(--v2-line);border-radius:18px;background:var(--v2-surface2)}
+.shipment-offers-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.shipment-offers-head b{font-size:13px}.shipment-offers-head small{min-width:22px;padding:3px 7px;border-radius:999px;background:var(--v2-primary-soft);color:var(--v2-primary);font-weight:800;text-align:center}
+.shipment-offer-row{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:13px 0;border-top:1px solid var(--v2-line)}.shipment-offer-row>div:first-child{min-width:0}.shipment-offer-row b{display:block;font-size:12px}.shipment-offer-row small,.shipment-offer-row p,.shipment-empty{display:block;margin:5px 0 0;color:var(--v2-muted);font-size:10px;line-height:1.7}.shipment-offer-row p{color:var(--v2-text)}.shipment-offer-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.shipment-offer-actions .btn{padding:8px 10px;font-size:9px}.shipment-offer-status{padding:5px 8px;border-radius:999px;background:var(--v2-primary-soft);color:var(--v2-primary);font-size:9px;font-weight:800}.shipment-offer-status.accepted{background:var(--v2-success-soft);color:var(--v2-success)}.shipment-offer-status.rejected{background:rgba(239,68,68,.11);color:#f87171}
+.chat-room-choice{width:100%;border:0;background:transparent;color:inherit;text-align:start;cursor:pointer;font:inherit}.chat-room-choice:hover{background:#10203a}.shipment-chat-list-title{display:block;margin:15px 8px 7px;color:var(--v2-muted);font-size:9px}.chat-person.placeholder{grid-template-columns:auto 1fr}.chat-person.placeholder:hover{background:transparent}.chat-room-head small{max-width:55vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:650px){.shipment-offers{padding:13px}.shipment-offer-row{display:block}.shipment-offer-actions{justify-content:flex-start;margin-top:10px}.chat-shell{grid-template-columns:1fr}.chat-list{border-inline-end:0;border-bottom:1px solid #203451;max-height:250px;overflow:auto}.chat-room{min-height:480px}}
+
 
 /* === YOLDASH V3 LOAD BOARD === */
 .load-board-shell{display:grid;gap:16px;padding:28px}

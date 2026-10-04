@@ -25,3 +25,41 @@ export async function submitCargoOffer({
 export async function getMyTransportCargo() {
   return supabase.rpc('get_my_transport_cargo');
 }
+
+// These commands are intentionally RPC calls.  The database verifies that only
+// the cargo owner can decide an offer and only the two shipment parties can
+// access the chat room.
+export async function setCargoOfferStatus(offerId, status) {
+  return supabase.rpc('set_cargo_offer_status', {
+    p_offer_id: offerId,
+    p_status: status
+  });
+}
+
+export async function getMyShipmentRooms() {
+  return supabase.rpc('get_my_shipment_rooms', {
+    p_completed: false,
+    p_limit: 100
+  });
+}
+
+export async function getShipmentRoomForOffer(offerId) {
+  return supabase.rpc('get_shipment_room_for_offer', {
+    p_offer_id: offerId
+  });
+}
+
+export async function getShipmentMessages(roomId) {
+  return supabase.rpc('get_shipment_messages', {
+    p_room_id: roomId,
+    p_limit: 100
+  });
+}
+
+export async function sendShipmentText(roomId, body) {
+  return supabase.rpc('send_shipment_message', {
+    p_room_id: roomId,
+    p_message_type: 'TEXT',
+    p_body: body.trim()
+  });
+}

@@ -30,7 +30,12 @@ import {
 import {
   getCargoOfferSnapshot,
   submitCargoOffer,
-  getMyTransportCargo
+  getMyTransportCargo,
+  setCargoOfferStatus,
+  getMyShipmentRooms,
+  getShipmentRoomForOffer,
+  getShipmentMessages,
+  sendShipmentText
 } from './src/features/transport/transport-service.js';
 import {
   listDriverHubListings,
@@ -1037,11 +1042,64 @@ async function loadShipments(){
   el.innerHTML='<div class="loading-card"></div><div class="loading-card"></div>';
   try{
     const {data,error}=await getMyTransportCargo(); if(error) throw error;
-    const rows=Array.isArray(data)?data:[]; el.innerHTML=rows.length?rows.map(c=>cargoCard(c,true)).join(''):emptyBlock('noShipments'); $('#metricShipments').textContent=String(rows.length); bindCargoActions();
+    const rows=Array.isArray(data)?data:[];
+    const cards=await Promise.all(rows.map(async cargo=>{
+      const snapshot=await getCargoOfferSnapshot(cargo.id);
+      const offers=snapshot.error ? [] : (snapshot.data||[]);
+      return `${cargoCard(cargo,true)}${shipmentOfferPanel(cargo,offers)}`;
+    }));
+    el.innerHTML=rows.length?cards.join(''):emptyBlock('noShipments');
+    $('#metricShipments').textContent=String(rows.length);
+    bindCargoActions();
+    bindShipmentOfferActions();
   }catch(err){el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
 }
 
+function shipmentCopy(key){
+  const copy={
+    fa:{requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
+    tr:{requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
+    en:{requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
+  };
+  return copy[state.lang]?.[key]||copy.en[key]||key;
+}
+function shipmentOfferPanel(cargo, rows){
+  if(!rows.some(row=>row.can_manage)) return '';
+  const offers=rows.filter(row=>row.offer_id);
+  const offerRow=offer=>{
+    const price=offer.proposed_price==null?'—':`${Number(offer.proposed_price).toLocaleString(localeMap[state.lang])} ${offer.currency_code||''}`;
+    const isPending=offer.offer_status==='PENDING';
+    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status||'PENDING')}</span>${isPending?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
+  };
+  return `<section class="shipment-offers" data-cargo-offers="${esc(cargo.id)}"><div class="shipment-offers-head"><b>${shipmentCopy('requests')}</b><small>${offers.length}</small></div>${offers.length?offers.map(offerRow).join(''):`<p class="shipment-empty">${shipmentCopy('noRequests')}</p>`}</section>`;
+}
+function bindShipmentOfferActions(){
+  $$('[data-offer-decision]').forEach(button=>button.onclick=async()=>{
+    const offerId=button.dataset.offerId, status=button.dataset.offerDecision;
+    if(!offerId||!status) return;
+    button.disabled=true;
+    try{
+      const {error}=await setCargoOfferStatus(offerId,status);
+      if(error) throw error;
+      if(status==='ACCEPTED'){
+        const roomResult=await getShipmentRoomForOffer(offerId);
+        if(roomResult.error) throw roomResult.error;
+        const room=(roomResult.data||[])[0];
+        toast(shipmentCopy('requestAccepted'));
+        await loadShipments();
+        if(room){ page('chat'); await openShipmentRoom(room); }
+      }else{
+        toast(shipmentCopy('requestRejected'));
+        await loadShipments();
+      }
+    }catch(err){ toast(humanError(err),'error'); button.disabled=false; }
+  });
+}
+
 let chatCache=[];
+let shipmentRooms=[];
+let shipmentMessages=[];
+let activeShipmentRoom=null;
 let notificationRealtimeChannel=null;
 function renderChatFromCache(){
   const el=$('#chatMessages'); if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForChat'));return;}
@@ -1056,14 +1114,19 @@ async function loadChat(silent=false){
   if(!state.session){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
   if(!isFullProfileReady()){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
   input.disabled=false;send.disabled=false;
+  await loadShipmentRooms(silent);
+  clearInterval(state.chatTimer);
+  state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},12000);
+  if(activeShipmentRoom) return loadShipmentMessages(activeShipmentRoom,silent);
+  setChatRoomHeader(null);
   try{
     const {data,error}=await getPublicChatMessages(60); if(error) throw error;
     chatCache=(data||[]).slice().reverse(); renderChatFromCache(); $('#chatTime').textContent=chatCache.length?new Date(chatCache.at(-1).created_at).toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit'}):'—';
     markPublicChatRead().then(()=>loadUnread());
   }catch(err){if(!silent) toast(humanError(err),'error');}
-  clearInterval(state.chatTimer); state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},12000);
 }
 async function sendChat(){
+  if(activeShipmentRoom) return sendShipmentChat();
   const input=$('#chatInput'), body=input.value.trim(); if(!body||!state.session) return;
   if(!requireCompleteProfile()) return;
   const btn=$('#sendChat'); btn.disabled=true;
@@ -1073,6 +1136,60 @@ async function sendChat(){
     window.yoldashTrack?.('send_chat_message',{chat_type:'public'});
     input.value=''; await loadChat(true);
   }catch(err){toast(humanError(err),'error');} finally{btn.disabled=false;}
+}
+function setChatRoomHeader(room){
+  const title=$('#chatRoomTitle'),avatar=$('#chatRoomAvatar'),online=$('#chatOnlineLabel');
+  if(!title||!avatar||!online) return;
+  if(room){
+    const other=room.owner_id===state.session?.user?.id ? room.provider_display_name : room.owner_display_name;
+    title.textContent=other || shipmentCopy('privateChat');
+    avatar.textContent=initials(other||'YD');
+    online.textContent=`${shipmentCopy('route')}: ${room.origin_city||'—'} → ${room.destination_city||'—'}`;
+  }else{
+    title.textContent=t('publicChat'); avatar.textContent='YG'; online.textContent=t('onlineNow');
+  }
+}
+function renderShipmentRooms(){
+  const el=$('#shipmentChatRooms'); if(!el) return;
+  if(!shipmentRooms.length){el.innerHTML=`<div class="chat-person placeholder"><span class="avatar">⇄</span><div><b>${t('shipmentChat')}</b><small>${shipmentCopy('chatReady')}</small></div></div>`;return;}
+  el.innerHTML=`<b class="shipment-chat-list-title">${shipmentCopy('privateChats')}</b>`+shipmentRooms.map(room=>{
+    const other=room.owner_id===state.session?.user?.id?room.provider_display_name:room.owner_display_name;
+    return `<button class="chat-person chat-room-choice ${activeShipmentRoom?.id===room.id?'active':''}" type="button" data-shipment-room="${esc(room.id)}"><span class="avatar">${esc(initials(other||'YD'))}</span><span><b>${esc(other||shipmentCopy('privateChat'))}</b><small>${esc(`${room.origin_city||'—'} → ${room.destination_city||'—'}`)}</small></span><time>${esc(relativeLabel(room.updated_at))}</time></button>`;
+  }).join('');
+  $$('[data-shipment-room]').forEach(button=>button.onclick=()=>{const room=shipmentRooms.find(item=>item.id===button.dataset.shipmentRoom);if(room) openShipmentRoom(room);});
+}
+async function loadShipmentRooms(silent=false){
+  if(!state.session) return;
+  try{const {data,error}=await getMyShipmentRooms();if(error) throw error;shipmentRooms=data||[];renderShipmentRooms();}
+  catch(err){if(!silent) console.warn('shipment rooms',err);}
+}
+function renderShipmentMessages(){
+  const el=$('#chatMessages'); if(!activeShipmentRoom) return;
+  if(!shipmentMessages.length){el.innerHTML=emptyBlock('shipmentChat',shipmentCopy('chatReady'));return;}
+  const uid=state.session?.user?.id;
+  el.innerHTML=shipmentMessages.map(message=>`<div class="bubble ${message.sender_id===uid?'me':''}"><span class="sender">${esc(message.sender_display_name||'Yoldash')}</span><span>${esc(message.body||'')}</span><time>${esc(dateLabel(message.created_at))}</time></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+async function openShipmentRoom(room){
+  activeShipmentRoom=room; renderShipmentRooms(); setChatRoomHeader(room); await loadShipmentMessages(room,true);
+}
+function openPublicChat(){
+  activeShipmentRoom=null;
+  shipmentMessages=[];
+  renderShipmentRooms();
+  $('#publicChatRoom')?.classList.add('active');
+  loadChat(true);
+}
+async function loadShipmentMessages(room=activeShipmentRoom,silent=false){
+  if(!room) return;
+  try{const {data,error}=await getShipmentMessages(room.id);if(error) throw error;shipmentMessages=(data||[]).slice().reverse();renderShipmentMessages();}
+  catch(err){if(!silent) toast(humanError(err),'error');}
+}
+async function sendShipmentChat(){
+  const input=$('#chatInput'),body=input.value.trim();if(!body||!activeShipmentRoom) return;
+  const button=$('#sendChat');button.disabled=true;
+  try{const {error}=await sendShipmentText(activeShipmentRoom.id,body);if(error) throw error;input.value='';await loadShipmentMessages(activeShipmentRoom,true);}
+  catch(err){toast(humanError(err),'error');}finally{button.disabled=false;}
 }
 async function loadUnread(){
   if(!state.session){$('#chatDot').style.display='none';return;}
@@ -1315,7 +1432,7 @@ function renderNotifications(rows=[]){
   list.innerHTML=rows.map(n=>{
     const tx=notificationText(n);
     const unread=!n.read_at;
-    return `<button type="button" class="notification-item ${unread?'unread':''}" data-notification-id="${esc(n.id)}" data-notification-cargo="${esc(n.cargo_id||'')}">
+    return `<button type="button" class="notification-item ${unread?'unread':''}" data-notification-id="${esc(n.id)}" data-notification-cargo="${esc(n.cargo_id||'')}" data-notification-room="${esc(n.room_id||'')}" data-notification-offer="${esc(n.offer_id||'')}">
       <span class="notification-dot"></span>
       <span class="notification-copy"><b>${esc(tx.title)}</b><small>${esc(tx.detail)}</small><time>${esc(dateLabel(n.created_at))}</time></span>
     </button>`;
@@ -1354,9 +1471,20 @@ async function markNotificationRead(id){
 async function openNotification(btn){
   const id=btn.dataset.notificationId;
   const cargoId=btn.dataset.notificationCargo;
+  const roomId=btn.dataset.notificationRoom;
+  const offerId=btn.dataset.notificationOffer;
   await markNotificationRead(id);
   await loadNotifications();
   $('#notificationPanel')?.classList.add('hidden');
+  if(roomId || offerId){
+    await loadShipmentRooms(true);
+    let room=shipmentRooms.find(item=>item.id===roomId);
+    if(!room && offerId){
+      const result=await getShipmentRoomForOffer(offerId);
+      room=(result.data||[])[0];
+    }
+    if(room){page('chat');await openShipmentRoom(room);return;}
+  }
   if(cargoId){
     page('loads');
     const card=document.querySelector(`[data-cargo-id="${CSS.escape(cargoId)}"]`);
@@ -1475,6 +1603,7 @@ function bindUI(){
   $('#loadSearch').addEventListener('input',renderLoads);
   $('#globalSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){page('loads');$('#loadSearch').value=e.target.value;renderLoads();}});
   $$('[data-filter]').forEach(b=>b.onclick=()=>{state.loadFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLoads();});
+  $('#publicChatRoom')?.addEventListener('click',openPublicChat);
   $('#sendChat').onclick=sendChat; $('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
 }
@@ -1505,6 +1634,9 @@ async function signOutUser(){
     state.businessProfile=null;
     state.isSuperAdmin=false;
     chatCache=[];
+    shipmentRooms=[];
+    shipmentMessages=[];
+    activeShipmentRoom=null;
 
     clearInterval(state.chatTimer);
     clearInterval(state.adminMapRefreshTimer);
@@ -1594,7 +1726,7 @@ async function init(){
         }
         state.session=session;
         if(session) await loadProfile();
-        else {state.profile=null;state.businessProfile=null;chatCache=[];}
+        else {state.profile=null;state.businessProfile=null;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;}
         renderProfileUI();
         loadUnread();
         startNotificationRealtime();
