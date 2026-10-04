@@ -63,3 +63,19 @@ export async function sendShipmentText(roomId, body) {
     p_body: body.trim()
   });
 }
+
+export function subscribeToShipmentRoom(roomId, onChange) {
+  return supabase
+    .channel(`web-shipment-room-${roomId}`)
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'shipment_messages', filter: `room_id=eq.${roomId}`
+    }, onChange)
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'shipment_chat_rooms', filter: `id=eq.${roomId}`
+    }, onChange)
+    .subscribe();
+}
+
+export function unsubscribeFromShipmentRoom(channel) {
+  if (channel) return supabase.removeChannel(channel);
+}

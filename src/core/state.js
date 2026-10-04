@@ -12,6 +12,7 @@ export const state = {
   fxData: null,
   fxTimer: null,
   chatTimer: null,
+  notificationTimer: null,
   driverListings: [],
   driverFilter: 'all',
   driverScope: 'all',

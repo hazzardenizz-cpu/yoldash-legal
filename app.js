@@ -35,7 +35,9 @@ import {
   getMyShipmentRooms,
   getShipmentRoomForOffer,
   getShipmentMessages,
-  sendShipmentText
+  sendShipmentText,
+  subscribeToShipmentRoom,
+  unsubscribeFromShipmentRoom
 } from './src/features/transport/transport-service.js';
 import {
   listDriverHubListings,
@@ -1100,6 +1102,7 @@ let chatCache=[];
 let shipmentRooms=[];
 let shipmentMessages=[];
 let activeShipmentRoom=null;
+let shipmentRealtimeChannel=null;
 let notificationRealtimeChannel=null;
 function renderChatFromCache(){
   const el=$('#chatMessages'); if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForChat'));return;}
@@ -1116,7 +1119,7 @@ async function loadChat(silent=false){
   input.disabled=false;send.disabled=false;
   await loadShipmentRooms(silent);
   clearInterval(state.chatTimer);
-  state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},12000);
+  state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},activeShipmentRoom?3000:12000);
   if(activeShipmentRoom) return loadShipmentMessages(activeShipmentRoom,silent);
   setChatRoomHeader(null);
   try{
@@ -1171,9 +1174,18 @@ function renderShipmentMessages(){
   el.scrollTop=el.scrollHeight;
 }
 async function openShipmentRoom(room){
-  activeShipmentRoom=room; renderShipmentRooms(); setChatRoomHeader(room); await loadShipmentMessages(room,true);
+  if(shipmentRealtimeChannel){
+    unsubscribeFromShipmentRoom(shipmentRealtimeChannel);
+    shipmentRealtimeChannel=null;
+  }
+  activeShipmentRoom=room;
+  renderShipmentRooms();
+  setChatRoomHeader(room);
+  try{shipmentRealtimeChannel=subscribeToShipmentRoom(room.id,()=>loadShipmentMessages(room,true));}catch(err){console.warn('shipment realtime',err);}
+  await loadShipmentMessages(room,true);
 }
 function openPublicChat(){
+  if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}
   activeShipmentRoom=null;
   shipmentMessages=[];
   renderShipmentRooms();
@@ -1506,6 +1518,13 @@ function startNotificationRealtime(){
     notificationRealtimeChannel=subscribeToUserNotifications(state.session.user.id,()=>loadNotifications());
   }catch(err){console.warn('notification realtime',err);}
 }
+function startNotificationPolling(){
+  clearInterval(state.notificationTimer);
+  if(!state.session) return;
+  state.notificationTimer=setInterval(()=>{
+    if(document.visibilityState==='visible' && state.session) loadNotifications();
+  },10000);
+}
 
 function fxNumber(value){
   const n=Number(value);
@@ -1606,6 +1625,8 @@ function bindUI(){
   $('#publicChatRoom')?.addEventListener('click',openPublicChat);
   $('#sendChat').onclick=sendChat; $('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
   window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
+  window.addEventListener('focus',()=>{if(state.session) loadNotifications();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&state.session) loadNotifications();});
 }
 
 async function signOutUser(){
@@ -1637,8 +1658,10 @@ async function signOutUser(){
     shipmentRooms=[];
     shipmentMessages=[];
     activeShipmentRoom=null;
+    if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}
 
     clearInterval(state.chatTimer);
+    clearInterval(state.notificationTimer);
     clearInterval(state.adminMapRefreshTimer);
 
     try{
@@ -1726,10 +1749,11 @@ async function init(){
         }
         state.session=session;
         if(session) await loadProfile();
-        else {state.profile=null;state.businessProfile=null;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;}
+        else {state.profile=null;state.businessProfile=null;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}}
         renderProfileUI();
         loadUnread();
         startNotificationRealtime();
+        startNotificationPolling();
         await loadNotifications();
         if(session && !isFullProfileReady() && event!=='PASSWORD_RECOVERY'){
           if(!$('#authModal')?.open) $('#authModal')?.showModal();
