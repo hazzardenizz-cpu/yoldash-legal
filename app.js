@@ -1597,6 +1597,8 @@ async function init(){
         else {state.profile=null;state.businessProfile=null;chatCache=[];}
         renderProfileUI();
         loadUnread();
+        startNotificationRealtime();
+        await loadNotifications();
         if(session && !isFullProfileReady() && event!=='PASSWORD_RECOVERY'){
           if(!$('#authModal')?.open) $('#authModal')?.showModal();
         }
