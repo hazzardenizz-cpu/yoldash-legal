@@ -137,6 +137,13 @@ function applyLanguage(next, persist=true){
   if (state.session) renderChatFromCache?.();
 }
 function page(name){
+  // Chat is available only after sign-in.  Opening the sign-in dialog here gives
+  // guest users a clear next step instead of displaying an inactive chat screen.
+  if(name==='chat' && !state.session){
+    $('#authModal')?.showModal();
+    return;
+  }
+
   const target=$('#page-'+name);
 
   $$('.page').forEach(p=>{
