@@ -15,15 +15,15 @@
   function mount(){
     const services=document.querySelector('.sidebar nav [data-page="services"]');
     if(!services)return;
-    let a=document.getElementById('aboutNavItem');
-    if(!a){
-      a=document.createElement('a');
-      a.id='aboutNavItem';
-      a.className='nav-item';
-      a.href='/about';
-      a.style.textDecoration='none';
-      a.innerHTML='<span class="ico">ⓘ</span><span data-about-nav-label></span>';
-      services.insertAdjacentElement('afterend',a);
+    let item=document.getElementById('aboutNavItem');
+    if(!item){
+      item=document.createElement('button');
+      item.type='button';
+      item.id='aboutNavItem';
+      item.className='nav-item';
+      item.innerHTML='<span class="ico">ⓘ</span><span data-about-nav-label></span>';
+      item.addEventListener('click',()=>{window.location.href='/about';});
+      services.insertAdjacentElement('afterend',item);
     }
     updateLabel();
     document.querySelectorAll('.lang-switch button[data-lang]').forEach(btn=>{
