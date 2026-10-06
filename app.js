@@ -1816,3 +1816,5 @@ document.querySelectorAll('[data-v2-action="refresh-fx"]').forEach((el) => {
 // production-sync: navfix6
 
 // production-sync: js-nav-hardfix7
+
+// deploy-event: navfix7-pr
