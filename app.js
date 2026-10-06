@@ -175,6 +175,7 @@ function page(name){
   }
 
   if(name==='shipments') loadShipments();
+  if(name==='loads') markLoadBoardSeen();
   if(name==='home'||name==='loads') loadLoads();
   if(name==='chat') loadChat();
   if(name==='drivers') loadDriverHub();
@@ -356,6 +357,47 @@ function openCargoDetails(id){
   dialog.showModal();
 }
 function emptyBlock(titleKey, body='') { return `<div class="empty-inline"><b>${t(titleKey)}</b>${body?`<span>${esc(body)}</span>`:''}</div>`; }
+
+const LOAD_BOARD_SEEN_PREFIX='yoldash_load_board_seen_v1';
+function loadBoardSeenStorageKey(){
+  return `${LOAD_BOARD_SEEN_PREFIX}:${state.session?.user?.id || 'guest'}`;
+}
+function loadPublishedAtMs(load){
+  const value=load?.published_at || load?.created_at || '';
+  const ms=Date.parse(value);
+  return Number.isFinite(ms)?ms:0;
+}
+function getLoadBoardSeenAt(){
+  const raw=Number(localStorage.getItem(loadBoardSeenStorageKey()) || 0);
+  return Number.isFinite(raw) && raw>0 ? raw : 0;
+}
+function isLoadBoardActive(){
+  return $('#page-loads')?.classList.contains('active') === true;
+}
+function setLoadUnreadBadge(count){
+  const badge=$('#loadCountBadge');
+  if(!badge) return;
+  const n=Math.max(0,Number(count)||0);
+  badge.textContent=n>99?'99+':String(n);
+  badge.style.display=n>0?'inline-flex':'none';
+  badge.setAttribute('aria-label',n>0?`${n} new loads`:'No new loads');
+}
+function markLoadBoardSeen(){
+  const newest=state.loads.reduce((max,load)=>Math.max(max,loadPublishedAtMs(load)),0);
+  const seenAt=Math.max(Date.now(),newest);
+  try{ localStorage.setItem(loadBoardSeenStorageKey(),String(seenAt)); }catch{}
+  setLoadUnreadBadge(0);
+}
+function renderLoadUnreadBadge(){
+  if(isLoadBoardActive()){
+    markLoadBoardSeen();
+    return;
+  }
+  const seenAt=getLoadBoardSeenAt();
+  const unread=state.loads.reduce((count,load)=>count+(loadPublishedAtMs(load)>seenAt?1:0),0);
+  setLoadUnreadBadge(unread);
+}
+
 function renderLoads(){
   const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
   const filtered = state.loads.filter(c=>{
@@ -386,7 +428,7 @@ function renderLoads(){
     ? filtered.map(c=>cargoCard(c)).join('')
     : emptyBlock('noLoads');
 
-  if($('#loadCountBadge')) $('#loadCountBadge').textContent = String(state.loads.length);
+  renderLoadUnreadBadge();
   if($('#metricLoads')) $('#metricLoads').textContent = String(state.loads.length);
   if($('#loadBoardTotal')) $('#loadBoardTotal').textContent = String(state.loads.length);
   if($('#loadBoardInternational')) $('#loadBoardInternational').textContent = String(internationalCount);
