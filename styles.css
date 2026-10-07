@@ -812,3 +812,6 @@ html[dir="rtl"] .cargo-detail-route>i{transform:rotate(180deg)}
 .social-icon:hover{transform:translateY(-2px)}
 .social-icon:focus-visible{outline:3px solid var(--text);outline-offset:4px}
 @media(max-width:900px){.social-float{inset-inline-end:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
+
+.social-telegram{background:#167faf}.social-youtube{background:#b91c1c}
+@media(max-width:480px){.social-float{gap:8px}.social-icon{width:42px;height:42px}}
