@@ -802,3 +802,13 @@ html[dir="rtl"] .cargo-detail-route>i{transform:rotate(180deg)}
   .cargo-card-foot{grid-template-columns:1fr}
   .cargo-published-time{grid-column:auto}
 }
+
+/* Compact social buttons at the bottom, above mobile navigation. */
+.social-float{position:fixed;z-index:120;inset-inline-end:22px;bottom:22px;display:flex;gap:10px;align-items:center}
+.social-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.25);box-shadow:0 5px 18px rgba(0,0,0,.2);transition:transform .18s ease}
+.social-icon svg{width:25px;height:25px}
+.social-whatsapp{background:#128c4b}
+.social-instagram{background:linear-gradient(135deg,#7628bb,#c62f73,#d45c27)}
+.social-icon:hover{transform:translateY(-2px)}
+.social-icon:focus-visible{outline:3px solid var(--text);outline-offset:4px}
+@media(max-width:900px){.social-float{inset-inline-end:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
