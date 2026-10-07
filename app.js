@@ -1319,6 +1319,14 @@ function adminMapPopup(row){
 
 // Separate overlapping markers in screen pixels; never change stored coordinates.
 function separateAdminMapMarkers(items,map){
+  // Keep geographic positions in the overview; separate only in close views.
+  if(map.getZoom()<12){
+    for(const item of items){
+      item.displayLatlng=item.latlng;
+      item.displaced=false;
+    }
+    return items;
+  }
   const gap=24; // 18px marker + 3px stroke on each side.
   const cells=new Map();
   const key=p=>`${Math.floor(p.x/gap)},${Math.floor(p.y/gap)}`;
