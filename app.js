@@ -1317,6 +1317,44 @@ function adminMapPopup(row){
   </div>`;
 }
 
+// Separate overlapping markers in screen pixels; never change stored coordinates.
+function separateAdminMapMarkers(items,map){
+  const gap=24; // 18px marker + 3px stroke on each side.
+  const cells=new Map();
+  const key=p=>`${Math.floor(p.x/gap)},${Math.floor(p.y/gap)}`;
+  const available=p=>{
+    const x=Math.floor(p.x/gap), y=Math.floor(p.y/gap);
+    for(let dx=-1;dx<=1;dx++) for(let dy=-1;dy<=1;dy++){
+      for(const other of cells.get(`${x+dx},${y+dy}`)||[]){
+        if(Math.hypot(p.x-other.x,p.y-other.y)<gap-.01) return false;
+      }
+    }
+    return true;
+  };
+  const identity=item=>String(item.row.user_id||item.row.id||
+    `${item.latlng.lat},${item.latlng.lng}:${item.row.display_name||''}:${item.row.location_source||''}`);
+  const ordered=[...items].sort((a,b)=>identity(a).localeCompare(identity(b)));
+  for(const item of ordered){
+    const origin=map.latLngToLayerPoint(item.latlng);
+    let point=origin;
+    // Compact concentric rings keep the displacement close to the real point.
+    for(let ring=1;!available(point);ring++){
+      const radius=gap*ring, slots=6*ring;
+      for(let slot=0;slot<slots;slot++){
+        const angle=2*Math.PI*slot/slots;
+        const candidate=L.point(origin.x+radius*Math.cos(angle),origin.y+radius*Math.sin(angle));
+        if(available(candidate)){ point=candidate; break; }
+      }
+    }
+    const bucket=key(point);
+    if(!cells.has(bucket)) cells.set(bucket,[]);
+    cells.get(bucket).push(point);
+    item.displayLatlng=map.layerPointToLatLng(point);
+    item.displaced=Math.hypot(point.x-origin.x,point.y-origin.y)>1;
+  }
+  return items;
+}
+
 function renderAdminUserMap(rows=[]){
   state.adminMapRows=rows;
   const mapEl=$('#adminUserMap');
@@ -1375,6 +1413,8 @@ function renderAdminUserMap(rows=[]){
     latlng:L.latLng(Number(row.latitude),Number(row.longitude))
   }));
 
+  separateAdminMapMarkers(items,state.adminUserMap);
+
   items.forEach(item=>{
 
     const row=item.row;
@@ -1383,7 +1423,12 @@ function renderAdminUserMap(rows=[]){
     const markerColor=freshnessClass==='fresh'?'#f6b817':freshnessClass==='aging'?'#2f80ed':'#ef4444';
     const label=esc(row.display_name||typeLabel(row.business_user_type)||'Yoldash');
 
-    const marker=L.circleMarker(item.latlng,{
+    if(item.displaced){
+      L.polyline([item.latlng,item.displayLatlng],{
+        color:markerColor,weight:1,opacity:.45,interactive:false
+      }).addTo(state.adminUserMapLayer);
+    }
+    const marker=L.circleMarker(item.displayLatlng,{
       radius:9,
       weight:3,
       color:'#ffffff',
