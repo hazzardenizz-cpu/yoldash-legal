@@ -37,7 +37,7 @@ for path,content in pages.items():
   if f'property="{key}"' not in content:errors.append(f'{path}: missing {key}')
  if not re.search(r'<link rel="icon"[^>]*href="/brand/yoldash.webp"',content):errors.append(f'{path}: favicon must use a crawlable image URL')
  if not re.search(r'<head>\s*<meta charset="utf-8"',content):errors.append(f'{path}: charset must be first in head')
- if path not in ['/', '/delete-account']:
+ if path!='/delete-account':
   if len(re.findall(r'<h1\b',content))!=1:errors.append(f'{path}: expected one main heading')
  for tag in re.findall(r'<img\b[^>]*>',content):
   if 'alt='not in tag:errors.append(f'{path}: image without alt text')

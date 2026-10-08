@@ -815,3 +815,5 @@ html[dir="rtl"] .cargo-detail-route>i{transform:rotate(180deg)}
 
 .social-telegram{background:#167faf}.social-youtube{background:#b91c1c}
 @media(max-width:480px){.social-float{gap:8px}.social-icon{width:42px;height:42px}}
+
+.page-title .page-heading{margin:0;font-size:30px;font-weight:700}

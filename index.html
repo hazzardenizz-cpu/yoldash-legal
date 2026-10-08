@@ -17,6 +17,7 @@
   <meta name="twitter:title" content="یولداش | اعلام بار و پیدا کردن راننده ایران–ترکیه">
   <meta name="twitter:description" content="Yoldash پلتفرم هوشمند اعلام بار و حمل‌ونقل جاده‌ای ایران و ترکیه برای صاحبان بار، رانندگان و شرکت‌های حمل‌ونقل است.">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.getyoldash.com/#organization","name":"Yoldash","url":"https://www.getyoldash.com/","description":"Digital road freight platform connecting cargo owners, drivers and transport companies.","logo":"https://www.getyoldash.com/brand/yoldash.webp","sameAs":["https://www.instagram.com/yoldashapplication/","https://t.me/GETYOLDASH","https://www.youtube.com/@getyoldash"],"email":"info@getyoldash.com","telephone":"+905326629800","alternateName":"یولداش"},{"@type":"WebSite","@id":"https://www.getyoldash.com/#website","url":"https://www.getyoldash.com/","name":"Yoldash","publisher":{"@id":"https://www.getyoldash.com/#organization"},"inLanguage":["fa","tr","en"],"alternateName":"یولداش"},{"@type":"SoftwareApplication","name":"Yoldash","applicationCategory":"BusinessApplication","operatingSystem":"Web, Android","url":"https://www.getyoldash.com/","description":"Road freight marketplace and shipment management platform for shippers, drivers and transport companies."},{"@type":"Service","name":"Yoldash Road Freight Platform","serviceType":"Road freight marketplace and load board","provider":{"@id":"https://www.getyoldash.com/#organization"},"areaServed":[{"@type":"Country","name":"Türkiye"},{"@type":"Country","name":"Iran"}],"url":"https://www.getyoldash.com/"},{"@type":"WebPage","@id":"https://www.getyoldash.com/#page","url":"https://www.getyoldash.com/","name":"یولداش | اعلام بار و پیدا کردن راننده ایران–ترکیه","description":"Yoldash پلتفرم هوشمند اعلام بار و حمل‌ونقل جاده‌ای ایران و ترکیه برای صاحبان بار، رانندگان و شرکت‌های حمل‌ونقل است.","inLanguage":"fa","isPartOf":{"@id":"https://www.getyoldash.com/#website"},"publisher":{"@id":"https://www.getyoldash.com/#organization"}}]}</script>
+  <link rel="preconnect" href="https://esm.sh" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -42,7 +43,7 @@
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <div class="shell">
     <aside class="sidebar glass">
-      <div class="brand"><img src="/brand/yoldash.webp" width="128" height="128" alt="Yoldash" decoding="async"><div><b>Yoldash</b><span data-i18n="roadFreight">حمل‌ونقل جاده‌ای</span></div></div>
+      <div class="brand"><img src="/brand/yoldash.webp" width="128" height="128" alt="Yoldash" decoding="async" fetchpriority="high"><div><b>Yoldash</b><span data-i18n="roadFreight">حمل‌ونقل جاده‌ای</span></div></div>
       <nav>
         <button class="nav-item active" data-page="home"><span class="ico">⌂</span><span data-i18n="home">خانه</span></button>
         <button class="nav-item" data-page="loads"><span class="ico">▦</span><span data-i18n="loadBoard">اعلام بار</span><span class="badge" id="loadCountBadge">—</span></button>
@@ -161,7 +162,7 @@
           <section class="load-board-head glass">
             <div class="load-board-head-copy">
               <span class="eyebrow"><i class="live-dot"></i><span data-i18n="marketplace">بازار حمل‌ونقل</span></span>
-              <h1 data-i18n="loadBoard">اعلام بار</h1>
+              <h2 class="page-heading" data-i18n="loadBoard">اعلام بار</h2>
               <p data-i18n="searchLoads">جستجو بر اساس مبدا، مقصد یا نوع بار</p>
             </div>
             <button class="btn primary load-board-create" id="createLoadBtn2">＋ <span data-i18n="createLoad">اعلام بار جدید</span></button>
@@ -189,7 +190,7 @@
         </div>
       </section>
 
-      <section class="generic-page page" id="page-shipments"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="transportManagement">مدیریت حمل</span><h1 data-i18n="myShipments">حمل‌های من</h1></div><button class="btn secondary" id="refreshShipments">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div><p class="muted" data-i18n="shipmentsDesc">همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.</p><div class="cargo-list expanded" id="shipmentList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForShipments">برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.</span></div></div></div></section>
+      <section class="generic-page page" id="page-shipments"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="transportManagement">مدیریت حمل</span><h2 class="page-heading" data-i18n="myShipments">حمل‌های من</h2></div><button class="btn secondary" id="refreshShipments">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div><p class="muted" data-i18n="shipmentsDesc">همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.</p><div class="cargo-list expanded" id="shipmentList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForShipments">برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.</span></div></div></div></section>
 
       <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><button class="chat-person active chat-room-choice" id="publicChatRoom" type="button"><span class="avatar green">YG</span><span><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></span><time id="chatTime">—</time></button><div id="shipmentChatRooms"><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green" id="chatRoomAvatar">YG</span><div><b id="chatRoomTitle" data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
 
@@ -198,7 +199,7 @@
           <section class="driver-hub-hero glass">
             <div>
               <span class="eyebrow"><i class="live-dot"></i><span data-i18n="driverHub">بازار راننده و خودرو</span></span>
-              <h1 data-i18n="drivers">راننده و ماشین</h1>
+              <h2 class="page-heading" data-i18n="drivers">راننده و ماشین</h2>
               <p data-i18n="driverHubDesc">برای پیدا کردن راننده یا خودرو آگهی ثبت کنید و آگهی‌های فعال کاربران Yoldash را ببینید.</p>
               <div class="hero-actions"><button class="btn primary" id="createDriverListing">＋ <span data-i18n="newDriverListing">آگهی جدید</span></button><button class="btn secondary" id="driverBrowseLoads" data-i18n="viewLoads">مشاهده بارها</button></div>
             </div>
@@ -225,7 +226,7 @@
           <div class="services-intro glass">
             <div>
               <span class="kicker" data-i18n="serviceCenter">مرکز خدمات Yoldash</span>
-              <h1 data-i18n="services">خدمات</h1>
+              <h2 class="page-heading" data-i18n="services">خدمات</h2>
               <p data-i18n="servicesDesc">بیمه ترکیه، CMR، اسناد، هزینه‌ها و ابزارهای راننده در همین داشبورد یکپارچه خواهند شد.</p>
             </div>
             <a class="btn primary services-support" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer">
@@ -399,7 +400,7 @@
   <dialog id="authModal">
     <form id="authForm" class="modal auth glass yd-auth-modal">
       <button type="button" class="close floating" data-close="authModal">×</button>
-      <img src="/brand/yoldash.webp" width="128" height="128" alt="Yoldash" decoding="async"><div><h2>Yoldash</h2><span>Road Freight Platform</span></div></div>
+      <img src="/brand/yoldash.webp" width="128" height="128" alt="Yoldash" decoding="async" loading="lazy"><div><h2>Yoldash</h2><span>Road Freight Platform</span></div></div>
       <p id="authSubtitle" data-i18n="authSubtitle">با حساب مشترک اپ وارد شوید</p>
       <div id="loggedOutAuth">
         <div class="auth-tabs yd-auth-tabs"><button type="button" class="active" data-auth-mode="signin" data-i18n="signIn">ورود</button><button type="button" data-auth-mode="signup" data-i18n="register">ثبت‌نام</button></div>
