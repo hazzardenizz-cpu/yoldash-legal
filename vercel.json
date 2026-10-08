@@ -27,6 +27,15 @@
           "value": "DENY"
         }
       ]
+    },
+    {
+      "source": "/vercel-preview/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
     }
   ],
   "git": {
@@ -42,6 +51,49 @@
     {
       "source": "/load-sitemap.xml",
       "destination": "/api/load-sitemap"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/about",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "fa"
+        }
+      ],
+      "destination": "/fa/about",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "tr"
+        }
+      ],
+      "destination": "/tr/hakkimizda",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/en/about",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/fa/about",
+      "permanent": true
     }
   ]
 }

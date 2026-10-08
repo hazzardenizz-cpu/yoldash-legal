@@ -22,7 +22,7 @@
       item.id='aboutNavItem';
       item.className='nav-item';
       item.innerHTML='<span class="ico">ⓘ</span><span data-about-nav-label></span>';
-      item.addEventListener('click',()=>{window.location.href='/about';});
+      item.addEventListener('click',()=>{window.location.href=({fa:'/fa/about',tr:'/tr/hakkimizda',en:'/en/about'})[currentLang()];});
       services.insertAdjacentElement('afterend',item);
     }
     updateLabel();

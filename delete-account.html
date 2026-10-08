@@ -9,7 +9,7 @@
 <meta name="robots" content="index,follow" />
 <title>Delete Account · Yoldash</title>
 <link rel="stylesheet" href="styles.css" />
-</head>
+<link rel="canonical" href="https://www.getyoldash.com/delete-account"><meta name="description" content="راهنمای درخواست حذف حساب یولداش و اطلاعات مرتبط از طریق پشتیبانی رسمی."></head>
 <body>
 <main class="shell">
   <div class="topbar">
@@ -40,31 +40,6 @@
   </div>
   <footer>Yoldash · <a href="mailto:yoldashapplication@gmail.com">yoldashapplication@gmail.com</a></footer>
 </main>
-<script>
-(() => {
- const supported = ['fa','tr','en'];
- const params = new URLSearchParams(location.search);
- let lang = params.get('lang');
- if (!supported.includes(lang)) {
-   const browser = (navigator.language || '').toLowerCase();
-   lang = browser.startsWith('fa') ? 'fa' : browser.startsWith('tr') ? 'tr' : 'en';
- }
- const apply = (next) => {
-   lang = supported.includes(next) ? next : 'en';
-   document.documentElement.lang = lang;
-   document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
-   document.querySelectorAll('.localized').forEach(el => el.hidden = el.dataset.lang !== lang);
-   document.querySelectorAll('[data-switch]').forEach(btn => btn.classList.toggle('active', btn.dataset.switch === lang));
-   const labels = {"fa":{"privacy":"حریم خصوصی","terms":"قوانین استفاده","deletion":"حذف حساب"},"tr":{"privacy":"Gizlilik","terms":"Kullanım koşulları","deletion":"Hesap silme"},"en":{"privacy":"Privacy","terms":"Terms","deletion":"Delete account"}}[lang];
-   const files = {privacy:'privacy.html',terms:'terms.html',deletion:'delete-account.html'};
-   document.querySelectorAll('[data-nav]').forEach(a => {
-      const r = a.dataset.nav; a.textContent = labels[r]; a.href = files[r] + '?lang=' + encodeURIComponent(lang);
-   });
-   const u = new URL(location.href); u.searchParams.set('lang', lang); history.replaceState(null,'',u);
- };
- document.querySelectorAll('[data-switch]').forEach(btn => btn.addEventListener('click', () => apply(btn.dataset.switch)));
- apply(lang);
-})();
-</script>
+<script src="/delete-account-ui.js" defer></script>
 </body>
 </html>
