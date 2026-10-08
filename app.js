@@ -1,4 +1,15 @@
-import L from 'https://esm.sh/leaflet@1.9.4';
+// Only Super Admin maps need Leaflet; keep it out of the public startup graph.
+let L=null;
+let leafletLoading=null;
+async function ensureLeaflet(){
+  if(L) return L;
+  if(!leafletLoading){
+    leafletLoading=import('https://esm.sh/leaflet@1.9.4')
+      .then(module=>{L=module.default;return L;})
+      .catch(error=>{leafletLoading=null;throw error;});
+  }
+  return leafletLoading;
+}
 import { $, $$, esc, uuidLike } from './src/core/dom.js';
 import { localeMap, canPostTypes, canOfferTypes } from './src/core/config.js';
 import { state } from './src/core/state.js';
@@ -1369,7 +1380,7 @@ function renderAdminUserMap(rows=[]){
   const empty=$('#adminMapEmpty');
   const count=$('#adminMapUserCount');
   if(count) count.textContent=String(rows.length);
-  if(!mapEl || !state.isSuperAdmin) return;
+  if(!mapEl || !state.isSuperAdmin || !L) return;
 
   if(!state.adminUserMap){
     state.adminUserMap=L.map(mapEl,{
@@ -1480,6 +1491,9 @@ async function loadAdminUserMap(silent=false){
   const btn=$('#refreshAdminUserMap');
   if(btn) btn.disabled=true;
   try{
+    await ensureLeaflet();
+    // Sign-out or a role change may occur while the library is downloading.
+    if(!state.session||!state.isSuperAdmin) return;
     const {data,error}=await getSuperAdminUserMap();
     if(error) throw error;
     renderAdminUserMap(Array.isArray(data)?data:[]);
