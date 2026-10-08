@@ -51,6 +51,7 @@
         <button class="nav-item" data-page="chat"><span class="ico">◌</span><span data-i18n="chat">گفتگو</span><span class="dot" id="chatDot"></span></button>
         <button class="nav-item" data-page="drivers"><span class="ico">◉</span><span data-i18n="drivers">راننده و ماشین</span></button>
         <button class="nav-item" data-page="services"><span class="ico">◇</span><span data-i18n="services">خدمات</span></button>
+        <button type="button" class="nav-item" data-page="knowledge"><span class="ico" aria-hidden="true">▤</span><span data-i18n="knowledge">دانشنامه</span></button>
       </nav>
       <div class="sidebar-card"><span class="shield">✓</span><div><b data-i18n="secureTitle">اتصال امن Yoldash</b><span data-i18n="secureText">داده‌ها با اپ و Supabase مشترک است</span></div></div>
       <div class="sidebar-foot"><span>YOLDASH WEB V1</span><span>© 2026</span></div>
@@ -279,9 +280,22 @@
           <div class="legal-links"><a href="/connect">شبکه‌های اجتماعی Yoldash</a><a href="/privacy" data-i18n="privacy">حریم خصوصی</a><a href="/terms" data-i18n="terms">شرایط استفاده</a></div>
         </div>
       </section>
+<section class="generic-page page" id="page-knowledge" hidden aria-labelledby="knowledge-title">
+ <div class="knowledge-intro glass"><span class="kicker">Yoldash</span><h2 class="page-heading" id="knowledge-title" data-i18n="knowledge">دانشنامه</h2><p data-i18n="knowledgeIntro">راهنماهای فارسی حمل‌ونقل و تجارت؛ از CMR و بارنامه تا گمرک، بانک و تحویل کالا.</p></div>
+ <div class="knowledge-grid" lang="fa" dir="rtl"><a class="knowledge-card glass" href="/fa/road-freight-documents"><span class="knowledge-number" aria-hidden="true">01</span><h3>راهنمای جامع اسناد</h3><p>نقشهٔ راه آماده‌سازی پرونده‌های حمل، گمرک و بانک.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/cmr-road-freight"><span class="knowledge-number" aria-hidden="true">02</span><h3>سند CMR</h3><p>اطلاعات سند، بررسی خانه‌ها و ثبت وضعیت تحویل.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/cmr-convention"><span class="knowledge-number" aria-hidden="true">03</span><h3>کنوانسیون CMR</h3><p>دامنهٔ اجرا، مسئولیت‌ها، مهلت‌ها و متن رسمی کنوانسیون.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/bill-of-lading"><span class="knowledge-number" aria-hidden="true">04</span><h3>انواع بارنامه</h3><p>تفاوت بارنامهٔ جاده‌ای، دریایی، هوایی و رسید تحویل.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/commercial-shipping-documents"><span class="knowledge-number" aria-hidden="true">05</span><h3>اسناد تجاری</h3><p>فاکتور، پروفرما، پکینگ‌لیست و گواهی مبدأ.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/customs-transit-documents"><span class="knowledge-number" aria-hidden="true">06</span><h3>گمرک و ترانزیت</h3><p>اظهارنامه، TIR، NCTS و کد HS.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/banking-trade-documents"><span class="knowledge-number" aria-hidden="true">07</span><h3>اسناد بانکی</h3><p>اعتبار اسنادی، وصولی، ضمانت‌نامه و تطبیق مدارک.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/incoterms-road-freight"><span class="knowledge-number" aria-hidden="true">08</span><h3>اینکوترمز</h3><p>تقسیم هزینه‌ها، ریسک و مسئولیت تحویل کالا.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a>
+<a class="knowledge-card glass" href="/fa/loading-delivery-checklist"><span class="knowledge-number" aria-hidden="true">09</span><h3>بارگیری، تخلیه و تحویل</h3><p>چک‌لیست اجرایی از آماده‌سازی بار تا بستن پرونده.</p><span class="knowledge-read">مطالعهٔ راهنما ←</span></a></div>
+</section>
     </main>
   </div>
 
+<nav class="mobile-bottom glass" aria-label="منوی اصلی موبایل"><button type="button" data-page="home" class="active"><i aria-hidden="true">⌂</i><span data-i18n="home">خانه</span></button><button type="button" data-page="loads"><i aria-hidden="true">▦</i><span data-i18n="loadBoard">اعلام بار</span></button><button type="button" data-page="shipments"><i aria-hidden="true">⇄</i><span data-i18n="myShipments">حمل‌های من</span></button><button type="button" data-page="chat"><i aria-hidden="true">◌</i><span data-i18n="chat">گفتگو</span></button><button type="button" data-page="knowledge"><i aria-hidden="true">▤</i><span data-i18n="knowledge">دانشنامه</span></button></nav>
   <dialog id="cargoDetailsModal">
     <section class="modal glass cargo-details-modal">
       <div class="modal-head yd-modal-head">
