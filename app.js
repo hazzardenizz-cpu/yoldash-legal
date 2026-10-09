@@ -482,6 +482,9 @@ function renderLoads(){
       c.destination_country_code
     ].some(v=>String(v||'').toLocaleLowerCase().includes(q));
   }),mode,boardPosition);
+  const activeFilterCount=[origin,destination,truck,originCity,destinationCity,count,currency,mode!=='latest',state.loadFilter!=='all'].filter(Boolean).length;
+  const filterCount=$('#boardFilterCount');
+  if(filterCount){filterCount.hidden=!activeFilterCount;filterCount.textContent=String(activeFilterCount);}
   if($('#boardLocationStatus')) $('#boardLocationStatus').textContent=boardLocationMessage?t(boardLocationMessage):'';
   if($('#boardFilterHint')) $('#boardFilterHint').textContent=t(mode==='price'?'priceSortHint':mode==='nearest'?'distanceHint':'boardFilterHint');
 
@@ -1798,6 +1801,18 @@ function bindUI(){
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
   $$('[data-business-type]').forEach(b=>b.onclick=()=>{state.selectedBusinessType=b.dataset.businessType;$$('[data-business-type]').forEach(x=>x.classList.toggle('active',x===b));});
   $('#loadSearch').addEventListener('input',renderLoads);
+  $('#boardFilterToggle')?.addEventListener('click',()=>{
+    const panel=$('#boardFilterPanel');
+    panel.hidden=!panel.hidden;
+    $('#boardFilterToggle').setAttribute('aria-expanded',String(!panel.hidden));
+  });
+  $('#boardFilterPanel')?.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){
+      $('#boardFilterPanel').hidden=true;
+      $('#boardFilterToggle').setAttribute('aria-expanded','false');
+      $('#boardFilterToggle').focus();
+    }
+  });
   ['boardOrigin','boardDestination','boardTruck','boardTruckCount','boardCurrency'].forEach(id=>$('#'+id)?.addEventListener('change',renderLoads));
   ['boardOriginCity','boardDestinationCity'].forEach(id=>$('#'+id)?.addEventListener('input',renderLoads));
   $('#boardSort')?.addEventListener('change',()=>{

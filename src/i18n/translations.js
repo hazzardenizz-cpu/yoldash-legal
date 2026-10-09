@@ -34,3 +34,7 @@ const filterCopy={
  en:{availableTruckCount:'Trucks needed',fiveOrMore:'5 or more',sortLoads:'Sort by',latestLoads:'Newest loads',highestFreight:'Highest freight price',nearestLoads:'Nearest loads to me',allCurrencies:'All currencies',useMyLocation:'Use my location',locationLoading:'Getting your location; approve the browser permission.',locationUnavailable:'Location could not be obtained. Enable location access and try again.',locationReady:'Loads are sorted by distance from you to their origin.',distanceHint:'Straight-line distance to origin, not road distance. Listings without coordinates appear last. Your location stays in this page and is not saved for this search.',priceSortHint:'Freight prices are compared only within the selected currency; filters apply to loaded listings.',kmAway:'km to origin',distanceUnknown:'Distance unknown'}
 };
 for(const [lang,copy] of Object.entries(filterCopy)) Object.assign(translations[lang],copy);
+
+Object.assign(translations.fa,{filters:'فیلترها'});
+Object.assign(translations.tr,{filters:'Filtreler'});
+Object.assign(translations.en,{filters:'Filters'});

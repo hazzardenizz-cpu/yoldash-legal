@@ -59,3 +59,11 @@ input, select, textarea { min-width: 0; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+.board-filter-panel[hidden] { display: none !important; }
+.board-filter-panel { padding: 18px; margin-block: 14px; border: 1px solid var(--yd-border); border-radius: 16px; background: var(--yd-surface); }
+.board-filter-toggle { flex-shrink: 0; gap: 8px; white-space: nowrap; margin-inline: 6px; }
+.load-board-search { flex: 1; width: 100%; }
+.load-board-search input { flex: 1; min-width: 0; }
+#boardFilterCount:not([hidden]) { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 50%; background: var(--yd-primary); color: white; font-size: .75rem; }
+@media(max-width: 760px) { .board-filter-panel { padding: 12px; } .board-filter-toggle { padding: 8px 10px; } }

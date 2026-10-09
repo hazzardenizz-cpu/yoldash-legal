@@ -38,7 +38,7 @@
 <meta property="og:image:width" content="128">
 <meta property="og:image:height" content="128">
 <meta property="og:image:type" content="image/webp">
-<link rel="stylesheet" href="international.css?v=20261009-filters2">
+<link rel="stylesheet" href="international.css?v=20261009-filter-panel">
 </head>
 <body>
 <a class="skip-link" href="#mainContent" data-i18n="skipToContent">رفتن به محتوای اصلی</a>
@@ -176,17 +176,19 @@
           </section>
           <section class="load-board-market glass">
             <div class="load-board-toolbar">
-              <div class="search inline load-board-search"><span>⌕</span><input id="loadSearch" aria-label="جستجوی بار" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div>
-              <div class="load-board-filters">
-                <button class="chip active" data-filter="all" data-i18n="all">همه</button>
-                <button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button>
-                <button class="chip" data-filter="domestic" data-i18n="domestic">داخلی</button>
-              </div>
+              <div class="search inline load-board-search"><span>⌕</span><input id="loadSearch" aria-label="جستجوی بار" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"><button type="button" class="btn secondary board-filter-toggle" id="boardFilterToggle" aria-expanded="false" aria-controls="boardFilterPanel"><span aria-hidden="true">☷</span><span data-i18n="filters">فیلترها</span><span id="boardFilterCount" hidden></span></button></div>
+
             </div>
             <div class="load-board-list-head">
               <div><b data-i18n="freshLoads">بارهای تازه اعلام‌شده</b><small id="loadBoardResultCount" role="status" aria-live="polite">—</small></div>
               <span class="load-board-live"><i></i><span data-i18n="live">زنده</span></span>
             </div>
+            <div id="boardFilterPanel" class="board-filter-panel" hidden>
+              <div class="load-board-filters">
+                <button class="chip active" data-filter="all" data-i18n="all">همه</button>
+                <button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button>
+                <button class="chip" data-filter="domestic" data-i18n="domestic">داخلی</button>
+              </div>
             <div class="market-filters">
               <label><span data-i18n="originCountry">کشور مبدأ</span><select id="boardOrigin"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
               <label><span data-i18n="destinationCountry">کشور مقصد</span><select id="boardDestination"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
@@ -201,6 +203,7 @@
             </div>
             <p id="boardLocationStatus" role="status" aria-live="polite" class="muted"></p>
             <p id="boardFilterHint" class="muted" data-i18n="boardFilterHint">فیلترها روی بارهای دریافت‌شده اعمال می‌شوند.</p>
+            </div>
             <div class="cargo-list expanded load-board-list" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
           </section>
         </div>
@@ -530,7 +533,7 @@
       <div><strong>English</strong><a href="/en">English</a> <a href="/en/about">About Yoldash</a><a href="/en/turkey-iran-road-freight">Turkey–Iran Freight</a><a href="/en/cmr-road-freight">CMR</a><a href="/en/turkey-freight-insurance">Freight Insurance</a></div>
     </section>
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <script type="module" src="app.js?v=20261009-filters2"></script>
+  <script type="module" src="app.js?v=20261009-filter-panel"></script>
 <nav class="social-float" aria-label="Yoldash social media">
 <a class="social-icon social-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5ZM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A10 10 0 1 1 12 22Zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-1 1.1c-.2.2-.4.2-.7.1a8.2 8.2 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.3 3.3 1.5 3.5c.2.2 2.5 3.8 6.1 5.3.9.4 1.6.6 2.1.7.9.3 1.7.2 2.3.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></a>
 <a class="social-icon social-instagram" href="https://www.instagram.com/yoldashapplication/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @yoldashapplication" title="Instagram · @yoldashapplication"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
