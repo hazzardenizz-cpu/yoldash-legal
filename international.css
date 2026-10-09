@@ -1,0 +1,61 @@
+/* Shared interaction and typography layer for the existing Yoldash application. */
+html { scroll-padding-top: 100px; }
+body { font-size: 1rem; line-height: 1.6; }
+button, input, select, textarea { font-size: 1rem; }
+button, .btn, .chip, .ghost { min-height: 44px; }
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--yd-primary); outline-offset: 3px;
+}
+.skip-link { position: fixed; inset-block-start: 8px; inset-inline-start: 12px; transform: translateY(-160%); z-index: 1000; padding: 12px 18px; border-radius: 12px; background: var(--yd-surface); color: var(--yd-text); }
+.skip-link:focus { transform: none; }
+.main:focus { outline: none; }
+.home-hero { grid-template-columns: minmax(0,1fr) !important; padding: clamp(24px,4vw,48px) !important; }
+.home-hero h1 { max-width: 850px; font-size: clamp(2rem,3.6vw,3.3rem) !important; line-height: 1.35 !important; letter-spacing: -.02em !important; }
+html[lang="fa"] .home-hero h1 { letter-spacing: 0 !important; line-height: 1.55 !important; }
+.home-hero p { font-size: 1rem !important; max-width: 760px; }
+.home-hero-actions { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); max-width: 760px; gap: 16px !important; }
+.journey-button { flex-direction: column; align-items: flex-start !important; text-align: start; min-height: 104px; padding: 20px 24px !important; border-radius: 18px !important; }
+.journey-button > span:first-child { font-size: 1.15rem; font-weight: 750; }
+.journey-button small { font-size: .875rem; line-height: 1.6; font-weight: 500; margin-top: 6px; }
+.home-trust small, .home-trust b { font-size: .875rem !important; }
+.home-metrics { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+.home-fx-card { grid-column: 1/-1; }
+.home-fx-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.home-fx-code, .home-fx-row em, .home-fx-foot small { font-size: .875rem !important; }
+.home-fx-row strong { font-size: 1rem !important; overflow-wrap: anywhere; }
+.home-fx-row { gap: 8px; }
+.home-metric-copy span, .home-metric-copy small, .kicker, .home-action small,
+.sidebar-card span, .profile-txt small, .city small, .cargo-meta div span, .price span,
+.cargo-meta div b, .cargo-card .btn, .chip, .ghost, .status, .home-trust small { font-size: .875rem !important; }
+.home-action b, .city b, .profile-txt b, .sidebar-card b, .nav-item, .price b { font-size: 1rem !important; }
+.cargo-card { gap: 16px; padding: 20px !important; }
+.cargo-card .btn { min-height: 44px; }
+.home-section-head { flex-wrap: wrap; }
+.lang-switch button { font-size: .875rem !important; min-width: 44px; }
+.topbar { flex-wrap: wrap; }
+.top-actions { flex-wrap: wrap; }
+.sidebar-foot { font-size: .75rem !important; }
+.home-action i { display: none; }
+input, select, textarea { min-width: 0; max-width: 100%; }
+.market-filters { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)) auto; gap: 12px; align-items: end; margin-block: 18px 10px; }
+.market-filters label { display: grid; gap: 6px; font-size: .875rem; color: var(--yd-muted); }
+.market-filters select { width: 100%; min-height: 44px; padding: 10px; border: 1px solid var(--yd-border); border-radius: 12px; background: var(--yd-surface); color: var(--yd-text); }
+#boardFilterHint { font-size: .875rem; }
+#loadFormStatus:empty { display: none; }
+#loadFormStatus { padding: 12px; border-radius: 12px; color: var(--yd-danger); background: var(--yd-surface-subtle); }
+@media (max-width: 760px) {
+  .market-filters { grid-template-columns: 1fr; }
+  .home-hero-actions { grid-template-columns: 1fr; }
+  .home-fx-grid { grid-template-columns: 1fr; }
+  .home-metrics { grid-template-columns: 1fr !important; }
+  .home-main-grid { grid-template-columns: 1fr !important; }
+  .top-actions { width: 100%; justify-content: space-between; gap: 6px; }
+  .profile { max-width: 100%; }
+  .cargo-card { grid-template-columns: minmax(0,1fr) !important; }
+  .cargo-meta { flex-wrap: wrap; }
+  .home-trust { gap: 8px; }
+  .home-trust span { border-radius: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

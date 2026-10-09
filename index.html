@@ -38,11 +38,13 @@
 <meta property="og:image:width" content="128">
 <meta property="og:image:height" content="128">
 <meta property="og:image:type" content="image/webp">
+<link rel="stylesheet" href="international.css?v=20261009-release1">
 </head>
 <body>
+<a class="skip-link" href="#mainContent" data-i18n="skipToContent">رفتن به محتوای اصلی</a>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <div class="shell">
-    <aside class="sidebar glass">
+    <aside class="sidebar glass" id="mainNavigation">
       <div class="brand"><img src="/brand/yoldash.webp" width="128" height="128" alt="Yoldash" decoding="async" fetchpriority="high"><div><b>Yoldash</b><span data-i18n="roadFreight">حمل‌ونقل جاده‌ای</span></div></div>
       <nav>
         <button class="nav-item active" data-page="home"><span class="ico">⌂</span><span data-i18n="home">خانه</span></button>
@@ -53,14 +55,14 @@
         <button class="nav-item" data-page="services"><span class="ico">◇</span><span data-i18n="services">خدمات</span></button>
         <button type="button" class="nav-item" data-page="knowledge"><span class="ico" aria-hidden="true">▤</span><span data-i18n="knowledge">دانشنامه</span></button>
       </nav>
-      <div class="sidebar-card"><span class="shield">✓</span><div><b data-i18n="secureTitle">اتصال امن Yoldash</b><span data-i18n="secureText">داده‌ها با اپ و Supabase مشترک است</span></div></div>
-      <div class="sidebar-foot"><span>YOLDASH WEB V1</span><span>© 2026</span></div>
+      <div class="sidebar-card"><span class="shield">✓</span><div><b data-i18n="secureTitle">اتصال امن Yoldash</b><span data-i18n="secureText">حساب شما در وب و اپ همراه شماست</span></div></div>
+      <div class="sidebar-foot"><span>YOLDASH</span><span>© 2026</span></div>
     </aside>
 
-    <main class="main">
+    <main class="main" id="mainContent" tabindex="-1">
       <header class="topbar">
-        <button class="icon-btn glass mobile-menu" id="mobileMenu">☰</button>
-        <div class="search glass"><span>⌕</span><input id="globalSearch" data-i18n-placeholder="search" placeholder="جستجوی بار، شهر یا کاربر..."></div>
+        <button class="icon-btn glass mobile-menu" id="mobileMenu" aria-label="باز کردن منو" aria-expanded="false" aria-controls="mainNavigation">☰</button>
+        <div class="search glass"><span>⌕</span><input id="globalSearch" aria-label="جستجوی بار" data-i18n-placeholder="search" placeholder="جستجوی بار، شهر یا کاربر..."></div>
         <div class="top-actions">
           <div class="top-status" id="networkStatus"><i></i><span data-i18n="onlineNow">آنلاین</span></div>
           <button type="button" class="theme-toggle" id="themeToggle" aria-label="Light / Dark mode" title="Light / Dark mode">◐</button><div class="lang-switch glass"><button data-lang="fa" class="active">FA</button><button data-lang="tr">TR</button><button data-lang="en">EN</button></div>
@@ -82,11 +84,11 @@
         <section class="home-hero glass">
           <div class="home-hero-copy">
             <span class="eyebrow"><i class="live-dot"></i><span data-i18n="livePlatform">پلتفرم زنده حمل‌ونقل جاده‌ای</span></span>
-            <h1 data-i18n="heroTitle"><em>Yoldash</em> سیستم هوشمند حمل‌ونقل</h1>
+            <h1 data-i18n="heroTitle">حمل بار بین ایران و ترکیه، از همین‌جا</h1>
             <p data-i18n="heroText">ارتباط مستقیم صاحب بار، راننده و شرکت حمل‌ونقل؛ از اعلام بار و دریافت پیشنهاد تا مدیریت کامل حمل.</p>
             <div class="home-hero-actions">
-              <button class="btn primary" id="createLoadBtn"><span>＋</span><span data-i18n="createLoad">اعلام بار جدید</span></button>
-              <button class="btn secondary" id="openBoardBtn"><span>↗</span><span data-i18n="viewLoads">مشاهده بارها</span></button>
+              <button class="btn primary journey-button" id="createLoadBtn"><span data-i18n="shipperJourney">بار دارم</span><small data-i18n="shipperJourneyHint">ثبت بار و دریافت پیشنهاد حمل</small></button>
+              <button class="btn secondary journey-button" id="openBoardBtn"><span data-i18n="driverJourney">دنبال بار هستم</span><small data-i18n="driverJourneyHint">مشاهده بارهای فعال و جزئیات مسیر</small></button>
             </div>
             <div class="home-trust">
               <span><b>24/7</b><small data-i18n="online">دسترسی آنلاین</small></span>
@@ -95,28 +97,12 @@
             </div>
           </div>
 
-          <aside class="home-fx-card">
-            <div class="home-fx-head">
-              <div><span class="kicker" data-i18n="liveRates">نرخ لحظه‌ای</span><h2 data-i18n="currency">ارز</h2></div>
-              <span class="status" id="fxStatus"><i></i><span id="fxStatusText" data-i18n="live">زنده</span></span>
-            </div>
-            <div class="home-fx-grid">
-              <div class="home-fx-row"><span class="home-fx-code">USD</span><strong id="fxUsd">—</strong><em data-i18n="toman">تومان</em></div>
-              <div class="home-fx-row"><span class="home-fx-code">EUR</span><strong id="fxEur">—</strong><em data-i18n="toman">تومان</em></div>
-              <div class="home-fx-row"><span class="home-fx-code">TRY</span><strong id="fxTry">—</strong><em data-i18n="toman">تومان</em></div>
-            </div>
-            <div class="home-fx-foot">
-              <small id="fxUpdated" data-i18n="ratesLoading">در حال دریافت نرخ بازار...</small>
-              <button type="button" id="refreshFx" class="fx-refresh" aria-label="Refresh exchange rates">↻</button>
-            </div>
-          </aside>
+
         </section>
 
         <section class="home-metrics" id="metrics-home">
           <article class="home-metric glass"><span class="home-metric-icon">▦</span><div class="home-metric-copy"><span data-i18n="activeLoads">بارهای فعال</span><b id="metricLoads">—</b><small data-i18n="live">زنده</small></div></article>
-          <article class="home-metric glass"><span class="home-metric-icon">◉</span><div class="home-metric-copy"><span data-i18n="onlineDrivers">رانندگان آنلاین</span><b>—</b><small data-i18n="sharedData">مشترک با اپ</small></div></article>
           <article class="home-metric glass"><span class="home-metric-icon">⇄</span><div class="home-metric-copy"><span data-i18n="inTransit">در حال حمل</span><b id="metricShipments">—</b><small data-i18n="today">امروز</small></div></article>
-          <article class="home-metric glass"><span class="home-metric-icon">✓</span><div class="home-metric-copy"><span data-i18n="completed">تحویل موفق</span><b>—</b><small data-i18n="sharedData">مشترک با اپ</small></div></article>
         </section>
 
         <section class="home-main-grid" id="content-home">
@@ -137,6 +123,21 @@
             </div>
           </aside>
 
+          <aside class="home-fx-card">
+            <div class="home-fx-head">
+              <div><span class="kicker" data-i18n="liveRates">نرخ لحظه‌ای</span><h2 data-i18n="currency">ارز</h2></div>
+              <span class="status" id="fxStatus"><i></i><span id="fxStatusText" data-i18n="live">زنده</span></span>
+            </div>
+            <div class="home-fx-grid">
+              <div class="home-fx-row"><span class="home-fx-code">USD</span><strong id="fxUsd">—</strong><em data-i18n="toman">تومان</em></div>
+              <div class="home-fx-row"><span class="home-fx-code">EUR</span><strong id="fxEur">—</strong><em data-i18n="toman">تومان</em></div>
+              <div class="home-fx-row"><span class="home-fx-code">TRY</span><strong id="fxTry">—</strong><em data-i18n="toman">تومان</em></div>
+            </div>
+            <div class="home-fx-foot">
+              <small id="fxUpdated" data-i18n="ratesLoading">در حال دریافت نرخ بازار...</small>
+              <button type="button" id="refreshFx" class="fx-refresh" aria-label="Refresh exchange rates">↻</button>
+            </div>
+          </aside>
           <div class="panel glass admin-user-map-panel hidden" id="adminUserMapPanel">
             <div class="section-head admin-map-head">
               <div>
@@ -175,7 +176,7 @@
           </section>
           <section class="load-board-market glass">
             <div class="load-board-toolbar">
-              <div class="search inline load-board-search"><span>⌕</span><input id="loadSearch" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div>
+              <div class="search inline load-board-search"><span>⌕</span><input id="loadSearch" aria-label="جستجوی بار" data-i18n-placeholder="searchLoads" placeholder="جستجو بر اساس مبدا، مقصد یا نوع بار"></div>
               <div class="load-board-filters">
                 <button class="chip active" data-filter="all" data-i18n="all">همه</button>
                 <button class="chip" data-filter="international" data-i18n="international">بین‌المللی</button>
@@ -183,9 +184,16 @@
               </div>
             </div>
             <div class="load-board-list-head">
-              <div><b data-i18n="freshLoads">بارهای تازه اعلام‌شده</b><small id="loadBoardResultCount">—</small></div>
+              <div><b data-i18n="freshLoads">بارهای تازه اعلام‌شده</b><small id="loadBoardResultCount" role="status" aria-live="polite">—</small></div>
               <span class="load-board-live"><i></i><span data-i18n="live">زنده</span></span>
             </div>
+            <div class="market-filters">
+              <label><span data-i18n="originCountry">کشور مبدأ</span><select id="boardOrigin"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+              <label><span data-i18n="destinationCountry">کشور مقصد</span><select id="boardDestination"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
+              <label><span data-i18n="truckType">نوع خودرو</span><select id="boardTruck"><option value="" data-i18n="allVehicles">همه خودروها</option><option value="CURTAIN" data-i18n="curtain">چادری</option><option value="FLATBED" data-i18n="flatbed">کفی</option><option value="TANKER" data-i18n="tanker">تانکر</option><option value="REFRIGERATED" data-i18n="reefer">یخچالی</option><option value="LIGHT_TRUCK" data-i18n="lightTruck">کامیون سبک</option></select></label>
+              <button type="button" class="btn secondary" id="clearBoardFilters" data-i18n="clearFilters">پاک کردن فیلترها</button>
+            </div>
+            <p id="boardFilterHint" class="muted" data-i18n="boardFilterHint">فیلترها روی بارهای دریافت‌شده اعمال می‌شوند.</p>
             <div class="cargo-list expanded load-board-list" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
           </section>
         </div>
@@ -307,8 +315,8 @@
   </dialog>
 
   <dialog id="loadModal">
-    <form id="loadForm" class="modal glass yd-load-form">
-      <div class="modal-head yd-modal-head"><div><span class="kicker" data-i18n="newLoad">اعلام بار جدید</span><h2 data-i18n="cargoDetails">مشخصات بار</h2><p class="yd-modal-subtitle" data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</p></div><button type="button" class="close" data-close="loadModal" aria-label="Close">×</button></div>
+    <form id="loadForm" aria-describedby="loadFormStatus" class="modal glass yd-load-form">
+      <div class="modal-head yd-modal-head"><div><span class="kicker" data-i18n="newLoad">اعلام بار جدید</span><h2 data-i18n="cargoDetails">مشخصات بار</h2><p class="yd-modal-subtitle" data-i18n="sharedSupabase">پس از انتشار، بار شما در بازار بار وب و اپ نمایش داده می‌شود.</p></div><button type="button" class="close" data-close="loadModal" aria-label="Close">×</button></div>
       <div class="yd-form-section"><div class="yd-form-section-head"><span class="yd-step">1</span><div><b data-i18n="origin">مبدأ</b><small data-i18n="destination">مقصد</small></div></div>
       <div class="form-grid three">
         <label><span data-i18n="originCountry">کشور مبدأ</span><select id="originCountry" required><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
@@ -322,7 +330,7 @@
       <div class="form-grid three">
         <label><span data-i18n="cargoType">نوع بار</span><input id="cargoType" data-i18n-placeholder="cargoTypeHint" placeholder="مثلاً مواد غذایی" required></label>
         <label><span data-i18n="truckType">نوع خودرو</span><select id="truckType" required><option value="CURTAIN" data-i18n="curtain">چادری</option><option value="FLATBED" data-i18n="flatbed">کفی</option><option value="TANKER" data-i18n="tanker">تانکر</option><option value="REFRIGERATED" data-i18n="reefer">یخچالی</option><option value="LIGHT_TRUCK" data-i18n="lightTruck">کامیون سبک</option></select></label>
-        <label><span data-i18n="truckCount">تعداد کامیون</span><input id="truckCount" type="number" min="1" value="1" required></label>
+        <label><span data-i18n="truckCount">تعداد کامیون</span><input id="truckCount" type="number" min="1" step="1" value="1" required></label>
         <label><span data-i18n="weight">وزن (kg)</span><input id="weightKg" type="number" min="1" step="0.01"></label>
         <label><span data-i18n="price">کرایه پیشنهادی</span><input id="freightPrice" type="number" min="0" step="0.01"></label>
         <label><span data-i18n="currency">ارز</span><select id="currencyCode"><option value="USD">USD</option><option value="EUR">EUR</option><option value="TRY">TRY</option><option value="IRR">IRR</option></select></label>
@@ -332,7 +340,8 @@
       </div>
       <label class="stack yd-description-field"><span data-i18n="description">توضیحات</span><textarea id="cargoDescription" maxlength="1500" rows="4"></textarea></label>
       </div>
-      <div class="modal-note yd-quota-note" id="quotaNote"><span>✓</span><span data-i18n="sharedSupabase">این فرم مستقیم در همان Supabase اپ Yoldash ذخیره می‌شود.</span></div>
+      <div class="modal-note yd-quota-note" id="quotaNote"><span>✓</span><span data-i18n="sharedSupabase">پس از انتشار، بار شما در بازار بار وب و اپ نمایش داده می‌شود.</span></div>
+      <div id="loadFormStatus" class="auth-status" role="alert" tabindex="-1"></div>
       <div class="modal-actions"><button type="button" class="btn secondary" data-close="loadModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="publishLoadBtn" data-i18n="publishLoad">انتشار بار</button></div>
     </form>
   </dialog>
@@ -425,7 +434,7 @@
           <button class="btn primary wide" id="authSubmit" type="submit" data-i18n="signIn">ورود</button>
           <div class="auth-status" id="authStatus"></div>
           <button type="button" class="link-btn" id="forgotPassword" data-i18n="forgotPassword">رمز عبور را فراموش کرده‌ام</button>
-          <small data-i18n="authNote">حساب وب و اپ یکی است و از Supabase Auth مشترک استفاده می‌کند.</small>
+          <small data-i18n="authNote">با یک حساب، در وب و اپ به بارها و گفتگوهای خود دسترسی دارید.</small>
         </div>
         <div id="forgotPasswordPanel" class="auth-step-card hidden">
           <span class="auth-step-icon">⌁</span>
@@ -514,7 +523,7 @@
       <div><strong>English</strong><a href="/en">English</a> <a href="/en/about">About Yoldash</a><a href="/en/turkey-iran-road-freight">Turkey–Iran Freight</a><a href="/en/cmr-road-freight">CMR</a><a href="/en/turkey-freight-insurance">Freight Insurance</a></div>
     </section>
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <script type="module" src="app.js?v=20261004-live-notifications1"></script>
+  <script type="module" src="app.js?v=20261009-release1"></script>
 <nav class="social-float" aria-label="Yoldash social media">
 <a class="social-icon social-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5ZM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A10 10 0 1 1 12 22Zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-1 1.1c-.2.2-.4.2-.7.1a8.2 8.2 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.3 3.3 1.5 3.5c.2.2 2.5 3.8 6.1 5.3.9.4 1.6.6 2.1.7.9.3 1.7.2 2.3.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></a>
 <a class="social-icon social-instagram" href="https://www.instagram.com/yoldashapplication/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @yoldashapplication" title="Instagram · @yoldashapplication"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>

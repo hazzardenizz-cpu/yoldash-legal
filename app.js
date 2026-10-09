@@ -145,7 +145,13 @@ function applyLanguage(next, persist=true){
   document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
   $$('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
   $$('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
-  $$('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===state.lang));
+  $$('.lang-switch button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.lang===state.lang);
+    b.setAttribute('aria-pressed',String(b.dataset.lang===state.lang));
+  });
+  $('#mobileMenu')?.setAttribute('aria-label',t('menuLabel'));
+  $('#globalSearch')?.setAttribute('aria-label',t('searchLoads'));
+  $('#loadSearch')?.setAttribute('aria-label',t('searchLoads'));
   renderLoads();
   renderProfileUI();
   renderFxRates();
@@ -154,7 +160,9 @@ function applyLanguage(next, persist=true){
   syncDriverListingSegments?.();
   if (state.session) renderChatFromCache?.();
 }
-function page(name){
+function page(name, updateHistory=true){
+  if (!document.getElementById('page-'+name)) return;
+
   // Chat is available only after sign-in.  Opening the sign-in dialog here gives
   // guest users a clear next step instead of displaying an inactive chat screen.
   if(name==='chat' && !state.session){
@@ -163,6 +171,13 @@ function page(name){
   }
 
   const target=$('#page-'+name);
+  if(updateHistory){
+    const url=new URL(location.href);
+    if(name==='home') url.searchParams.delete('page');
+    else url.searchParams.set('page',name);
+    if(url.href!==location.href) history.pushState({page:name},'',url);
+  }
+
 
   $$('.page').forEach(p=>{
     const active=p===target;
@@ -171,7 +186,12 @@ function page(name){
     p.style.display=active?'grid':'none';
   });
 
-  $$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+  $$('[data-page]').forEach(b=>{
+    const active=b.dataset.page===name;
+    b.classList.toggle('active',active);
+    if(active) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  $('#mobileMenu')?.setAttribute('aria-expanded','false');
 
   const sidebar=$('.sidebar');
   if(window.matchMedia('(max-width: 900px)').matches && sidebar){
@@ -411,7 +431,13 @@ function renderLoadUnreadBadge(){
 
 function renderLoads(){
   const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
+  const origin=$('#boardOrigin')?.value||'';
+  const destination=$('#boardDestination')?.value||'';
+  const truck=$('#boardTruck')?.value||'';
   const filtered = state.loads.filter(c=>{
+    if(origin && c.origin_country_code!==origin) return false;
+    if(destination && c.destination_country_code!==destination) return false;
+    if(truck && String(c.required_truck_type||'').toUpperCase()!==truck) return false;
     if(state.loadFilter==='international' && c.origin_country_code===c.destination_country_code) return false;
     if(state.loadFilter==='domestic' && c.origin_country_code!==c.destination_country_code) return false;
     if(!q) return true;
@@ -437,7 +463,7 @@ function renderLoads(){
 
   if(all) all.innerHTML = filtered.length
     ? filtered.map(c=>cargoCard(c)).join('')
-    : emptyBlock('noLoads');
+    : emptyBlock(state.loads.length?'noMatchingLoads':'noLoads');
 
   renderLoadUnreadBadge();
   if($('#metricLoads')) $('#metricLoads').textContent = String(state.loads.length);
@@ -972,6 +998,7 @@ function isBusinessProfileReady(){
 async function openLoadModal(){
   if(!requireCompleteProfile()) return;
   if(!canPostTypes.has(state.profile?.business_user_type)){ toast(state.profile?.business_user_type==='DRIVER'?t('driverCannotPost'):t('postOnlyBusiness'),'error'); return; }
+  $('#loadFormStatus').textContent='';
   $('#loadModal').showModal();
   try{
     const {data}=await getCurrentCargoDailyQuota(); const q=Array.isArray(data)?data[0]:data;
@@ -980,6 +1007,13 @@ async function openLoadModal(){
 }
 async function submitLoad(ev){
   ev.preventDefault();
+  const status=$('#loadFormStatus'); status.textContent='';
+  const count=Number($('#truckCount').value);
+  const loading=$('#loadingAt').value;
+  if(!Number.isInteger(count)||count<1){status.textContent=t('invalidTruckCount');$('#truckCount').focus();return;}
+  if(loading && (!Number.isFinite(new Date(loading).getTime())||new Date(loading).getTime()<Date.now())){
+    status.textContent=t('invalidLoadingDate');$('#loadingAt').focus();return;
+  }
   const btn=$('#publishLoadBtn'); btn.disabled=true; btn.textContent=t('loading');
   try{
     if(!state.session) throw new Error(t('loginRequired'));
@@ -1015,7 +1049,7 @@ async function submitLoad(ev){
       });
       console.info('Public cargo URL:',url);
     }
-  }catch(err){ toast(humanError(err),'error'); }
+  }catch(err){ status.className='auth-status error'; status.textContent=humanError(err); status.focus(); }
   finally{ btn.disabled=false; btn.textContent=t('publishLoad'); }
 }
 
@@ -1698,6 +1732,7 @@ function canonicalFallback(){
 }
 
 function bindUI(){
+  window.addEventListener('popstate',()=>page(new URL(location.href).searchParams.get('page')||'home',false));
   $$('[data-lang]').forEach(b=>b.addEventListener('click',()=>applyLanguage(b.dataset.lang)));
   $$('[data-page]').forEach(b=>b.addEventListener('click',()=>page(b.dataset.page)));
   $$('[data-close]').forEach(b=>b.addEventListener('click',()=>$('#'+b.dataset.close)?.close()));
@@ -1706,6 +1741,7 @@ function bindUI(){
     if(!sidebar) return;
     const opening=!sidebar.classList.contains('open');
     sidebar.classList.toggle('open',opening);
+    $('#mobileMenu').setAttribute('aria-expanded',String(opening));
     if(window.matchMedia('(max-width: 900px)').matches){
       sidebar.style.display=opening?'flex':'none';
       sidebar.style.visibility=opening?'visible':'hidden';
@@ -1729,6 +1765,13 @@ function bindUI(){
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
   $$('[data-business-type]').forEach(b=>b.onclick=()=>{state.selectedBusinessType=b.dataset.businessType;$$('[data-business-type]').forEach(x=>x.classList.toggle('active',x===b));});
   $('#loadSearch').addEventListener('input',renderLoads);
+  ['boardOrigin','boardDestination','boardTruck'].forEach(id=>$('#'+id)?.addEventListener('change',renderLoads));
+  $('#clearBoardFilters')?.addEventListener('click',()=>{
+    ['boardOrigin','boardDestination','boardTruck','loadSearch','globalSearch'].forEach(id=>{if($('#'+id)) $('#'+id).value='';});
+    state.loadFilter='all';
+    $$('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
+    renderLoads(); $('#loadSearch')?.focus();
+  });
   $('#globalSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){page('loads');$('#loadSearch').value=e.target.value;renderLoads();}});
   $$('[data-filter]').forEach(b=>b.onclick=()=>{state.loadFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLoads();});
   $('#publicChatRoom')?.addEventListener('click',openPublicChat);
@@ -1879,6 +1922,7 @@ async function init(){
 
   await Promise.allSettled([refreshSession(),loadLoads()]);
   try{ await syncSuperAdminMapAccess(); }catch(err){ console.error('admin map access init',err); }
+  page(new URL(location.href).searchParams.get('page')||'home',false);
   try{ startLiveLoads(); }catch(err){ console.error('live loads init',err); }
 }
 init();
