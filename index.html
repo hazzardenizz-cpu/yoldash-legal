@@ -38,7 +38,7 @@
 <meta property="og:image:width" content="128">
 <meta property="og:image:height" content="128">
 <meta property="og:image:type" content="image/webp">
-<link rel="stylesheet" href="international.css?v=20261009-release1">
+<link rel="stylesheet" href="international.css?v=20261009-filters2">
 </head>
 <body>
 <a class="skip-link" href="#mainContent" data-i18n="skipToContent">رفتن به محتوای اصلی</a>
@@ -191,8 +191,15 @@
               <label><span data-i18n="originCountry">کشور مبدأ</span><select id="boardOrigin"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
               <label><span data-i18n="destinationCountry">کشور مقصد</span><select id="boardDestination"><option value="" data-i18n="allCountries">همه کشورها</option><option value="TR">Türkiye · TR</option><option value="IR">Iran · IR</option><option value="AZ">Azerbaijan · AZ</option><option value="IQ">Iraq · IQ</option><option value="GE">Georgia · GE</option><option value="AM">Armenia · AM</option></select></label>
               <label><span data-i18n="truckType">نوع خودرو</span><select id="boardTruck"><option value="" data-i18n="allVehicles">همه خودروها</option><option value="CURTAIN" data-i18n="curtain">چادری</option><option value="FLATBED" data-i18n="flatbed">کفی</option><option value="TANKER" data-i18n="tanker">تانکر</option><option value="REFRIGERATED" data-i18n="reefer">یخچالی</option><option value="LIGHT_TRUCK" data-i18n="lightTruck">کامیون سبک</option></select></label>
+              <label><span data-i18n="originCity">شهر مبدأ</span><input id="boardOriginCity" type="search" data-i18n-placeholder="originCity" placeholder="شهر مبدأ"></label>
+              <label><span data-i18n="destinationCity">شهر مقصد</span><input id="boardDestinationCity" type="search" data-i18n-placeholder="destinationCity" placeholder="شهر مقصد"></label>
+              <label><span data-i18n="availableTruckCount">تعداد کامیون موردنیاز</span><select id="boardTruckCount"><option value="" data-i18n="all">همه</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" data-i18n="fiveOrMore">۵ یا بیشتر</option></select></label>
+              <label><span data-i18n="sortLoads">مرتب‌سازی</span><select id="boardSort"><option value="latest" data-i18n="latestLoads">تازه‌ترین بارها</option><option value="price" data-i18n="highestFreight">بیشترین کرایه</option><option value="nearest" data-i18n="nearestLoads">نزدیک‌ترین بار به من</option></select></label>
+              <label><span data-i18n="currency">ارز</span><select id="boardCurrency"><option value="" data-i18n="allCurrencies">همه ارزها</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="TRY">TRY</option><option value="IRR">IRR</option></select></label>
+              <button type="button" class="btn secondary" id="locateForLoads" data-i18n="useMyLocation">استفاده از موقعیت من</button>
               <button type="button" class="btn secondary" id="clearBoardFilters" data-i18n="clearFilters">پاک کردن فیلترها</button>
             </div>
+            <p id="boardLocationStatus" role="status" aria-live="polite" class="muted"></p>
             <p id="boardFilterHint" class="muted" data-i18n="boardFilterHint">فیلترها روی بارهای دریافت‌شده اعمال می‌شوند.</p>
             <div class="cargo-list expanded load-board-list" id="cargoListAll"><div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div></div>
           </section>
@@ -523,7 +530,7 @@
       <div><strong>English</strong><a href="/en">English</a> <a href="/en/about">About Yoldash</a><a href="/en/turkey-iran-road-freight">Turkey–Iran Freight</a><a href="/en/cmr-road-freight">CMR</a><a href="/en/turkey-freight-insurance">Freight Insurance</a></div>
     </section>
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <script type="module" src="app.js?v=20261009-release1"></script>
+  <script type="module" src="app.js?v=20261009-filters2"></script>
 <nav class="social-float" aria-label="Yoldash social media">
 <a class="social-icon social-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5ZM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A10 10 0 1 1 12 22Zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-1 1.1c-.2.2-.4.2-.7.1a8.2 8.2 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.3 3.3 1.5 3.5c.2.2 2.5 3.8 6.1 5.3.9.4 1.6.6 2.1.7.9.3 1.7.2 2.3.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></a>
 <a class="social-icon social-instagram" href="https://www.instagram.com/yoldashapplication/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @yoldashapplication" title="Instagram · @yoldashapplication"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>

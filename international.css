@@ -37,9 +37,9 @@ html[lang="fa"] .home-hero h1 { letter-spacing: 0 !important; line-height: 1.55 
 .sidebar-foot { font-size: .75rem !important; }
 .home-action i { display: none; }
 input, select, textarea { min-width: 0; max-width: 100%; }
-.market-filters { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)) auto; gap: 12px; align-items: end; margin-block: 18px 10px; }
+.market-filters { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; align-items: end; margin-block: 18px 10px; }
 .market-filters label { display: grid; gap: 6px; font-size: .875rem; color: var(--yd-muted); }
-.market-filters select { width: 100%; min-height: 44px; padding: 10px; border: 1px solid var(--yd-border); border-radius: 12px; background: var(--yd-surface); color: var(--yd-text); }
+.market-filters select, .market-filters input { width: 100%; min-height: 44px; padding: 10px; border: 1px solid var(--yd-border); border-radius: 12px; background: var(--yd-surface); color: var(--yd-text); }
 #boardFilterHint { font-size: .875rem; }
 #loadFormStatus:empty { display: none; }
 #loadFormStatus { padding: 12px; border-radius: 12px; color: var(--yd-danger); background: var(--yd-surface-subtle); }

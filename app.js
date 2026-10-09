@@ -1,3 +1,4 @@
+import {distanceKm,sortBoardLoads} from './src/features/loads/board-sort.js';
 // Only Super Admin maps need Leaflet; keep it out of the public startup graph.
 let L=null;
 let leafletLoading=null;
@@ -300,6 +301,7 @@ function cargoCard(c, shipment=false){
       </div>
       <div class="cargo-card-badges">
         <span class="cargo-scope-pill">${esc(scopeLabel)}</span>
+        ${!shipment&&$('#boardSort')?.value==='nearest'&&boardPosition?`<span class="cargo-scope-pill">${distanceKm(boardPosition,c)!=null?`${distanceKm(boardPosition,c).toLocaleString(localeMap[state.lang],{maximumFractionDigits:1})} ${t('kmAway')}`:t('distanceUnknown')}</span>`:''}
         <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
       </div>
     </div>
@@ -429,12 +431,41 @@ function renderLoadUnreadBadge(){
   setLoadUnreadBadge(unread);
 }
 
+let boardPosition=null;
+let boardLocationRequest=0;
+let boardLocationMessage='';
+function requestBoardLocation(){
+  const request=++boardLocationRequest;
+  boardLocationMessage='locationLoading'; renderLoads();
+  const fail=()=>{
+    if(request!==boardLocationRequest) return;
+    boardLocationMessage='locationUnavailable';
+    if($('#boardSort').value==='nearest') $('#boardSort').value='latest';
+    renderLoads();
+  };
+  if(!navigator.geolocation){fail();return;}
+  navigator.geolocation.getCurrentPosition(result=>{
+    if(request!==boardLocationRequest) return;
+    boardPosition={latitude:result.coords.latitude,longitude:result.coords.longitude};
+    boardLocationMessage='locationReady'; $('#boardSort').value='nearest'; renderLoads();
+  },fail,{enableHighAccuracy:false,timeout:12000,maximumAge:60000});
+}
 function renderLoads(){
   const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
   const origin=$('#boardOrigin')?.value||'';
   const destination=$('#boardDestination')?.value||'';
   const truck=$('#boardTruck')?.value||'';
-  const filtered = state.loads.filter(c=>{
+  const originCity=($('#boardOriginCity')?.value||'').trim().toLocaleLowerCase();
+  const destinationCity=($('#boardDestinationCity')?.value||'').trim().toLocaleLowerCase();
+  const count=Number($('#boardTruckCount')?.value||0);
+  const mode=$('#boardSort')?.value||'latest';
+  const currency=$('#boardCurrency')?.value||'';
+  const cityMatches=(c,which,q)=>!q||[cityName(c,which),c[which+'_city'],c[which+'_city_name_fa'],c[which+'_city_name_tr'],c[which+'_city_name_en']].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+  const filtered = sortBoardLoads(state.loads.filter(c=>{
+    if(!cityMatches(c,'origin',originCity)||!cityMatches(c,'destination',destinationCity)) return false;
+    const available=Number(c.remaining_truck_count??c.truck_count??1);
+    if(count && (count===5?available<5:available!==count)) return false;
+    if(currency && c.currency_code!==currency) return false;
     if(origin && c.origin_country_code!==origin) return false;
     if(destination && c.destination_country_code!==destination) return false;
     if(truck && String(c.required_truck_type||'').toUpperCase()!==truck) return false;
@@ -450,7 +481,9 @@ function renderLoads(){
       c.origin_country_code,
       c.destination_country_code
     ].some(v=>String(v||'').toLocaleLowerCase().includes(q));
-  });
+  }),mode,boardPosition);
+  if($('#boardLocationStatus')) $('#boardLocationStatus').textContent=boardLocationMessage?t(boardLocationMessage):'';
+  if($('#boardFilterHint')) $('#boardFilterHint').textContent=t(mode==='price'?'priceSortHint':mode==='nearest'?'distanceHint':'boardFilterHint');
 
   const internationalCount = state.loads.filter(c=>c.origin_country_code!==c.destination_country_code).length;
   const domesticCount = state.loads.length - internationalCount;
@@ -1765,9 +1798,21 @@ function bindUI(){
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
   $$('[data-business-type]').forEach(b=>b.onclick=()=>{state.selectedBusinessType=b.dataset.businessType;$$('[data-business-type]').forEach(x=>x.classList.toggle('active',x===b));});
   $('#loadSearch').addEventListener('input',renderLoads);
-  ['boardOrigin','boardDestination','boardTruck'].forEach(id=>$('#'+id)?.addEventListener('change',renderLoads));
+  ['boardOrigin','boardDestination','boardTruck','boardTruckCount','boardCurrency'].forEach(id=>$('#'+id)?.addEventListener('change',renderLoads));
+  ['boardOriginCity','boardDestinationCity'].forEach(id=>$('#'+id)?.addEventListener('input',renderLoads));
+  $('#boardSort')?.addEventListener('change',()=>{
+    if($('#boardSort').value==='price'&&!$('#boardCurrency').value) $('#boardCurrency').value='USD';
+    if($('#boardSort').value==='nearest'&&!boardPosition) requestBoardLocation();
+    else renderLoads();
+  });
+  $('#boardCurrency')?.addEventListener('change',()=>{
+    if($('#boardSort').value==='price'&&!$('#boardCurrency').value) $('#boardSort').value='latest';
+    renderLoads();
+  });
+  $('#locateForLoads')?.addEventListener('click',requestBoardLocation);
   $('#clearBoardFilters')?.addEventListener('click',()=>{
-    ['boardOrigin','boardDestination','boardTruck','loadSearch','globalSearch'].forEach(id=>{if($('#'+id)) $('#'+id).value='';});
+    ['boardOrigin','boardDestination','boardTruck','boardTruckCount','boardCurrency','boardOriginCity','boardDestinationCity','loadSearch','globalSearch'].forEach(id=>{if($('#'+id)) $('#'+id).value='';});
+    $('#boardSort').value='latest'; boardLocationRequest++; boardPosition=null; boardLocationMessage='';
     state.loadFilter='all';
     $$('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
     renderLoads(); $('#loadSearch')?.focus();
