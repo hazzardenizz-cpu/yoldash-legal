@@ -1,0 +1,55 @@
+/* Yoldash: white, navy and brand yellow. Shared across all app screens. */
+html[data-theme="light"] {
+  --yd-bg:#f6f7f9; --yd-surface:#fff; --yd-surface-subtle:#f8f9fb;
+  --yd-surface-elevated:#fff; --yd-text:#152840; --yd-muted:#59687b;
+  --yd-border:#e3e7ec; --yd-border-strong:#c8d0da;
+  --yd-primary:#18334f; --yd-primary-strong:#10253c; --yd-primary-soft:#edf1f5;
+  --yd-shadow-sm:0 2px 8px rgba(21,40,64,.035);
+  --yd-shadow-md:0 8px 28px rgba(21,40,64,.055);
+  --yd-shadow-lg:0 20px 56px rgba(21,40,64,.12);
+  --yd-radius-md:12px; --yd-radius-lg:20px; --yd-radius-xl:24px;
+  --yd-accent:#ffcb32; --yd-accent-text:#152840;
+}
+html[data-theme="dark"] { --yd-accent:#ffcb32; --yd-accent-text:#152840; }
+body { font-family:"Vazirmatn","DM Sans",sans-serif; }
+html:not([lang="fa"]) body { font-family:"DM Sans","Vazirmatn",sans-serif; }
+.ambient { display:none; }
+.brand b { color:var(--yd-text)!important; letter-spacing:-.03em; }
+.brand img { box-shadow:none!important; border-radius:12px; }
+html[data-theme="light"] .btn.primary {
+  background:var(--yd-accent)!important; color:var(--yd-accent-text)!important;
+  border:1px solid var(--yd-accent)!important; box-shadow:none!important;
+}
+html[data-theme="light"] .btn.primary:hover { background:#f4be1d!important; border-color:#f4be1d!important; }
+.btn { font-weight:700; transition:background .18s,border-color .18s,box-shadow .18s; }
+.btn.secondary:hover { background:var(--yd-primary-soft)!important; }
+html[data-theme="light"] .nav-item.active {
+  background:var(--yd-primary)!important; color:white!important; border-color:var(--yd-primary)!important;
+}
+.nav-item.active:before { background:var(--yd-accent)!important; }
+html[data-theme="light"] .nav-item:hover:not(.active) { background:var(--yd-primary-soft)!important; color:var(--yd-text)!important; }
+html[data-theme="light"] .nav-item.active .ico { background:var(--yd-accent)!important; color:var(--yd-accent-text)!important; }
+.home-hero { background:var(--yd-surface)!important; border-radius:24px!important; box-shadow:var(--yd-shadow-sm)!important; }
+.home-hero:after { display:none; }
+.home-hero h1 { max-width:800px; font-weight:800; }
+.home-hero .kicker { display:inline-flex; align-items:center; gap:10px; }
+.home-hero .kicker:before { content:""; width:9px; height:9px; border-radius:50%; background:var(--yd-accent); }
+.journey-button { border-radius:16px!important; }
+.home-trust span { background:transparent!important; border:0!important; padding-inline:0!important; margin-inline-end:20px; }
+.home-metric,.home-loads-panel,.home-actions-panel,.home-fx-card { border-radius:18px!important; }
+.load-board-head { border-radius:20px!important; box-shadow:var(--yd-shadow-sm)!important; }
+.load-board-head:after { display:none; }
+.load-board-market { border-radius:20px!important; box-shadow:var(--yd-shadow-sm)!important; }
+.marketplace-card { border-radius:16px!important; }
+.cargo-card-core { background:var(--yd-surface-subtle)!important; }
+.cargo-route-city b { font-weight:800; letter-spacing:-.02em; }
+.search { border-radius:14px!important; background:var(--yd-surface-subtle)!important; }
+.search:focus-within { border-color:var(--yd-primary)!important; box-shadow:0 0 0 3px color-mix(in srgb,var(--yd-primary) 9%,transparent)!important; }
+.board-filter-toggle { border-radius:10px!important; color:var(--yd-text)!important; min-height:40px!important; }
+.board-filter-toggle[aria-expanded="true"] { background:var(--yd-primary-soft)!important; border-color:var(--yd-primary)!important; }
+html[data-theme="light"] .lang-switch button.active { background:var(--yd-primary)!important; color:#fff!important; }
+html[data-theme="light"] .profile-avatar { background:var(--yd-primary)!important; color:#fff!important; }
+html[data-theme="light"] .mobile-bottom button.active { background:var(--yd-primary)!important; color:#fff!important; }
+.topbar { box-shadow:none!important; }
+input,select,textarea { border-radius:10px!important; }
+@media(max-width:760px) { .home-hero { border-radius:18px!important; } .load-board-head,.load-board-market { border-radius:16px!important; } }
