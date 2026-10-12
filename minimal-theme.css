@@ -101,3 +101,6 @@ h1,h2 { text-wrap:balance; }
   .toast-wrap { bottom:calc(90px + env(safe-area-inset-bottom,0px))!important; max-width:calc(100vw - 24px); }
   .mobile-bottom { padding-bottom:calc(6px + env(safe-area-inset-bottom,0px)); }
 }
+html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .btn.primary span { color:#10253c!important; }
+.load-board-head h1 { font-size:clamp(1.75rem,3vw,2.25rem)!important; margin:12px 0 8px!important; letter-spacing:normal!important; line-height:1.5; }
+.load-board-head { min-height:0!important; }
