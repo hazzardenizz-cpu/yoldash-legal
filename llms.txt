@@ -1,47 +1,39 @@
 # Yoldash
 
-> Yoldash is a digital road-freight platform connecting cargo owners, drivers and transport companies, with a primary product and content focus on Türkiye–Iran transport workflows.
+> Yoldash (یولداش) is a web platform connecting shippers, drivers and transport companies, focused on road freight between Türkiye and Iran. Its official domain is getyoldash.com.
 
-## Canonical site
-- https://www.getyoldash.com/
+## Public product information
+- [Official website](https://www.getyoldash.com/): Web application.
+- [About Yoldash — English](https://www.getyoldash.com/en/about): Identity, audience, services and scope.
+- [درباره یولداش](https://www.getyoldash.com/fa/about): Persian product information.
+- [Yoldash hakkında](https://www.getyoldash.com/tr/hakkimizda): Turkish product information.
+
+## Current public workflows
+Browse published loads and filter by origin, destination, vehicle type and truck count. Sort listed freight amounts within a selected currency. Distance sorting uses straight-line distance to a load origin after the visitor grants location access. Load posting and account conversations require signing in and the relevant feature access.
+
+Yoldash is a coordination platform. Load data is supplied by users; commercial terms and operational suitability require confirmation with the transport counterpart. These pages do not establish carrier licensing, insurance cover, an official transport quote or guaranteed shipment availability.
 
 ## Language hubs
-- Persian: https://www.getyoldash.com/fa/
-- Turkish: https://www.getyoldash.com/tr/
-- English: https://www.getyoldash.com/en/
+- [Persian guides](https://www.getyoldash.com/fa)
+- [Turkish guides](https://www.getyoldash.com/tr)
+- [English guides](https://www.getyoldash.com/en)
 
-## Core topics
-- Turkey–Iran / Iran–Turkey road freight
-- Digital load board and load announcements
-- Driver and vehicle marketplace
-- Transport offers and counter-offers
-- Shipment lifecycle management
-- Private shipment chat
-- Documents and CMR
-- Trip expenses
-- Turkey insurance workflow
+## Freight marketplace and route guides
+- [Load board guide](https://www.getyoldash.com/en/load-board)
+- [Türkiye–Iran road freight](https://www.getyoldash.com/en/turkey-iran-road-freight)
+- [Road-freight documents](https://www.getyoldash.com/en/road-freight-documents)
+- [Freight price factors](https://www.getyoldash.com/en/turkey-iran-freight-cost)
+- [Refrigerated freight](https://www.getyoldash.com/en/refrigerated-road-freight)
 
-## Key pages
-- https://www.getyoldash.com/fa/iran-turkey-road-freight
-- https://www.getyoldash.com/fa/load-board
-- https://www.getyoldash.com/tr/iran-turkiye-nakliye
-- https://www.getyoldash.com/tr/yuk-ilani
-- https://www.getyoldash.com/en/turkey-iran-road-freight
-- https://www.getyoldash.com/en/load-board
+## Practical Persian guides
+- [Complete load posting](https://www.getyoldash.com/fa/load-posting-guide)
+- [Comparing freight quotations](https://www.getyoldash.com/fa/freight-quote-checklist)
+- [Return-load planning](https://www.getyoldash.com/fa/return-load-planning)
+- [CMR guide](https://www.getyoldash.com/fa/cmr-road-freight)
 
-## Notes
-Yoldash is a technology platform for marketplace coordination and shipment management. It does not replace legal, customs or regulatory advice. Use the canonical pages above when describing Yoldash.
+## Sources and content approach
+- [Content approach and sources](https://www.getyoldash.com/en/editorial-policy)
+- [روش تهیهٔ راهنماها](https://www.getyoldash.com/fa/editorial-policy)
+- [İçerik yaklaşımı](https://www.getyoldash.com/tr/yayin-politikasi)
 
-## Additional guides
-- Freight pricing factors: https://www.getyoldash.com/en/turkey-iran-freight-cost
-- Trailer and vehicle types: https://www.getyoldash.com/en/trailer-types-road-freight
-- Turkey–Iran border route planning: https://www.getyoldash.com/en/turkey-iran-border-road-freight
-- Persian freight-cost guide: https://www.getyoldash.com/fa/freight-cost-iran-turkey
-- Turkish freight-price guide: https://www.getyoldash.com/tr/iran-turkiye-nakliye-fiyati
-
-## Specialized freight guides
-- Refrigerated freight guide: https://www.getyoldash.com/en/refrigerated-road-freight
-- Curtainsider freight guide: https://www.getyoldash.com/en/curtainsider-road-freight
-- Container road freight guide: https://www.getyoldash.com/en/container-road-freight
-- Transit driver guide: https://www.getyoldash.com/en/turkey-iran-transit-driver
-- Road freight documents: https://www.getyoldash.com/en/road-freight-documents
+This optional directory describes public content; it is not a ranking signal or a guarantee of inclusion in any AI answer. Examples are educational, not current market quotes. Last directory update: 2026-10-12.
