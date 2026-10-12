@@ -332,7 +332,7 @@ function cargoCard(c, shipment=false){
       <div class="cargo-published-time"><span>◷</span><b>${esc(published)}</b></div>
       <div class="cargo-actions">
         ${primaryAction}
-        <button class="btn secondary cargo-detail-action" data-cargo-details="${esc(c.id)}">${t('details')} ↗</button>
+        <a class="btn secondary cargo-detail-action" href="/load/${encodeURIComponent(c.id)}" data-cargo-details="${esc(c.id)}">${t('details')} ↗</a>
         <button class="btn secondary cargo-share-btn" data-share-cargo="${esc(c.id)}" aria-label="${shareCargoLabel()}">↗</button>
       </div>
     </div>
@@ -528,7 +528,9 @@ function bindCargoActions(){
   $$('[data-retry-loads]').forEach(btn=>btn.onclick=()=>loadLoads());
   $$('[data-clear-load-search]').forEach(btn=>btn.onclick=()=>$('#clearBoardFilters')?.click());
   $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
-  $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
+  $$('[data-cargo-details]').forEach(btn=>btn.onclick=event=>{
+    if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0) return;
+    event.preventDefault();
     const id=btn.dataset.cargoDetails;
     if(id) openCargoDetails(id);
   });

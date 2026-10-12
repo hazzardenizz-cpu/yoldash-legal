@@ -22,6 +22,8 @@ for path,content in pages.items():
   target=urlparse(url).path
   targetalts=dict(re.findall(r'<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"',pages.get(target,'')))
   if alts!=targetalts:errors.append(f'{path}: hreflang is not reciprocal with {target}')
+# The app shell includes inactive routes; each route has its own heading.
+if len(re.findall(r'<h1\b',pages['/']))<1:errors.append('app shell: missing main heading')
 # Metadata must describe the same page in search and sharing previews.
 descriptions=[]
 for path,content in pages.items():
@@ -33,11 +35,14 @@ for path,content in pages.items():
  for kind,key,expected in [('property','og:title',title),('property','og:description',desc[0]),('property','og:url',base+path),('name','twitter:title',title),('name','twitter:description',desc[0])]:
   actual=re.findall(rf'<meta {kind}="{key}" content="([^"]+)"',content)
   if actual!=[expected]:errors.append(f'{path}: inconsistent {key}')
+ for image in re.findall(r'<meta property="og:image" content="([^"]+)"',content):
+  image_url=urlparse(image)
+  if image_url.netloc=='www.getyoldash.com' and not(root/image_url.path.lstrip('/')).is_file():errors.append(f'{path}: missing share image {image}')
  for key in ['og:image','og:image:alt','og:locale']:
   if f'property="{key}"' not in content:errors.append(f'{path}: missing {key}')
  if not re.search(r'<link rel="icon"[^>]*href="/brand/yoldash.webp"',content):errors.append(f'{path}: favicon must use a crawlable image URL')
  if not re.search(r'<head>\s*<meta charset="utf-8"',content):errors.append(f'{path}: charset must be first in head')
- if path!='/delete-account':
+ if path not in ['/delete-account','/']:
   if len(re.findall(r'<h1\b',content))!=1:errors.append(f'{path}: expected one main heading')
  for tag in re.findall(r'<img\b[^>]*>',content):
   if 'alt='not in tag:errors.append(f'{path}: image without alt text')

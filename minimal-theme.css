@@ -104,3 +104,6 @@ h1,h2 { text-wrap:balance; }
 html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .btn.primary span { color:#10253c!important; }
 .load-board-head h1 { font-size:clamp(1.75rem,3vw,2.25rem)!important; margin:12px 0 8px!important; letter-spacing:normal!important; line-height:1.5; }
 .load-board-head { min-height:0!important; }
+
+.seo-fallback { max-width:75ch; margin:24px auto; padding:24px; background:var(--yd-surface); color:var(--yd-text); border:1px solid var(--yd-border); border-radius:16px; }
+.cargo-detail-action { text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
