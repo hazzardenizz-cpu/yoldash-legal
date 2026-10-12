@@ -144,6 +144,7 @@ function applyLanguage(next, persist=true){
   if (persist) localStorage.setItem('yoldash_lang', state.lang);
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
+  document.dispatchEvent(new CustomEvent('yoldash:language-change'));
   $$('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
   $$('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   $$('.lang-switch button').forEach(b=>{
@@ -1969,7 +1970,7 @@ async function init(){
 
   try{ bindUI(); }catch(err){ console.error('bindUI init',err); }
   try{ networkUI(); }catch(err){ console.error('networkUI init',err); }
-  try{ applyLanguage(state.lang,false); }catch(err){ console.error('language init',err); }
+  try{ const incomingLang=new URL(location.href).searchParams.get('lang');applyLanguage(['fa','tr','en'].includes(incomingLang)?incomingLang:state.lang,['fa','tr','en'].includes(incomingLang)); }catch(err){ console.error('language init',err); }
   try{ setAuthMode('signin'); handleAuthCallbackErrors(); }catch(err){ console.error('auth ui init',err); }
 
   // FX must never depend on auth, profile, cargo or any other module.
