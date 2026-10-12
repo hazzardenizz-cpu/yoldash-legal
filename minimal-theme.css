@@ -107,3 +107,10 @@ html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .btn.primary span {
 
 .seo-fallback { max-width:75ch; margin:24px auto; padding:24px; background:var(--yd-surface); color:var(--yd-text); border:1px solid var(--yd-border); border-radius:16px; }
 .cargo-detail-action { text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.knowledge-tools { padding:20px; border-radius:16px; display:grid; gap:12px; }
+.knowledge-tools label { color:var(--yd-text); font-weight:700; }
+.knowledge-tools input { width:100%; min-height:48px; background:var(--yd-surface-subtle); color:var(--yd-text); border:1px solid var(--yd-border-strong); padding:12px; }
+.knowledge-categories { display:flex; flex-wrap:wrap; gap:8px; }
+.knowledge-card[hidden],#knowledgeEmpty[hidden] { display:none!important; }
+.knowledge-card h2 { margin:0; font-size:1.125rem; line-height:1.8; }
+#knowledgeCount { margin:0; color:var(--yd-muted); }
