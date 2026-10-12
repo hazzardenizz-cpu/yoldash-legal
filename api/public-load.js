@@ -11,7 +11,8 @@ function truck(v){
 }
 export default async function handler(req,res){
   const id=String(req.query?.id||'').trim();
-  if(!/^[0-9a-f-]{36}$/i.test(id)){res.status(404).send('Not found');return;}
+  res.setHeader('X-Robots-Tag','noindex, follow');
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)){res.status(404).send('Not found');return;}
   const select=[
     'id','status','cargo_type','required_truck_type','origin_country_code','origin_city',
     'destination_country_code','destination_city','origin_city_name_en','origin_city_name_fa','origin_city_name_tr',
@@ -19,7 +20,8 @@ export default async function handler(req,res){
     'remaining_truck_count','loading_at','freight_price','currency_code','description','published_at','expires_at'
   ].join(',');
   const url=SUPABASE_URL+'/rest/v1/cargo_posts?select='+encodeURIComponent(select)+'&id=eq.'+encodeURIComponent(id)+'&status=eq.PUBLISHED&deleted_at=is.null&limit=1';
-  const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
+  let r;
+  try{r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});}catch(error){res.setHeader('Cache-Control','no-store');res.setHeader('Retry-After','60');res.status(503).send('Load information is temporarily unavailable. Please try again.');return;}
   if(!r.ok){res.status(502).send('Unable to load cargo');return;}
   const rows=await r.json(); const c=rows?.[0];
   if(!c || (c.expires_at && new Date(c.expires_at)<=new Date())){res.status(404).send('This load is no longer active.');return;}
@@ -31,15 +33,16 @@ export default async function handler(req,res){
   const price=c.freight_price!=null?Number(c.freight_price).toLocaleString('en-US')+' '+(c.currency_code||''):'—';
   const trucks=c.remaining_truck_count??c.truck_count??1;
   const loading=c.loading_at?new Date(c.loading_at).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'UTC'})+' UTC':'—';
-  const schema={"@context":"https://schema.org","@type":"ItemPage","name":title,"description":description,"url":canonical,"isPartOf":{"@type":"WebSite","name":"Yoldash","url":"https://www.getyoldash.com/"},"mainEntity":{"@type":"Offer","name":cargo+' freight: '+from+' to '+to,"url":canonical,"availability":"https://schema.org/InStock"}};
+  const schema={"@context":"https://schema.org","@type":"ItemPage","name":title,"description":description,"url":canonical,"isPartOf":{"@type":"WebSite","name":"Yoldash","url":"https://www.getyoldash.com/"},"about":{"@type":"Service","name":cargo+' road-freight transport',"serviceType":"Road freight"}};
   res.setHeader('Content-Type','text/html; charset=utf-8');
   res.setHeader('Cache-Control','public, s-maxage=60, stale-while-revalidate=300');
+  res.setHeader('X-Robots-Tag','index, follow');
   res.status(200).send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="${canonical}"><meta property="og:type" content="website"><meta property="og:site_name" content="Yoldash"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">
-<link rel="stylesheet" href="/seo.css"><script type="application/ld+json">${json(schema)}</script></head><body><div class="wrap">
+<link rel="icon" type="image/webp" sizes="128x128" href="/brand/yoldash.webp"><meta property="og:locale" content="en_GB"><meta property="og:image" content="https://www.getyoldash.com/brand/yoldash-social.png"><meta property="og:image:alt" content="Yoldash road freight platform"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="https://www.getyoldash.com/brand/yoldash-social.png"><link rel="stylesheet" href="/seo.css"><script type="application/ld+json">${json(schema)}</script></head><body><div class="wrap">
 <header class="top"><a class="brand" href="/"><b>Y</b>oldash</a><nav class="nav"><a href="/en/load-board">Load Board</a><a href="/">Open Yoldash</a></nav></header>
-<main><section class="hero"><span class="eyebrow">Active Yoldash Load</span><h1>${esc(from)} → ${esc(to)}</h1><p>${esc(cargo)} · ${esc(c.origin_country_code||'')} → ${esc(c.destination_country_code||'')}</p><div class="actions"><a class="btn primary" href="/">Open Yoldash</a><a class="btn" href="/en/load-board">Browse more loads</a></div></section>
+<main><section class="hero"><span class="eyebrow">Active Yoldash Load</span><h1>${esc(from)} → ${esc(to)}</h1><p>${esc(cargo)} · ${esc(c.origin_country_code||'')} → ${esc(c.destination_country_code||'')}</p><div class="actions"><a class="btn primary" href="/?page=loads">Open load board</a><a class="btn" href="/en/load-board">Browse more loads</a></div></section>
 <section class="grid"><article class="card"><h2>Cargo</h2><p>${esc(cargo)}</p></article><article class="card"><h2>Vehicle</h2><p>${esc(truck(c.required_truck_type))}</p></article><article class="card"><h2>Weight</h2><p>${esc(weight)}</p></article></section>
 <section class="section"><h2>Transport details</h2><div class="two"><div><h3>Trucks required</h3><p>${esc(trucks)}</p><h3>Loading</h3><p>${esc(loading)}</p></div><div><h3>Freight indication</h3><p>${esc(price)}</p><h3>Listing status</h3><p>Published · active</p></div></div></section>
 ${c.description?`<section class="section"><h2>Cargo notes</h2><p>${esc(c.description)}</p></section>`:''}
