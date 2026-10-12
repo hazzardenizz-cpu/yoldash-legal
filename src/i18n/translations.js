@@ -38,3 +38,7 @@ for(const [lang,copy] of Object.entries(filterCopy)) Object.assign(translations[
 Object.assign(translations.fa,{filters:'فیلترها'});
 Object.assign(translations.tr,{filters:'Filtreler'});
 Object.assign(translations.en,{filters:'Filters'});
+
+Object.assign(translations.fa,{loadsLoading:'در حال دریافت بارها…',loadsLoadFailed:'دریافت بارها ممکن نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.',retryLoads:'تلاش دوباره',closeDialog:'بستن پنجره',themeLabel:'تغییر حالت روشن و تیره',publishedStatus:'منتشرشده'});
+Object.assign(translations.tr,{loadsLoading:'Yükler alınıyor…',loadsLoadFailed:'Yükler alınamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.',retryLoads:'Tekrar dene',closeDialog:'Pencereyi kapat',themeLabel:'Açık ve koyu tema arasında geçiş',publishedStatus:'Yayında'});
+Object.assign(translations.en,{loadsLoading:'Loading loads…',loadsLoadFailed:'Could not load listings. Check your connection and try again.',retryLoads:'Try again',closeDialog:'Close dialog',themeLabel:'Switch light and dark theme',publishedStatus:'Published'});

@@ -151,6 +151,14 @@ function applyLanguage(next, persist=true){
     b.setAttribute('aria-pressed',String(b.dataset.lang===state.lang));
   });
   $('#mobileMenu')?.setAttribute('aria-label',t('menuLabel'));
+  $('#themeToggle')?.setAttribute('aria-label',t('themeLabel'));
+  $('#notificationBtn')?.setAttribute('aria-label',t('notifications'));
+  $('#refreshFx')?.setAttribute('aria-label',t('refresh'));
+  $$('.close[data-close]').forEach(button=>button.setAttribute('aria-label',t('closeDialog')));
+  $$('dialog').forEach(dialog=>{
+    const heading=dialog.querySelector('h2,h1');
+    if(heading){if(!heading.id) heading.id=dialog.id+'Title';dialog.setAttribute('aria-labelledby',heading.id);}
+  });
   $('#globalSearch')?.setAttribute('aria-label',t('searchLoads'));
   $('#loadSearch')?.setAttribute('aria-label',t('searchLoads'));
   renderLoads();
@@ -192,6 +200,7 @@ function page(name, updateHistory=true){
     b.classList.toggle('active',active);
     if(active) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
   });
+  if(updateHistory){const heading=target.querySelector('h1,h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}window.scrollTo({top:0,behavior:'instant'});}
   $('#mobileMenu')?.setAttribute('aria-expanded','false');
 
   const sidebar=$('.sidebar');
@@ -302,7 +311,7 @@ function cargoCard(c, shipment=false){
       <div class="cargo-card-badges">
         <span class="cargo-scope-pill">${esc(scopeLabel)}</span>
         ${!shipment&&$('#boardSort')?.value==='nearest'&&boardPosition?`<span class="cargo-scope-pill">${distanceKm(boardPosition,c)!=null?`${distanceKm(boardPosition,c).toLocaleString(localeMap[state.lang],{maximumFractionDigits:1})} ${t('kmAway')}`:t('distanceUnknown')}</span>`:''}
-        <span class="status-pill">${esc(c.status||'PUBLISHED')}</span>
+        <span class="status-pill">${esc(c.status==='PUBLISHED'||!c.status?t('publishedStatus'):c.status)}</span>
       </div>
     </div>
 
@@ -450,6 +459,8 @@ function requestBoardLocation(){
     boardLocationMessage='locationReady'; $('#boardSort').value='nearest'; renderLoads();
   },fail,{enableHighAccuracy:false,timeout:12000,maximumAge:60000});
 }
+let loadsLoading=true;
+let loadsLoadError=false;
 function renderLoads(){
   const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
   const origin=$('#boardOrigin')?.value||'';
@@ -493,24 +504,29 @@ function renderLoads(){
   const home = $('#cargoList');
   const all = $('#cargoListAll');
 
-  if(home) home.innerHTML = state.loads.length
+  const pending=loadsLoading&&!state.loads.length;
+  const failed=loadsLoadError&&!state.loads.length;
+  const loadFeedback=pending?`<div class="board-feedback" role="status"><span class="loading-card" aria-hidden="true"></span><p>${esc(t('loadsLoading'))}</p></div>`:failed?`<div class="board-feedback" role="status"><p>${esc(t('loadsLoadFailed'))}</p><button type="button" class="btn secondary" data-retry-loads>${esc(t('retryLoads'))}</button></div>`:null;
+  if(home) home.innerHTML = loadFeedback || (state.loads.length
     ? state.loads.slice(0,3).map(c=>cargoCard(c)).join('')
-    : emptyBlock('noLoads');
+    : emptyBlock('noLoads'));
 
-  if(all) all.innerHTML = filtered.length
+  if(all) all.innerHTML = loadFeedback || (filtered.length
     ? filtered.map(c=>cargoCard(c)).join('')
-    : emptyBlock(state.loads.length?'noMatchingLoads':'noLoads');
+    : emptyBlock(state.loads.length?'noMatchingLoads':'noLoads')+(state.loads.length?`<button type="button" class="btn secondary" data-clear-load-search>${esc(t('clearFilters'))}</button>`:''));
 
   renderLoadUnreadBadge();
-  if($('#metricLoads')) $('#metricLoads').textContent = String(state.loads.length);
-  if($('#loadBoardTotal')) $('#loadBoardTotal').textContent = String(state.loads.length);
-  if($('#loadBoardInternational')) $('#loadBoardInternational').textContent = String(internationalCount);
-  if($('#loadBoardDomestic')) $('#loadBoardDomestic').textContent = String(domesticCount);
-  if($('#loadBoardResultCount')) $('#loadBoardResultCount').textContent = `${filtered.length} / ${state.loads.length}`;
+  if($('#metricLoads')) $('#metricLoads').textContent = pending||failed?'—':String(state.loads.length);
+  if($('#loadBoardTotal')) $('#loadBoardTotal').textContent = pending||failed?'—':String(state.loads.length);
+  if($('#loadBoardInternational')) $('#loadBoardInternational').textContent = pending||failed?'—':String(internationalCount);
+  if($('#loadBoardDomestic')) $('#loadBoardDomestic').textContent = pending||failed?'—':String(domesticCount);
+  if($('#loadBoardResultCount')) $('#loadBoardResultCount').textContent = pending?t('loadsLoading'):failed?t('loadsLoadFailed'):`${filtered.length.toLocaleString(localeMap[state.lang])} / ${state.loads.length.toLocaleString(localeMap[state.lang])}`;
 
   bindCargoActions();
 }
 function bindCargoActions(){
+  $$('[data-retry-loads]').forEach(btn=>btn.onclick=()=>loadLoads());
+  $$('[data-clear-load-search]').forEach(btn=>btn.onclick=()=>$('#clearBoardFilters')?.click());
   $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
   $$('[data-cargo-details]').forEach(btn=>btn.onclick=()=>{
     const id=btn.dataset.cargoDetails;
@@ -519,15 +535,22 @@ function bindCargoActions(){
   $$('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
 async function loadLoads(query=''){
-  const result = await fetchOpenLoads(query, 50);
-  if(result.rpcError) console.warn('get_open_cargo_posts failed, using public table fallback', result.rpcError);
-  if(result.error){
-    state.loads=[];
-    toast(humanError(result.error),'error');
-  }else{
+  if(loadsLoading && state.loads.length) return;
+  loadsLoading=true;
+  loadsLoadError=false;
+  if(!state.loads.length) renderLoads();
+  try{
+    const result = await fetchOpenLoads(query, 50);
+    if(result.rpcError) console.warn('get_open_cargo_posts failed, using public table fallback', result.rpcError);
+    if(result.error) throw result.error;
     state.loads=result.data;
+  }catch(error){
+    loadsLoadError=true;
+    if(state.loads.length) toast(humanError(error),'error');
+  }finally{
+    loadsLoading=false;
+    renderLoads();
   }
-  renderLoads();
 }
 
 function scheduleLoadRefresh(delay=500){
@@ -1980,6 +2003,8 @@ async function init(){
     },0));
   }catch(err){ console.error('auth listener init',err); }
 
+  const initialPage=new URL(location.href).searchParams.get('page')||'home';
+  if(initialPage!=='chat') page(initialPage,false);
   await Promise.allSettled([refreshSession(),loadLoads()]);
   try{ await syncSuperAdminMapAccess(); }catch(err){ console.error('admin map access init',err); }
   page(new URL(location.href).searchParams.get('page')||'home',false);
