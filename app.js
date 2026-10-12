@@ -141,7 +141,11 @@ function businessSecondaryLabel(type){ return type==='TRANSPORT_COMPANY' ? `${t(
 
 function applyLanguage(next, persist=true){
   state.lang = ['fa','tr','en'].includes(next) ? next : 'fa';
-  if (persist) localStorage.setItem('yoldash_lang', state.lang);
+  if(persist){
+    try{localStorage.setItem('yoldash_lang',state.lang);}catch(_){}
+    const languageUrl=new URL(location.href);
+    if(languageUrl.searchParams.has('lang')){languageUrl.searchParams.set('lang',state.lang);history.replaceState(history.state,'',languageUrl);}
+  }
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
   document.dispatchEvent(new CustomEvent('yoldash:language-change'));
