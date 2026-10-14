@@ -1227,7 +1227,7 @@ async function submitOffer(ev){
       currency:price?$('#offerCurrency').value:undefined
     });
     window.yoldashTrack?.('generate_lead',{lead_source:'cargo_offer'});
-    $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent'));
+    $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent')); page('shipments'); await loadShipments();
   }catch(err){
     const msg=humanError(err);
     toast(msg,'error');
@@ -1260,9 +1260,9 @@ async function loadShipments(){
 
 function shipmentCopy(key){
   const copy={
-    fa:{requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
-    tr:{requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
-    en:{requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
+    fa:{priceOffer:'پیشنهاد کرایه',pending:'در انتظار بررسی',confirmAccept:'آیا این پیشنهاد کرایه را تأیید می‌کنید؟ پس از تأیید، گفت‌وگوی خصوصی فعال می‌شود.',confirmReject:'آیا این درخواست حمل را رد می‌کنید؟',requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
+    tr:{priceOffer:'Navlun teklifi',pending:'Değerlendiriliyor',confirmAccept:'Bu navlun teklifini kabul ediyor musunuz? Kabulden sonra özel sohbet açılır.',confirmReject:'Bu taşıma talebini reddetmek istiyor musunuz?',requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
+    en:{priceOffer:'Freight offer',pending:'Pending review',confirmAccept:'Accept this freight offer? A private chat will become available.',confirmReject:'Reject this transport request?',requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
   };
   return copy[state.lang]?.[key]||copy.en[key]||key;
 }
@@ -1272,7 +1272,7 @@ function shipmentOfferPanel(cargo, rows){
   const offerRow=offer=>{
     const price=offer.proposed_price==null?'—':`${Number(offer.proposed_price).toLocaleString(localeMap[state.lang])} ${offer.currency_code||''}`;
     const isPending=offer.offer_status==='PENDING';
-    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status||'PENDING')}</span>${isPending?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
+    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${isPending?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
   };
   return `<section class="shipment-offers" data-cargo-offers="${esc(cargo.id)}"><div class="shipment-offers-head"><b>${shipmentCopy('requests')}</b><small>${offers.length}</small></div>${offers.length?offers.map(offerRow).join(''):`<p class="shipment-empty">${shipmentCopy('noRequests')}</p>`}</section>`;
 }
@@ -1280,6 +1280,7 @@ function bindShipmentOfferActions(){
   $$('[data-offer-decision]').forEach(button=>button.onclick=async()=>{
     const offerId=button.dataset.offerId, status=button.dataset.offerDecision;
     if(!offerId||!status) return;
+    if(!window.confirm(shipmentCopy(status==='ACCEPTED'?'confirmAccept':'confirmReject')))return;
     button.disabled=true;
     try{
       const {error}=await setCargoOfferStatus(offerId,status);
