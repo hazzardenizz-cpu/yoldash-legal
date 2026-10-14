@@ -66,3 +66,15 @@ export async function searchCities({ query, limit = 8, countryCode }) {
     p_country_code: countryCode
   });
 }
+
+export async function updateOwnLoad(id, ownerId, fields) {
+  return supabase.from('cargo_posts').update(fields)
+    .eq('id',id).eq('owner_id',ownerId).eq('status','PUBLISHED')
+    .is('deleted_at',null).select('id');
+}
+export async function deleteOwnLoad(id, ownerId) {
+  return supabase.from('cargo_posts')
+    .update({deleted_at:new Date().toISOString()})
+    .eq('id',id).eq('owner_id',ownerId).eq('status','PUBLISHED')
+    .is('deleted_at',null).select('id');
+}
