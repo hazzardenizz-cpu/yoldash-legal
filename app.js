@@ -568,9 +568,9 @@ function renderLoads(){
 function bindCargoActions(){
   $$('[data-retry-loads]').forEach(btn=>btn.onclick=()=>loadLoads());
   $$('[data-clear-load-search]').forEach(btn=>btn.onclick=()=>$('#clearBoardFilters')?.click());
-  $('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
-  $('[data-edit-own-load]').forEach(btn=>btn.onclick=()=>editOwnCargo(btn.dataset.editOwnLoad));
-  $('[data-delete-own-load]').forEach(btn=>btn.onclick=()=>removeOwnCargo(btn.dataset.deleteOwnLoad));
+  $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $$('[data-edit-own-load]').forEach(btn=>btn.onclick=()=>editOwnCargo(btn.dataset.editOwnLoad));
+  $$('[data-delete-own-load]').forEach(btn=>btn.onclick=()=>removeOwnCargo(btn.dataset.deleteOwnLoad));
   $$('[data-cargo-details]').forEach(btn=>btn.onclick=event=>{
     if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0) return;
     event.preventDefault();
