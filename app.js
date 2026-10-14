@@ -27,6 +27,8 @@ import {
 import {
   fetchOpenLoads,
   publishLoad,
+  updateOwnLoad,
+  deleteOwnLoad,
   subscribeToOpenLoads,
   unsubscribeFromOpenLoads,
   getCurrentCargoDailyQuota,
@@ -270,6 +272,40 @@ async function shareCargo(id){
   }
 }
 
+const ownLoadLabels={fa:{edit:"ویرایش بار",delete:"حذف بار",save:"ذخیره تغییرات",confirm:"آیا مطمئن هستید که می‌خواهید این آگهی را حذف کنید؟",done:"بار با موفقیت حذف شد.",saved:"بار ویرایش شد."},tr:{edit:"Yükü düzenle",delete:"Yükü sil",save:"Değişiklikleri kaydet",confirm:"Bu yük ilanını silmek istiyor musunuz?",done:"Yük silindi.",saved:"Yük güncellendi."},en:{edit:"Edit load",delete:"Delete load",save:"Save changes",confirm:"Delete this load listing?",done:"Load deleted.",saved:"Load updated."}};
+function ownLoadText(key){return (ownLoadLabels[state.lang]||ownLoadLabels.fa)[key];}
+let editingOwnLoadId=null;
+function resetOwnLoadEditor(){
+ editingOwnLoadId=null;
+ $('#loadForm').reset();
+ state.city={origin:null,destination:null};
+ $('#publishLoadBtn').textContent=t('publishLoad');
+}
+function datetimeLocalValue(value){
+ const date=new Date(value),offset=date.getTimezoneOffset()*60000;
+ return Number.isFinite(date.getTime())?new Date(date.getTime()-offset).toISOString().slice(0,16):'';
+}
+function editOwnCargo(id){
+ const c=state.loads.find(x=>x.id===id);
+ if(!c||c.owner_id!==state.session?.user?.id||c.status!=='PUBLISHED')return;
+ resetOwnLoadEditor();editingOwnLoadId=id;
+ const mapping={originCountry:c.origin_country_code,originCity:c.origin_city,originCustoms:c.origin_customs,destinationCountry:c.destination_country_code,destinationCity:c.destination_city,destinationCustoms:c.destination_customs,cargoType:c.cargo_type,truckType:c.required_truck_type,truckCount:c.truck_count,weightKg:c.weight_kg,freightPrice:c.freight_price,currencyCode:c.currency_code,loadingAt:c.loading_at?datetimeLocalValue(c.loading_at):'',exitBorder:c.exit_border,cargoDescription:c.description,validityDays:c.validity_days};
+ for(const [key,value] of Object.entries(mapping)){const field=document.getElementById(key);if(field&&value!=null)field.value=String(value);}
+ $('#loadFormStatus').textContent='';
+ $('#publishLoadBtn').textContent=ownLoadText('save');
+ $('#loadModal').showModal();
+}
+async function removeOwnCargo(id){
+ const c=state.loads.find(x=>x.id===id),uid=state.session?.user?.id;
+ if(!c||c.owner_id!==uid||c.status!=='PUBLISHED'||!window.confirm(ownLoadText('confirm')))return;
+ try{
+ const {data,error}=await deleteOwnLoad(id,uid);
+ if(error)throw error;
+ if(!data?.length)throw new Error('This load cannot be deleted; it may have active transport requests.');
+ state.loads=state.loads.filter(x=>x.id!==id);
+ renderLoads();toast(ownLoadText('done'));await loadLoads();
+ }catch(err){toast(humanError(err),'error');}
+}
 function cargoCard(c, shipment=false){
   const from = cityName(c,'origin');
   const to = cityName(c,'destination');
@@ -293,7 +329,7 @@ function cargoCard(c, shipment=false){
   if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) {
     primaryAction = `<button class="btn primary cargo-primary-action" data-offer="${esc(c.id)}">${t('requestTransport')}</button>`;
   } else if (!shipment && own) {
-    primaryAction = `<button class="btn secondary owner-btn" disabled>${t('yourLoad')}</button>`;
+    primaryAction = `<button type="button" class="btn secondary" data-edit-own-load="${esc(c.id)}">${ownLoadText("edit")}</button><button type="button" class="btn secondary" data-delete-own-load="${esc(c.id)}">${ownLoadText("delete")}</button>`;
   }
 
   return `<article class="cargo-card marketplace-card" data-cargo-id="${esc(c.id)}">
@@ -532,7 +568,9 @@ function renderLoads(){
 function bindCargoActions(){
   $$('[data-retry-loads]').forEach(btn=>btn.onclick=()=>loadLoads());
   $$('[data-clear-load-search]').forEach(btn=>btn.onclick=()=>$('#clearBoardFilters')?.click());
-  $$('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $('[data-offer]').forEach(btn=>btn.onclick=()=>openOffer(btn.dataset.offer));
+  $('[data-edit-own-load]').forEach(btn=>btn.onclick=()=>editOwnCargo(btn.dataset.editOwnLoad));
+  $('[data-delete-own-load]').forEach(btn=>btn.onclick=()=>removeOwnCargo(btn.dataset.deleteOwnLoad));
   $$('[data-cargo-details]').forEach(btn=>btn.onclick=event=>{
     if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0) return;
     event.preventDefault();
@@ -1063,6 +1101,7 @@ function isBusinessProfileReady(){
 }
 async function openLoadModal(){
   if(!requireCompleteProfile()) return;
+  resetOwnLoadEditor();
   if(!canPostTypes.has(state.profile?.business_user_type)){ toast(state.profile?.business_user_type==='DRIVER'?t('driverCannotPost'):t('postOnlyBusiness'),'error'); return; }
   $('#loadFormStatus').textContent='';
   $('#loadModal').showModal();
@@ -1100,9 +1139,18 @@ async function submitLoad(ev){
       for(const l of ['en','fa','tr']) if(c[`name_${l}`]) payload[`${which}_city_name_${l}`]=c[`name_${l}`];
     }
     if(!payload.cargo_type||!payload.origin_city||!payload.destination_city) throw new Error(t('requiredFields'));
-    const {data:created,error}=await publishLoad(payload); if(error) throw error;
-    $('#loadModal').close(); $('#loadForm').reset(); state.city={origin:null,destination:null}; toast(t('loadPublished')); await loadLoads();
-    if(created?.id){
+    const isEditing=!!editingOwnLoadId;
+    let result;
+    if(isEditing){
+      delete payload.status;
+      delete payload.validity_days;
+      result=await updateOwnLoad(editingOwnLoadId,state.session.user.id,payload);
+    }else result=await publishLoad(payload);
+    const {data:created,error}=result;
+    if(error)throw error;
+    if(isEditing&&!created?.length)throw new Error('This load cannot be edited in its current state.');
+    $('#loadModal').close(); resetOwnLoadEditor(); toast(isEditing?ownLoadText('saved'):t('loadPublished')); await loadLoads();
+    if(!isEditing&&created?.id){
       const url=publicCargoUrl(created.id);
       window.yoldashTrack?.('publish_load',{
         item_id:created.id,
@@ -1116,7 +1164,7 @@ async function submitLoad(ev){
       console.info('Public cargo URL:',url);
     }
   }catch(err){ status.className='auth-status error'; status.textContent=humanError(err); status.focus(); }
-  finally{ btn.disabled=false; btn.textContent=t('publishLoad'); }
+  finally{ btn.disabled=false; btn.textContent=editingOwnLoadId?ownLoadText('save'):t('publishLoad'); }
 }
 
 async function setupCitySearch(which){
