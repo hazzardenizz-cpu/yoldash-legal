@@ -1110,10 +1110,25 @@ async function openLoadModal(){
     if(q){ $('#quotaNote').innerHTML=`<span>✓</span><span>${t('quota')}: ${esc(q.used_count)} / ${esc(q.daily_limit)} · ${t('remaining')}: ${esc(q.remaining_count)}</span>`; }
   }catch{}
 }
+function normalizeLoadingDateToday(){
+  const input=$('#loadingAt');
+  if(!input?.value) return;
+  const selected=new Date(input.value);
+  if(!Number.isFinite(selected.getTime())) return;
+  const now=new Date();
+  const sameDay=selected.getFullYear()===now.getFullYear()&&selected.getMonth()===now.getMonth()&&selected.getDate()===now.getDate();
+  if(sameDay && selected.getTime()<now.getTime()){
+    const later=new Date(now.getTime()+5*60000);
+    if(later.getDate()===now.getDate()&&later.getMonth()===now.getMonth()&&later.getFullYear()===now.getFullYear()){
+      input.value=datetimeLocalValue(later);
+    }
+  }
+}
 async function submitLoad(ev){
   ev.preventDefault();
   const status=$('#loadFormStatus'); status.textContent='';
   const count=Number($('#truckCount').value);
+  normalizeLoadingDateToday();
   const loading=$('#loadingAt').value;
   if(!Number.isInteger(count)||count<1){status.textContent=t('invalidTruckCount');$('#truckCount').focus();return;}
   if(loading && (!Number.isFinite(new Date(loading).getTime())||new Date(loading).getTime()<Date.now())){
@@ -1875,6 +1890,7 @@ function bindUI(){
   document.addEventListener('click',e=>{const p=$('#notificationPanel');if(p&&!p.classList.contains('hidden')&&!p.contains(e.target)&&!$('#notificationBtn')?.contains(e.target))p.classList.add('hidden');});
   $('#refreshFx')?.addEventListener('click',()=>loadFxRates(false));
   $('#createDriverListing').onclick=()=>openDriverListing(); $('#driverListingForm').addEventListener('submit',submitDriverListing); $('#driverHubSearch').addEventListener('input',renderDriverHub); $$('[data-listing-type]').forEach(b=>b.onclick=()=>{$('#driverListingType').value=b.dataset.listingType;syncDriverListingSegments();}); $$('[data-employment-type]').forEach(b=>b.onclick=()=>{$('#driverEmploymentType').value=b.dataset.employmentType;syncDriverListingSegments();}); $$('[data-driver-filter]').forEach(b=>b.onclick=()=>{state.driverFilter=b.dataset.driverFilter;$$('[data-driver-filter]').forEach(x=>x.classList.toggle('active',x===b));renderDriverHub();});
+  $('#loadingAt')?.addEventListener('change',normalizeLoadingDateToday);
   $('#loadForm').addEventListener('submit',submitLoad); $('#offerForm').addEventListener('submit',submitOffer); $('#authForm').addEventListener('submit',submitAuth); $('#recoveryForm')?.addEventListener('submit',submitRecovery);
   $('#saveProfileBtn').onclick=saveProfile; $('#forgotPassword').onclick=showForgotPassword; $('#sendResetLink').onclick=forgotPassword; $('#backFromForgot').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#resendVerification').onclick=resendVerification; $('#backToSignIn').onclick=()=>{showAuthEntry();setAuthMode('signin');}; $('#authPasswordToggle').onclick=()=>{const input=$('#authPassword');const show=input.type==='password';input.type=show?'text':'password';$('#authPasswordToggle').textContent=show?'◌':'◉';}; $('#signOutBtn').onclick=signOutUser;
   $$('[data-auth-mode]').forEach(b=>b.onclick=()=>setAuthMode(b.dataset.authMode));
