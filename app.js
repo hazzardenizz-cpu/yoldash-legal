@@ -509,7 +509,7 @@ function requestBoardLocation(){
 let loadsLoading=true;
 let loadsLoadError=false;
 function renderLoads(){
-  const more=$('#loadMoreCargo');if(more){more.hidden=!loadsHaveMore;more.textContent=t('loadMoreCargo');more.disabled=loadsLoading;}
+  const more=$('#loadMoreCargo');if(more){more.hidden=!loadsHaveMore;if(more.parentElement)more.parentElement.hidden=!loadsHaveMore;more.textContent=t('loadMoreCargo');more.disabled=loadsLoading;}
   const q=normalizeSearch($('#loadSearch')?.value);
   const origin=$('#boardOrigin')?.value||'';
   const destination=$('#boardDestination')?.value||'';
