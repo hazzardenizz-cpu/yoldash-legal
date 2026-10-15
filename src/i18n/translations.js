@@ -52,3 +52,11 @@ translations.tr.loadMoreCargo='Daha fazla yük';translations.en.loadMoreCargo='M
 Object.assign(translations.fa,{staleCargoData:'به‌روزرسانی انجام نشد؛ آخرین اطلاعات دریافت‌شده نمایش داده می‌شود.',sendChatMessage:'ارسال پیام'});
 Object.assign(translations.tr,{staleCargoData:'Güncellenemedi; son alınan bilgiler gösteriliyor.',sendChatMessage:'Mesaj gönder'});
 Object.assign(translations.en,{staleCargoData:'Refresh failed. Showing the last received information.',sendChatMessage:'Send message'});
+
+translations.fa.cargoHasTransportHistory='این بار سابقهٔ پذیرش یا حمل دارد و قابل حذف مستقیم نیست؛ از مسیر لغو حمل اقدام کنید.';
+translations.tr.cargoHasTransportHistory='Bu yükün kabul veya taşıma geçmişi var. Doğrudan silmek yerine taşıma iptal sürecini kullanın.';
+translations.en.cargoHasTransportHistory='This load has accepted transport history. Use the shipment cancellation workflow instead of deleting it.';
+
+Object.assign(translations.fa,{shipmentProgress:'پیگیری مراحل حمل',confirmStage:'تأیید مرحله',statusHistory:'تاریخچهٔ وضعیت',stageUpdated:'مرحلهٔ حمل ثبت شد.',noStatusHistory:'هنوز تغییری ثبت نشده است.',lifecycleFailed:'دریافت مراحل حمل انجام نشد؛ دوباره به‌روزرسانی کنید.'});
+Object.assign(translations.tr,{shipmentProgress:'Taşıma aşamaları',confirmStage:'Aşamayı onayla',statusHistory:'Durum geçmişi',stageUpdated:'Taşıma aşaması kaydedildi.',noStatusHistory:'Henüz durum değişikliği yok.',lifecycleFailed:'Taşıma aşamaları alınamadı. Yenileyin.'});
+Object.assign(translations.en,{shipmentProgress:'Shipment progress',confirmStage:'Confirm stage',statusHistory:'Status history',stageUpdated:'Shipment stage updated.',noStatusHistory:'No status changes yet.',lifecycleFailed:'Could not load shipment stages. Please refresh.'});

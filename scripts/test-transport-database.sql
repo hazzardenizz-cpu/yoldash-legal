@@ -1,7 +1,7 @@
 -- Transactional integration test. The success marker rolls back all fixtures,
 -- messages, notifications and queued side effects. No test accounts are kept.
 do $test$
-declare owner_uid uuid:=gen_random_uuid(); driver_uid uuid:=gen_random_uuid(); stranger_uid uuid:=gen_random_uuid(); cargo_uid uuid; offer_uid uuid; room_uid uuid; rejected boolean:=false; n integer;
+declare owner_uid uuid:=gen_random_uuid(); driver_uid uuid:=gen_random_uuid(); stranger_uid uuid:=gen_random_uuid(); cargo_uid uuid; assignment_uid uuid; offer_uid uuid; room_uid uuid; rejected boolean:=false; n integer;
 begin
  begin
   insert into auth.users(id,email,raw_user_meta_data,raw_app_meta_data,aud,role,created_at,updated_at) values
@@ -16,6 +16,9 @@ begin
     values('PUBLISHED','TRANSACTION QA','CURTAIN','TR','Istanbul','IR','Tehran',2,now()+interval '5 minutes',100,'USD') returning id into cargo_uid;
   update public.cargo_posts set description='QA edit' where id=cargo_uid;
   if not exists(select 1 from public.cargo_posts where id=cargo_uid and description='QA edit') then raise exception 'Owner edit failed'; end if;
+  update public.cargo_posts set deleted_at=now() where id=cargo_uid;
+  if not exists(select 1 from public.cargo_posts where id=cargo_uid and deleted_at is not null) then raise exception 'Unassigned own cargo deletion failed'; end if;
+  update public.cargo_posts set deleted_at=null where id=cargo_uid;
   perform set_config('request.jwt.claim.sub',driver_uid::text,true);
   select id into offer_uid from public.submit_cargo_offer(cargo_uid,110,'USD','QA request',1);
   if offer_uid is null then raise exception 'Offer submission failed'; end if;
@@ -37,6 +40,41 @@ begin
   perform set_config('request.jwt.claim.sub',stranger_uid::text,true);
   select count(*) into n from public.get_shipment_messages(room_uid,100);
   if n<>0 then raise exception 'Stranger can read private chat'; end if;
+  perform set_config('request.jwt.claim.sub',owner_uid::text,true);
+  rejected:=false;
+  begin
+    update public.cargo_posts set deleted_at=now() where id=cargo_uid;
+  exception when invalid_parameter_value then
+    if sqlerrm<>'cargo_has_transport_history' then raise; end if;
+    rejected:=true;
+  end;
+  if not rejected then raise exception 'Assigned cargo can still be deleted'; end if;
+  select assignment_id into assignment_uid from public.get_shipment_room_for_offer(offer_uid);
+  perform public.advance_shipment_assignment_status(assignment_uid,'SELECTED',null);
+  rejected:=false;
+  begin perform public.advance_shipment_assignment_status(assignment_uid,'SELECTED',null);
+  exception when sqlstate 'PT409' then rejected:=true;end;
+  if not rejected then raise exception 'Stale stage update was accepted';end if;
+  rejected:=false;
+  begin perform public.advance_shipment_assignment_status(assignment_uid,'ASSIGNED',null);
+  exception when insufficient_privilege then rejected:=true;end;
+  if not rejected then raise exception 'Owner can advance driver-only stage';end if;
+  perform set_config('request.jwt.claim.sub',driver_uid::text,true);
+  perform public.advance_shipment_assignment_status(assignment_uid,'ASSIGNED',null);
+  perform public.advance_shipment_assignment_status(assignment_uid,'PICKUP',null);
+  perform public.advance_shipment_assignment_status(assignment_uid,'IN_TRANSIT',null);
+  perform public.advance_shipment_assignment_status(assignment_uid,'BORDER_CUSTOMS',null);
+  rejected:=false;
+  begin perform public.advance_shipment_assignment_status(assignment_uid,'DELIVERED',null);
+  exception when insufficient_privilege then rejected:=true;end;
+  if not rejected then raise exception 'Driver can confirm final delivery instead of owner';end if;
+  perform set_config('request.jwt.claim.sub',owner_uid::text,true);
+  perform public.advance_shipment_assignment_status(assignment_uid,'DELIVERED',null);
+  select count(*) into n from public.get_assignment_status_history(assignment_uid);
+  if n<6 then raise exception 'Shipment history is incomplete';end if;
+  perform set_config('request.jwt.claim.sub',stranger_uid::text,true);
+  select count(*) into n from public.get_assignment_status_history(assignment_uid);
+  if n<>0 then raise exception 'Stranger can read shipment history';end if;
   raise exception using errcode='ZX001',message='QA complete: roll back every fixture and queued side effect';
  exception when sqlstate 'ZX001' then null;
  end;

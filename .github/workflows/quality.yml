@@ -1,0 +1,27 @@
+name: Site quality checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Regression checks
+        run: |
+          node scripts/test-site-structure.mjs
+          node scripts/test-transport-flow.mjs
+          node scripts/test-public-seo.mjs
+          python3 scripts/check-seo.py
+          node scripts/check-release-assets.mjs
+      - name: Rebuild and verify committed release
+        run: |
+          python3 scripts/build-performance.py
+          git diff --exit-code -- index.html vercel.json assets/
+          node scripts/check-release-assets.mjs

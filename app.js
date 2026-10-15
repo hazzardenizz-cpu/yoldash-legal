@@ -1,3 +1,4 @@
+import { renderLifecycle } from './src/features/transport/lifecycle-view.js';
 import { transportStatusLabel } from './src/features/transport/status.js';
 import { normalizeSearch,matchesSearch } from './src/features/loads/search.js';
 import { readStored } from './src/core/storage.js';
@@ -47,6 +48,7 @@ import {
 } from './src/features/profile/profile-service.js';
 import {
   getCargoOfferSnapshot,
+  getCargoLifecycle,advanceShipmentStage,getAssignmentHistory,
   submitCargoOffer,
   getMyTransportCargo,
   setCargoOfferStatus,
@@ -96,6 +98,7 @@ function toast(message, type='ok'){
 function humanError(error){
   const msg = String(error?.message || error || '').toLowerCase();
   if (!navigator.onLine || msg.includes('failed to fetch') || msg.includes('network')) return t('networkError');
+  if(msg.includes('cargo_has_transport_history'))return t('cargoHasTransportHistory');
   if (msg.includes('email not confirmed')) return t('verificationRequired');
   if (msg.includes('invalid login credentials')) return state.lang==='fa'?'ایمیل یا رمز عبور صحیح نیست.':state.lang==='tr'?'E-posta veya şifre hatalı.':'Incorrect email or password.';
   if (msg.includes('user already registered')) return state.lang==='fa'?'این ایمیل قبلاً ثبت شده است. وارد حساب شوید.':state.lang==='tr'?'Bu e-posta zaten kayıtlı. Giriş yapın.':'This email is already registered. Please sign in.';
@@ -303,6 +306,7 @@ function editOwnCargo(id){
 }
 async function removeOwnCargo(id){
  const c=state.loads.find(x=>x.id===id)||shipmentCargoCache.find(x=>x.id===id),uid=state.session?.user?.id;
+ if(Number(c?.accepted_truck_count)>0){toast(t('cargoHasTransportHistory'),'error');return;}
  if(!c||c.owner_id!==uid||c.status!=='PUBLISHED'||!window.confirm(ownLoadText('confirm')))return;
  try{
  const {data,error}=await deleteOwnLoad(id,uid);
@@ -335,7 +339,7 @@ function cargoCard(c, shipment=false){
   if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) {
     primaryAction = `<button class="btn primary cargo-primary-action" data-offer="${esc(c.id)}">${t('requestTransport')}</button>`;
   } else if (own && c.status==='PUBLISHED') {
-    primaryAction = `<button type="button" class="btn secondary" data-edit-own-load="${esc(c.id)}">${ownLoadText("edit")}</button><button type="button" class="btn secondary" data-delete-own-load="${esc(c.id)}">${ownLoadText("delete")}</button>`;
+    primaryAction = `<button type="button" class="btn secondary" data-edit-own-load="${esc(c.id)}">${ownLoadText("edit")}</button>${Number(c.accepted_truck_count||0)===0?`<button type="button" class="btn secondary" data-delete-own-load="${esc(c.id)}">${ownLoadText("delete")}</button>`:''}`;
   }
 
   return `<article class="cargo-card marketplace-card" data-cargo-id="${esc(c.id)}">
@@ -1288,16 +1292,16 @@ async function loadShipments(){
     const {data,error}=await getMyTransportCargo(uid); if(error) throw error;
     const rows=Array.isArray(data)?data:[];
     const cards=await mapLimited(rows,4,async cargo=>{
-      const snapshot=await getCargoOfferSnapshot(cargo.id);
+      const [snapshot,lifecycle]=await Promise.all([getCargoOfferSnapshot(cargo.id),getCargoLifecycle(cargo.id)]);
       const offers=snapshot.error ? [] : (snapshot.data||[]);
-      return `<div class="shipment-group">${cargoCard(cargo,true)}${snapshot.error?`<div class="board-feedback" role="status">${esc(shipmentCopy('offersFailed'))}</div>`:shipmentOfferPanel(cargo,offers)}</div>`;
+      return `<div class="shipment-group">${cargoCard(cargo,true)}${snapshot.error?`<div class="board-feedback" role="status">${esc(shipmentCopy('offersFailed'))}</div>`:shipmentOfferPanel(cargo,offers)}${lifecycle.error?`<div class="board-feedback">${esc(t('lifecycleFailed'))}</div>`:renderLifecycle(lifecycle.data||[],state.lang,t)}</div>`;
     });
     if(request!==shipmentRequest||uid!==state.session?.user?.id)return;
     shipmentCargoCache=rows;
     el.innerHTML=rows.length?cards.join(''):emptyBlock('noShipments');
     $('#metricShipments').textContent=String(rows.length);
     bindCargoActions();
-    bindShipmentOfferActions();
+    bindShipmentOfferActions();bindShipmentLifecycle();
   }catch(err){if(request===shipmentRequest&&uid===state.session?.user?.id)el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
 }
 
@@ -1318,6 +1322,27 @@ function shipmentOfferPanel(cargo, rows){
     return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${offer.offer_status==='ACCEPTED'?`<button type="button" class="btn secondary" data-offer-room="${esc(offer.offer_id)}">${shipmentCopy('openAcceptedChat')}</button>`:''}${isPending&&canManage?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
   };
   return `<section class="shipment-offers" data-cargo-offers="${esc(cargo.id)}"><div class="shipment-offers-head"><b>${shipmentCopy('requests')}</b><small>${offers.length}</small></div>${offers.length?offers.map(offerRow).join(''):`<p class="shipment-empty">${shipmentCopy('noRequests')}</p>`}</section>`;
+}
+const advancingAssignments=new Set();
+function bindShipmentLifecycle(){
+ $$('[data-advance-assignment]').forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.advanceAssignment,uid=state.session?.user?.id;
+  if(!uid||advancingAssignments.has(id))return;
+  const next=transportStatusLabel(button.dataset.nextStage,state.lang);
+  if(!window.confirm(`${t('confirmStage')}: ${next}؟`))return;
+  advancingAssignments.add(id);button.disabled=true;
+  try{const {error}=await advanceShipmentStage(id,button.dataset.expectedStage);if(error)throw error;toast(t('stageUpdated'));await loadShipments();await loadLoads();}
+  catch(error){toast(humanError(error),'error');if(error?.code==='PT409')await loadShipments();}
+  finally{advancingAssignments.delete(id);button.disabled=false;}
+ });
+ $$('[data-assignment-history]').forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.assignmentHistory,uid=state.session?.user?.id;
+  const panel=$$('[data-history-for]').find(p=>p.dataset.historyFor===id);if(!panel||button.disabled)return;
+  if(!panel.hidden){panel.hidden=true;button.setAttribute('aria-expanded','false');return;}
+  button.disabled=true;
+  try{const {data,error}=await getAssignmentHistory(id);if(error)throw error;if(uid!==state.session?.user?.id)return;panel.innerHTML=(data||[]).length?`<ol>${data.map(row=>`<li><b>${esc(transportStatusLabel(row.to_status,state.lang))}</b><time>${esc(dateLabel(row.created_at))}</time>${row.note?`<p>${esc(row.note)}</p>`:''}</li>`).join('')}</ol>`:`<p>${esc(t('noStatusHistory'))}</p>`;panel.hidden=false;button.setAttribute('aria-expanded','true');}
+  catch(error){toast(humanError(error),'error');}finally{button.disabled=false;}
+ });
 }
 const decidingOffers=new Set();
 function bindShipmentOfferActions(){

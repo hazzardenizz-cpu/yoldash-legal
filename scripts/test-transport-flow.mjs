@@ -22,3 +22,12 @@ const stale=chat.loadShipmentMessages({id:'A'});chat.activeShipmentRoom={id:'B'}
 const first=chat.loadShipmentMessages({id:'B'}),second=chat.loadShipmentMessages({id:'B'});waiting[1]({data:[{body:'latest B'}]});await second;waiting[0]({data:[{body:'older B'}]});await first;assert.equal(renders,1);assert.equal(chat.shipmentMessages[0].body,'latest B');
 const afterLogout=chat.loadShipmentMessages({id:'B'});chat.state.session=null;waiting.at(-1)({data:[{body:'private'}]});await afterLogout;assert.equal(renders,1);
 console.log('PASS: dashboard ownership, pending requests, deduplication, errors, bounded concurrency, provider permissions, XSS escaping, room switching, out-of-order responses and logout isolation');
+const lifecycle=fs.readFileSync('src/features/transport/lifecycle-view.js','utf8').replace(/^import .*;\n/gm,'').replace('export function','function');
+const view=vm.createContext({esc,transportStatusLabel:s=>s});vm.runInContext(lifecycle,view);
+const stage={assignment_id:'assignment',provider_display_name:'<script>',assignment_status:'SELECTED',next_status:'ASSIGNED',can_advance:false};
+assert.ok(!view.renderLifecycle([stage],'en',k=>k).includes('data-advance-assignment'));assert.ok(view.renderLifecycle([{...stage,can_advance:true}],'en',k=>k).includes('data-advance-assignment'));assert.ok(!view.renderLifecycle([stage],'en',k=>k).includes('<script>'));assert.equal(view.renderLifecycle([],'en',k=>k),'');
+const cardSource=app.slice(app.indexOf('function cargoCard('),app.indexOf('function cargoDetailValue('));
+const card=vm.createContext({state:{lang:'en',session:{user:{id:'owner'}}},localeMap:{en:'en-US'},cityName:(c,k)=>k,truckKey:()=>'',t:k=>k,esc,relativeLabel:()=>'',dateLabel:()=>'',isFullProfileReady:()=>false,ownLoadText:k=>k,transportStatusLabel:s=>s,initials:()=>'',shareCargoLabel:()=>'',encodeURIComponent,$:()=>null});vm.runInContext(cardSource,card);
+assert.ok(card.cargoCard({id:'c',owner_id:'owner',status:'PUBLISHED',accepted_truck_count:0}).includes('data-delete-own-load'));
+assert.ok(!card.cargoCard({id:'c',owner_id:'owner',status:'PUBLISHED',accepted_truck_count:1}).includes('data-delete-own-load'));
+console.log('PASS: lifecycle action visibility, escaped provider names and assigned-load deletion controls');

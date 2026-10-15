@@ -80,3 +80,7 @@ export function subscribeToShipmentRoom(roomId, onChange) {
 export function unsubscribeFromShipmentRoom(channel) {
   if (channel) return supabase.removeChannel(channel);
 }
+
+export const getCargoLifecycle=cargoId=>supabase.rpc('get_cargo_assignment_lifecycle',{p_cargo_id:cargoId});
+export const advanceShipmentStage=(assignmentId,expectedStatus)=>supabase.rpc('advance_shipment_assignment_status',{p_assignment_id:assignmentId,p_expected_status:expectedStatus,p_note:null});
+export const getAssignmentHistory=assignmentId=>supabase.rpc('get_assignment_status_history',{p_assignment_id:assignmentId});
