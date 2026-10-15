@@ -44,3 +44,8 @@ Leaked-password protection remains disabled; no supported configuration tool was
 - Bound cargo and notification reads to 15 seconds with query cancellation. Writes are not automatically retried.
 - Notification cargo navigation waits for the feed and explains when the target cargo is unavailable.
 - Added automated regression coverage for these cases to the quality workflow.
+
+### Route metadata consistency follow-up
+- Editing a cargo city or country as free text now explicitly clears the old city ID, geoname ID, coordinates and translated city names. Previously those fields could still describe the previous route and affect distance sorting and nearby notifications.
+- Selecting a city replaces the entire metadata set, including clearing optional fields absent from the new result. Unchanged routes preserve existing location data.
+- Added regression checks for city/country changes, unchanged routes, incomplete city results and invalid numeric coordinates; included in CI. No bulk changes to existing cargo records were made.

@@ -15,6 +15,7 @@ jobs:
           persist-credentials: false
       - name: Regression checks
         run: |
+          node scripts/test-cargo-city-fields.mjs
           node scripts/test-notification-loading.mjs
           node scripts/test-site-structure.mjs
           node scripts/test-transport-flow.mjs

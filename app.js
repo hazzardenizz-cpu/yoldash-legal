@@ -1,3 +1,4 @@
+import { cargoCityFields } from './src/features/loads/city-fields.js';
 import { renderLifecycle } from './src/features/transport/lifecycle-view.js';
 import { transportStatusLabel } from './src/features/transport/status.js';
 import { normalizeSearch,matchesSearch } from './src/features/loads/search.js';
@@ -1167,13 +1168,9 @@ async function submitLoad(ev){
       weight_kg:$('#weightKg').value?Number($('#weightKg').value):null,truck_count:Number($('#truckCount').value||1),loading_at:$('#loadingAt').value?new Date($('#loadingAt').value).toISOString():null,
       freight_price:price,currency_code:price?$('#currencyCode').value:null,description:$('#cargoDescription').value.trim()||null,validity_days:Number($('#validityDays').value||3)
     };
+    const originalCargo=editingOwnLoadId?(state.loads.find(c=>c.id===editingOwnLoadId)||shipmentCargoCache.find(c=>c.id===editingOwnLoadId)):null;
     for(const which of ['origin','destination']){
-      const c=state.city[which]; if(!c) continue;
-      if(uuidLike(c.city_id)) payload[`${which}_city_id`]=c.city_id;
-      if(c.geoname_id!=null) payload[`${which}_geoname_id`]=Number(c.geoname_id);
-      if(c.latitude!=null) payload[`${which}_lat`]=Number(c.latitude);
-      if(c.longitude!=null) payload[`${which}_lng`]=Number(c.longitude);
-      for(const l of ['en','fa','tr']) if(c[`name_${l}`]) payload[`${which}_city_name_${l}`]=c[`name_${l}`];
+      Object.assign(payload,cargoCityFields(which,state.city[which],payload[`${which}_city`],payload[`${which}_country_code`],originalCargo));
     }
     if(!payload.cargo_type||!payload.origin_city||!payload.destination_city) throw new Error(t('requiredFields'));
     const isEditing=!!editingOwnLoadId;
