@@ -1,3 +1,4 @@
+import { mapLimited } from './src/features/transport/dashboard.js';
 import {distanceKm,sortBoardLoads} from './src/features/loads/board-sort.js';
 // Only Super Admin maps need Leaflet; keep it out of the public startup graph.
 let L=null;
@@ -67,6 +68,7 @@ import {
 } from './src/features/chat/chat-service.js';
 import {
   listUserNotifications,
+  getCargoNotificationPreference,setCargoNotificationMode,updateNotificationLocation,
   markUserNotificationRead,
   markAllUserNotificationsRead,
   subscribeToUserNotifications,
@@ -286,7 +288,7 @@ function datetimeLocalValue(value){
  return Number.isFinite(date.getTime())?new Date(date.getTime()-offset).toISOString().slice(0,16):'';
 }
 function editOwnCargo(id){
- const c=state.loads.find(x=>x.id===id);
+ const c=state.loads.find(x=>x.id===id)||shipmentCargoCache.find(x=>x.id===id);
  if(!c||c.owner_id!==state.session?.user?.id||c.status!=='PUBLISHED')return;
  resetOwnLoadEditor();editingOwnLoadId=id;
  const mapping={originCountry:c.origin_country_code,originCity:c.origin_city,originCustoms:c.origin_customs,destinationCountry:c.destination_country_code,destinationCity:c.destination_city,destinationCustoms:c.destination_customs,cargoType:c.cargo_type,truckType:c.required_truck_type,truckCount:c.truck_count,weightKg:c.weight_kg,freightPrice:c.freight_price,currencyCode:c.currency_code,loadingAt:c.loading_at?datetimeLocalValue(c.loading_at):'',exitBorder:c.exit_border,cargoDescription:c.description,validityDays:c.validity_days};
@@ -296,14 +298,14 @@ function editOwnCargo(id){
  $('#loadModal').showModal();
 }
 async function removeOwnCargo(id){
- const c=state.loads.find(x=>x.id===id),uid=state.session?.user?.id;
+ const c=state.loads.find(x=>x.id===id)||shipmentCargoCache.find(x=>x.id===id),uid=state.session?.user?.id;
  if(!c||c.owner_id!==uid||c.status!=='PUBLISHED'||!window.confirm(ownLoadText('confirm')))return;
  try{
  const {data,error}=await deleteOwnLoad(id,uid);
  if(error)throw error;
  if(!data?.length)throw new Error('This load cannot be deleted; it may have active transport requests.');
  state.loads=state.loads.filter(x=>x.id!==id);
- renderLoads();toast(ownLoadText('done'));await loadLoads();
+ renderLoads();toast(ownLoadText('done'));await loadLoads();if($('#page-shipments').classList.contains('active'))await loadShipments();
  }catch(err){toast(humanError(err),'error');}
 }
 function cargoCard(c, shipment=false){
@@ -328,7 +330,7 @@ function cargoCard(c, shipment=false){
   let primaryAction = '';
   if (!shipment && isFullProfileReady() && canOfferTypes.has(state.profile?.business_user_type) && !own) {
     primaryAction = `<button class="btn primary cargo-primary-action" data-offer="${esc(c.id)}">${t('requestTransport')}</button>`;
-  } else if (!shipment && own) {
+  } else if (own && c.status==='PUBLISHED') {
     primaryAction = `<button type="button" class="btn secondary" data-edit-own-load="${esc(c.id)}">${ownLoadText("edit")}</button><button type="button" class="btn secondary" data-delete-own-load="${esc(c.id)}">${ownLoadText("delete")}</button>`;
   }
 
@@ -1125,7 +1127,7 @@ function normalizeLoadingDateToday(){
   }
 }
 async function submitLoad(ev){
-  ev.preventDefault();
+  ev.preventDefault();if($('#publishLoadBtn').disabled)return;
   const status=$('#loadFormStatus'); status.textContent='';
   const count=Number($('#truckCount').value);
   normalizeLoadingDateToday();
@@ -1164,7 +1166,7 @@ async function submitLoad(ev){
     const {data:created,error}=result;
     if(error)throw error;
     if(isEditing&&!created?.length)throw new Error('This load cannot be edited in its current state.');
-    $('#loadModal').close(); resetOwnLoadEditor(); toast(isEditing?ownLoadText('saved'):t('loadPublished')); await loadLoads();
+    $('#loadModal').close(); resetOwnLoadEditor(); toast(isEditing?ownLoadText('saved'):t('loadPublished')); await loadLoads();if($('#page-shipments').classList.contains('active'))await loadShipments();
     if(!isEditing&&created?.id){
       const url=publicCargoUrl(created.id);
       window.yoldashTrack?.('publish_load',{
@@ -1183,19 +1185,20 @@ async function submitLoad(ev){
 }
 
 async function setupCitySearch(which){
-  const input=$(`#${which}City`), results=$(`#${which}CityResults`), country=$(`#${which}Country`); let timer;
+  const input=$(`#${which}City`), results=$(`#${which}CityResults`), country=$(`#${which}Country`); let timer,version=0;
   input.addEventListener('input',()=>{
-    state.city[which]=null; clearTimeout(timer); const q=input.value.trim();
+    state.city[which]=null;clearTimeout(timer);const request=++version,q=input.value.trim(),countryCode=country.value;
     if(q.length<2){results.classList.remove('open');results.innerHTML='';return;}
     timer=setTimeout(async()=>{
-      const {data,error}=await searchCities({query:q,limit:8,countryCode:country.value});
+      const {data,error}=await searchCities({query:q,limit:8,countryCode});
+      if(request!==version||input.value.trim()!==q||country.value!==countryCode)return;
       if(error||!data?.length){results.classList.remove('open');return;}
       results.innerHTML=data.map((c,i)=>`<button type="button" data-city-index="${i}"><b>${esc(c.matched_name||c.name_en||'')}</b><small>${esc(c.country_code||'')} · ${esc(c.region_name||'')}</small></button>`).join('');
       results.classList.add('open');
       $$('[data-city-index]',results).forEach(b=>b.onclick=()=>{const c=data[Number(b.dataset.cityIndex)];state.city[which]=c;input.value=c[`name_${state.lang}`]||c.matched_name||c.name_en||'';results.classList.remove('open');});
     },300);
   });
-  country.addEventListener('change',()=>{state.city[which]=null;input.value='';results.classList.remove('open');});
+  country.addEventListener('change',()=>{++version;clearTimeout(timer);state.city[which]=null;input.value='';results.classList.remove('open');});
 }
 
 async function openOffer(id){
@@ -1207,6 +1210,7 @@ async function openOffer(id){
     const {data,error}=await getCargoOfferSnapshot(id);
     if(error) throw error;
     const rows=Array.isArray(data)?data:[];
+    if(!rows[0]?.can_submit){toast(shipmentCopy('offerUnavailable'),'error');return;}
     const pending=rows.find(r=>r.offer_id && r.offer_status==='PENDING');
     if(pending){
       const price=pending.proposed_price!=null?`${Number(pending.proposed_price).toLocaleString(localeMap[state.lang])} ${pending.currency_code||''}`:'—';
@@ -1215,22 +1219,28 @@ async function openOffer(id){
       return;
     }
   }catch(err){
-    console.warn('offer snapshot',err);
+    toast(humanError(err),'error');return;
   }
 
+  $('#offerForm').reset();
+  $('#offerPrice').value=cargo.freight_price??'';
+  if(cargo.currency_code&&[...$('#offerCurrency').options].some(o=>o.value===cargo.currency_code))$('#offerCurrency').value=cargo.currency_code;
   $('#offerCargoId').value=id;
   $('#offerRoute').textContent=`${cityName(cargo,'origin')} → ${cityName(cargo,'destination')}`;
   $('#offerTruckCount').max=cargo.remaining_truck_count||cargo.truck_count||1;
   $('#offerModal').showModal();
 }
 async function submitOffer(ev){
-  ev.preventDefault(); const btn=$('#submitOffer');btn.disabled=true;btn.textContent=t('loading');
+  ev.preventDefault(); const btn=$('#submitOffer');if(btn.disabled)return;btn.disabled=true;btn.textContent=t('loading');
   try{
     const price=$('#offerPrice').value?Number($('#offerPrice').value):null;
+    const count=Number($('#offerTruckCount').value),maximum=Number($('#offerTruckCount').max);
+    if(!Number.isFinite(price)||price<=0)throw new Error(shipmentCopy('positivePrice'));
+    if(!Number.isInteger(count)||count<1||count>maximum)throw new Error(t('invalidTruckCount'));
     const {error}=await submitCargoOffer({
       cargoId: $('#offerCargoId').value,
       proposedPrice: price,
-      currencyCode: price ? $('#offerCurrency').value : null,
+      currencyCode: price!==null ? $('#offerCurrency').value : null,
       message: $('#offerMessage').value.trim() || null,
       requestedTruckCount: Number($('#offerTruckCount').value || 1)
     });
@@ -1242,7 +1252,7 @@ async function submitOffer(ev){
       currency:price?$('#offerCurrency').value:undefined
     });
     window.yoldashTrack?.('generate_lead',{lead_source:'cargo_offer'});
-    $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent')); page('shipments'); await loadShipments();
+    $('#offerModal').close(); $('#offerForm').reset(); toast(t('offerSent')); page('shipments');
   }catch(err){
     const msg=humanError(err);
     toast(msg,'error');
@@ -1253,65 +1263,73 @@ async function submitOffer(ev){
   finally{btn.disabled=false;btn.textContent=t('sendRequest');}
 }
 
+let shipmentRequest=0;
+let shipmentCargoCache=[];
 async function loadShipments(){
+  const request=++shipmentRequest,uid=state.session?.user?.id;
   const el=$('#shipmentList');
   if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForShipments'));$('#metricShipments').textContent='—';return;}
   if(!isFullProfileReady()){el.innerHTML=emptyBlock('profileIncomplete',t('completeProfileRequired'));$('#metricShipments').textContent='—';return;}
   el.innerHTML='<div class="loading-card"></div><div class="loading-card"></div>';
   try{
-    const {data,error}=await getMyTransportCargo(); if(error) throw error;
+    const {data,error}=await getMyTransportCargo(uid); if(error) throw error;
     const rows=Array.isArray(data)?data:[];
-    const cards=await Promise.all(rows.map(async cargo=>{
+    const cards=await mapLimited(rows,4,async cargo=>{
       const snapshot=await getCargoOfferSnapshot(cargo.id);
       const offers=snapshot.error ? [] : (snapshot.data||[]);
-      return `${cargoCard(cargo,true)}${shipmentOfferPanel(cargo,offers)}`;
-    }));
+      return `<div class="shipment-group">${cargoCard(cargo,true)}${snapshot.error?`<div class="board-feedback" role="status">${esc(shipmentCopy('offersFailed'))}</div>`:shipmentOfferPanel(cargo,offers)}</div>`;
+    });
+    if(request!==shipmentRequest||uid!==state.session?.user?.id)return;
+    shipmentCargoCache=rows;
     el.innerHTML=rows.length?cards.join(''):emptyBlock('noShipments');
     $('#metricShipments').textContent=String(rows.length);
     bindCargoActions();
     bindShipmentOfferActions();
-  }catch(err){el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
+  }catch(err){if(request===shipmentRequest&&uid===state.session?.user?.id)el.innerHTML=emptyBlock('unexpectedError',humanError(err));}
 }
 
 function shipmentCopy(key){
   const copy={
-    fa:{priceOffer:'پیشنهاد کرایه',pending:'در انتظار بررسی',confirmAccept:'آیا این پیشنهاد کرایه را تأیید می‌کنید؟ پس از تأیید، گفت‌وگوی خصوصی فعال می‌شود.',confirmReject:'آیا این درخواست حمل را رد می‌کنید؟',requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
-    tr:{priceOffer:'Navlun teklifi',pending:'Değerlendiriliyor',confirmAccept:'Bu navlun teklifini kabul ediyor musunuz? Kabulden sonra özel sohbet açılır.',confirmReject:'Bu taşıma talebini reddetmek istiyor musunuz?',requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
-    en:{priceOffer:'Freight offer',pending:'Pending review',confirmAccept:'Accept this freight offer? A private chat will become available.',confirmReject:'Reject this transport request?',requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
+    fa:{offerUnavailable:'این بار در حال حاضر درخواست جدید نمی‌پذیرد.',decisionChanged:'وضعیت این پیشنهاد قبلاً تغییر کرده است؛ فهرست به‌روز شد.',offersFailed:'دریافت پیشنهادها انجام نشد؛ به‌روزرسانی را بزنید.',positivePrice:'کرایه‌ای بیشتر از صفر وارد کنید.',acceptedChatRetry:'پیشنهاد پذیرفته شد؛ برای ورود به گفتگو، بخش گفتگو را باز کنید.',priceOffer:'پیشنهاد کرایه',pending:'در انتظار بررسی',confirmAccept:'آیا این پیشنهاد کرایه را تأیید می‌کنید؟ پس از تأیید، گفت‌وگوی خصوصی فعال می‌شود.',confirmReject:'آیا این درخواست حمل را رد می‌کنید؟',requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
+    tr:{offerUnavailable:'Bu yük şu anda yeni talep kabul etmiyor.',decisionChanged:'Bu teklifin durumu zaten değişti. Liste yenilendi.',offersFailed:'Teklifler alınamadı. Yenileyin.',positivePrice:'Sıfırdan büyük bir navlun girin.',acceptedChatRetry:'Teklif kabul edildi. Sohbet bölümünden devam edin.',priceOffer:'Navlun teklifi',pending:'Değerlendiriliyor',confirmAccept:'Bu navlun teklifini kabul ediyor musunuz? Kabulden sonra özel sohbet açılır.',confirmReject:'Bu taşıma talebini reddetmek istiyor musunuz?',requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
+    en:{offerUnavailable:'This cargo is not currently accepting new requests.',decisionChanged:'This offer has already changed. The list was refreshed.',offersFailed:'Could not load offers. Please refresh.',positivePrice:'Enter a freight price greater than zero.',acceptedChatRetry:'Offer accepted. Open Chats to continue.',priceOffer:'Freight offer',pending:'Pending review',confirmAccept:'Accept this freight offer? A private chat will become available.',confirmReject:'Reject this transport request?',requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
   };
   return copy[state.lang]?.[key]||copy.en[key]||key;
 }
 function shipmentOfferPanel(cargo, rows){
-  if(!rows.some(row=>row.can_manage)) return '';
+  const canManage=rows.some(row=>row.can_manage===true);
   const offers=rows.filter(row=>row.offer_id);
   const offerRow=offer=>{
     const price=offer.proposed_price==null?'—':`${Number(offer.proposed_price).toLocaleString(localeMap[state.lang])} ${offer.currency_code||''}`;
     const isPending=offer.offer_status==='PENDING';
-    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${isPending?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
+    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${isPending&&canManage?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
   };
   return `<section class="shipment-offers" data-cargo-offers="${esc(cargo.id)}"><div class="shipment-offers-head"><b>${shipmentCopy('requests')}</b><small>${offers.length}</small></div>${offers.length?offers.map(offerRow).join(''):`<p class="shipment-empty">${shipmentCopy('noRequests')}</p>`}</section>`;
 }
+const decidingOffers=new Set();
 function bindShipmentOfferActions(){
   $$('[data-offer-decision]').forEach(button=>button.onclick=async()=>{
     const offerId=button.dataset.offerId, status=button.dataset.offerDecision;
-    if(!offerId||!status) return;
+    if(!offerId||!status||decidingOffers.has(offerId)) return;
     if(!window.confirm(shipmentCopy(status==='ACCEPTED'?'confirmAccept':'confirmReject')))return;
-    button.disabled=true;
+    decidingOffers.add(offerId);const controls=$$('[data-offer-id]').filter(b=>b.dataset.offerId===offerId);controls.forEach(b=>b.disabled=true);
     try{
-      const {error}=await setCargoOfferStatus(offerId,status);
+      const {data,error}=await setCargoOfferStatus(offerId,status);
       if(error) throw error;
+      const decided=Array.isArray(data)?data[0]:data;
+      if(decided?.status!==status){toast(shipmentCopy('decisionChanged'),'error');await loadShipments();return;}
       if(status==='ACCEPTED'){
         const roomResult=await getShipmentRoomForOffer(offerId);
-        if(roomResult.error) throw roomResult.error;
+        if(roomResult.error){toast(shipmentCopy('acceptedChatRetry'));await loadShipments();return;}
         const room=(roomResult.data||[])[0];
         toast(shipmentCopy('requestAccepted'));
         await loadShipments();
-        if(room){ page('chat'); await openShipmentRoom(room); }
+        if(room){ await openShipmentRoom(room);page('chat'); }
       }else{
         toast(shipmentCopy('requestRejected'));
         await loadShipments();
       }
-    }catch(err){ toast(humanError(err),'error'); button.disabled=false; }
+    }catch(err){ toast(humanError(err),'error'); }finally{decidingOffers.delete(offerId);controls.forEach(b=>b.disabled=false);}
   });
 }
 
@@ -1321,41 +1339,50 @@ let shipmentMessages=[];
 let activeShipmentRoom=null;
 let shipmentRealtimeChannel=null;
 let notificationRealtimeChannel=null;
+let chatSending=false;
+let chatRequest=0;
+let publicChatRequest=0;
 function renderChatFromCache(){
   const el=$('#chatMessages'); if(!state.session){el.innerHTML=emptyBlock('loginRequired',t('loginForChat'));return;}
   if(!isFullProfileReady()){el.innerHTML=emptyBlock('profileIncomplete',t('completeProfileRequired'));return;}
   if(!chatCache.length){el.innerHTML=emptyBlock('noMessages');return;}
   const uid=state.session.user.id;
+  const keepBottom=el.scrollHeight-el.scrollTop-el.clientHeight<80;
   el.innerHTML=chatCache.map(m=>`<div class="bubble ${m.sender_id===uid?'me':''}"><span class="sender">${esc(m.sender_name||'Yoldash')}</span><span>${m.deleted_at?'—':esc(m.body||'')}</span><time>${esc(dateLabel(m.created_at))}</time></div>`).join('');
-  el.scrollTop=el.scrollHeight;
+  if(keepBottom)el.scrollTop=el.scrollHeight;
 }
 async function loadChat(silent=false){
   const input=$('#chatInput'),send=$('#sendChat');
   if(!state.session){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
   if(!isFullProfileReady()){input.disabled=true;send.disabled=true;renderChatFromCache();return;}
-  input.disabled=false;send.disabled=false;
+  input.disabled=false;send.disabled=chatSending;
+  const uid=state.session.user.id,roomId=activeShipmentRoom?.id;
   await loadShipmentRooms(silent);
+  if(uid!==state.session?.user?.id||roomId!==activeShipmentRoom?.id)return;
   clearInterval(state.chatTimer);
-  state.chatTimer=setInterval(()=>{if($('#page-chat').classList.contains('active')&&state.session) loadChat(true);},activeShipmentRoom?3000:12000);
+  state.chatTimer=setInterval(()=>{if(document.visibilityState==='visible'&&$('#page-chat').classList.contains('active')&&state.session) loadChat(true);},activeShipmentRoom?3000:12000);
   if(activeShipmentRoom) return loadShipmentMessages(activeShipmentRoom,silent);
   setChatRoomHeader(null);
+  const request=++publicChatRequest;
   try{
     const {data,error}=await getPublicChatMessages(60); if(error) throw error;
+    if(request!==publicChatRequest||activeShipmentRoom||uid!==state.session?.user?.id)return;
     chatCache=(data||[]).slice().reverse(); renderChatFromCache(); $('#chatTime').textContent=chatCache.length?new Date(chatCache.at(-1).created_at).toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit'}):'—';
     markPublicChatRead().then(()=>loadUnread());
   }catch(err){if(!silent) toast(humanError(err),'error');}
 }
 async function sendChat(){
+  if(chatSending)return;
   if(activeShipmentRoom) return sendShipmentChat();
   const input=$('#chatInput'), body=input.value.trim(); if(!body||!state.session) return;
   if(!requireCompleteProfile()) return;
-  const btn=$('#sendChat'); btn.disabled=true;
+  const btn=$('#sendChat');chatSending=true; btn.disabled=true;
   try{
     const rid=crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     const {error}=await sendPublicChatMessage({requestId:rid,body}); if(error) throw error;
     window.yoldashTrack?.('send_chat_message',{chat_type:'public'});
-    input.value=''; await loadChat(true);
-  }catch(err){toast(humanError(err),'error');} finally{btn.disabled=false;}
+    if(!activeShipmentRoom&&input.value.trim()===body)input.value=''; await loadChat(true);
+  }catch(err){toast(humanError(err),'error');} finally{chatSending=false;btn.disabled=!state.session;}
 }
 function setChatRoomHeader(room){
   const title=$('#chatRoomTitle'),avatar=$('#chatRoomAvatar'),online=$('#chatOnlineLabel');
@@ -1380,45 +1407,53 @@ function renderShipmentRooms(){
 }
 async function loadShipmentRooms(silent=false){
   if(!state.session) return;
-  try{const {data,error}=await getMyShipmentRooms();if(error) throw error;shipmentRooms=data||[];renderShipmentRooms();}
+  const uid=state.session.user.id;
+  try{const {data,error}=await getMyShipmentRooms();if(error) throw error;if(uid!==state.session?.user?.id)return;shipmentRooms=data||[];renderShipmentRooms();}
   catch(err){if(!silent) console.warn('shipment rooms',err);}
 }
 function renderShipmentMessages(){
   const el=$('#chatMessages'); if(!activeShipmentRoom) return;
   if(!shipmentMessages.length){el.innerHTML=emptyBlock('shipmentChat',shipmentCopy('chatReady'));return;}
   const uid=state.session?.user?.id;
+  const keepBottom=el.scrollHeight-el.scrollTop-el.clientHeight<80;
   el.innerHTML=shipmentMessages.map(message=>`<div class="bubble ${message.sender_id===uid?'me':''}"><span class="sender">${esc(message.sender_display_name||'Yoldash')}</span><span>${esc(message.body||'')}</span><time>${esc(dateLabel(message.created_at))}</time></div>`).join('');
-  el.scrollTop=el.scrollHeight;
+  if(keepBottom)el.scrollTop=el.scrollHeight;
 }
 async function openShipmentRoom(room){
   if(shipmentRealtimeChannel){
     unsubscribeFromShipmentRoom(shipmentRealtimeChannel);
     shipmentRealtimeChannel=null;
   }
-  activeShipmentRoom=room;
+  ++chatRequest;++publicChatRequest;
+  activeShipmentRoom=room;shipmentMessages=[];
+  $('#chatInput').value='';$('#publicChatRoom')?.classList.remove('active');
+  $('#chatMessages').innerHTML='<div class="loading-card"></div>';
   renderShipmentRooms();
   setChatRoomHeader(room);
   try{shipmentRealtimeChannel=subscribeToShipmentRoom(room.id,()=>loadShipmentMessages(room,true));}catch(err){console.warn('shipment realtime',err);}
-  await loadShipmentMessages(room,true);
+  await loadShipmentMessages(room,false);
 }
 function openPublicChat(){
   if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}
+  ++chatRequest;++publicChatRequest;
   activeShipmentRoom=null;
-  shipmentMessages=[];
+  $('#chatInput').value='';
+  shipmentMessages=[];renderChatFromCache();
   renderShipmentRooms();
   $('#publicChatRoom')?.classList.add('active');
   loadChat(true);
 }
 async function loadShipmentMessages(room=activeShipmentRoom,silent=false){
-  if(!room) return;
-  try{const {data,error}=await getShipmentMessages(room.id);if(error) throw error;shipmentMessages=(data||[]).slice().reverse();renderShipmentMessages();}
-  catch(err){if(!silent) toast(humanError(err),'error');}
+  if(!room||room.id!==activeShipmentRoom?.id||!state.session)return;
+  const request=++chatRequest,uid=state.session.user.id;
+  try{const {data,error}=await getShipmentMessages(room.id);if(error) throw error;if(request!==chatRequest||room.id!==activeShipmentRoom?.id||uid!==state.session?.user?.id)return;shipmentMessages=(data||[]).slice().reverse();renderShipmentMessages();}
+  catch(err){if(request===chatRequest&&room.id===activeShipmentRoom?.id&&!silent){$('#chatMessages').innerHTML=emptyBlock('unexpectedError',humanError(err));}}
 }
 async function sendShipmentChat(){
-  const input=$('#chatInput'),body=input.value.trim();if(!body||!activeShipmentRoom) return;
-  const button=$('#sendChat');button.disabled=true;
-  try{const {error}=await sendShipmentText(activeShipmentRoom.id,body);if(error) throw error;input.value='';await loadShipmentMessages(activeShipmentRoom,true);}
-  catch(err){toast(humanError(err),'error');}finally{button.disabled=false;}
+  const input=$('#chatInput'),body=input.value.trim(),room=activeShipmentRoom;if(!body||!room||chatSending||!requireCompleteProfile())return;
+  const button=$('#sendChat');chatSending=true;button.disabled=true;
+  try{const {error}=await sendShipmentText(room.id,body);if(error)throw error;if(activeShipmentRoom?.id===room.id){if(input.value.trim()===body)input.value='';await loadShipmentMessages(room,true);}}
+  catch(err){toast(humanError(err),'error');}finally{chatSending=false;button.disabled=!state.session;}
 }
 async function loadUnread(){
   if(!state.session){$('#chatDot').style.display='none';return;}
@@ -1784,6 +1819,36 @@ async function markAllNotificationsRead(){
     await loadNotifications();
   }catch(err){ console.warn('mark all notifications read',err); }
 }
+function nearbyCopy(key){
+ const copy={fa:{title:'اعلان بارهای نزدیک',mode:'شعاع دریافت بار',off:'خاموش',all:'همه بارها',locate:'ارسال موقعیت فعلی برای اعلان بار',hint:'برای شعاع ۲۰۰ یا ۴۰۰ کیلومتر، موقعیت دقیق با عمر کمتر از ۱۵ دقیقه لازم است. این دکمه موقعیت شما را برای یولداش ارسال می‌کند. دریافت در پس‌زمینه به اپ و مجوزهای دستگاه وابسته است.',saved:'تنظیم اعلان ذخیره شد.',ready:'موقعیت ثبت شد؛ برای ۱۵ دقیقه آینده قابل استفاده است.',failed:'موقعیت دریافت نشد؛ مجوز مکان دستگاه را بررسی و دوباره تلاش کنید.',working:'در حال انجام…'},tr:{title:'Yakındaki yük bildirimleri',mode:'Bildirim alanı',off:'Kapalı',all:'Tüm yükler',locate:'Bildirimler için konumumu paylaş',hint:'200/400 km için 15 dakikadan yeni, doğru bir konum gerekir. Bu düğme konumunuzu Yoldash ile paylaşır. Arka plan bildirimleri uygulamaya ve cihaz izinlerine bağlıdır.',saved:'Tercih kaydedildi.',ready:'Konum kaydedildi; 15 dakika geçerlidir.',failed:'Konum alınamadı. Konum iznini kontrol edin.',working:'İşleniyor…'},en:{title:'Nearby cargo alerts',mode:'Alert radius',off:'Off',all:'All cargo',locate:'Share current location for cargo alerts',hint:'200/400 km alerts require an accurate location less than 15 minutes old. This button shares your location with Yoldash. Background delivery depends on the app and device permissions.',saved:'Preference saved.',ready:'Location saved; usable for the next 15 minutes.',failed:'Could not get location. Check location permission and retry.',working:'Working…'}};
+ return (copy[state.lang]||copy.en)[key];
+}
+async function loadNearbySettings(){
+ const panel=$('#nearbySettings'),uid=state.session?.user?.id;
+ panel.hidden=state.profile?.business_user_type!=='DRIVER';if(panel.hidden)return;
+ $('#nearbyTitle').textContent=nearbyCopy('title');$('#nearbyModeLabel').textContent=nearbyCopy('mode');$('#nearbyHint').textContent=nearbyCopy('hint');$('#nearbyLocation').textContent=nearbyCopy('locate');
+ $('#nearbyMode').options[0].textContent=nearbyCopy('off');$('#nearbyMode').options[3].textContent=nearbyCopy('all');
+ $('#nearbyMode').disabled=true;
+ try{const {data,error}=await getCargoNotificationPreference();if(error)throw error;if(uid!==state.session?.user?.id)return;const row=Array.isArray(data)?data[0]:data;$('#nearbyMode').value=row?.notification_mode||'OFF';$('#nearbyStatus').textContent='';}
+ catch(error){$('#nearbyStatus').textContent=humanError(error);return;}
+ finally{if(uid===state.session?.user?.id)$('#nearbyMode').disabled=false;}
+}
+async function saveNearbyMode(){
+ const input=$('#nearbyMode'),uid=state.session?.user?.id;if(!uid||input.disabled)return;input.disabled=true;
+ try{const {error}=await setCargoNotificationMode(input.value);if(error)throw error;if(uid===state.session?.user?.id)$('#nearbyStatus').textContent=nearbyCopy('saved');}
+ catch(error){if(uid===state.session?.user?.id)$('#nearbyStatus').textContent=humanError(error);}
+ finally{input.disabled=false;}
+}
+async function shareNearbyLocation(){
+ const button=$('#nearbyLocation'),uid=state.session?.user?.id;if(button.disabled||!uid)return;button.disabled=true;$('#nearbyStatus').textContent=nearbyCopy('working');
+ try{
+  if(!navigator.geolocation)throw new Error(nearbyCopy('failed'));
+  const position=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
+  if(uid!==state.session?.user?.id)return;
+  const {error}=await updateNotificationLocation(position.coords);if(error)throw error;$('#nearbyStatus').textContent=nearbyCopy('ready');
+ }catch(error){if(uid===state.session?.user?.id)$('#nearbyStatus').textContent=error?.code===1||error?.code===2||error?.code===3?nearbyCopy('failed'):humanError(error);}
+ finally{button.disabled=false;}
+}
 function startNotificationRealtime(){
   try{
     if(notificationRealtimeChannel) unsubscribeFromUserNotifications(notificationRealtimeChannel);
@@ -1884,7 +1949,8 @@ function bindUI(){
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
   $('#refreshShipments').onclick=loadShipments;
-  $('#notificationBtn')?.addEventListener('click',async(e)=>{e.stopPropagation();if(!state.session){$('#authModal')?.showModal();return;}const panel=$('#notificationPanel');panel?.classList.toggle('hidden');if(panel&&!panel.classList.contains('hidden')) await loadNotifications();});
+  $('#nearbyMode').onchange=saveNearbyMode;$('#nearbyLocation').onclick=shareNearbyLocation;
+  $('#notificationBtn')?.addEventListener('click',async(e)=>{e.stopPropagation();if(!state.session){$('#authModal')?.showModal();return;}const panel=$('#notificationPanel');panel?.classList.toggle('hidden');if(panel&&!panel.classList.contains('hidden'))await Promise.all([loadNotifications(),loadNearbySettings()]);});
   $('#markAllNotificationsRead')?.addEventListener('click',markAllNotificationsRead);
   $('#refreshAdminUserMap')?.addEventListener('click',()=>loadAdminUserMap(false));
   document.addEventListener('click',e=>{const p=$('#notificationPanel');if(p&&!p.classList.contains('hidden')&&!p.contains(e.target)&&!$('#notificationBtn')?.contains(e.target))p.classList.add('hidden');});
@@ -1961,6 +2027,7 @@ async function signOutUser(){
     state.profile=null;
     state.businessProfile=null;
     state.isSuperAdmin=false;
+    shipmentCargoCache=[];++shipmentRequest;
     chatCache=[];
     shipmentRooms=[];
     shipmentMessages=[];
@@ -2056,7 +2123,7 @@ async function init(){
         }
         state.session=session;
         if(session) await loadProfile();
-        else {state.profile=null;state.businessProfile=null;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}}
+        else {state.profile=null;state.businessProfile=null;shipmentCargoCache=[];++shipmentRequest;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}}
         renderProfileUI();
         loadUnread();
         startNotificationRealtime();
@@ -2085,14 +2152,8 @@ async function init(){
 init();
 
 
-// === YOLDASH WEB APP V2.1 PRODUCTION CONTROLS ===
-try {
-  const savedTheme = localStorage.getItem('yoldash-web-theme');
-  document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
-} catch (_) {
-  document.documentElement.dataset.theme = 'light';
-}
-
+// Yoldash uses a single dark appearance across the application.
+document.documentElement.dataset.theme='dark';
 const v2ThemeButton = document.getElementById('themeToggle');
 const syncV2ThemeButton = () => {
   if (!v2ThemeButton) return;
@@ -2102,13 +2163,7 @@ const syncV2ThemeButton = () => {
 };
 syncV2ThemeButton();
 
-v2ThemeButton?.addEventListener('click', () => {
-  const root = document.documentElement;
-  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-  root.dataset.theme = next;
-  try { localStorage.setItem('yoldash-web-theme', next); } catch (_) {}
-  syncV2ThemeButton();
-});
+if(v2ThemeButton)v2ThemeButton.hidden=true;
 
 document.querySelectorAll('[data-v2-action="services"]').forEach((el) => {
   el.addEventListener('click', () => {

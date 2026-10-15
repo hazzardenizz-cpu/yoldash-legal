@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const module=await import('data:text/javascript;base64,'+fs.readFileSync('src/features/transport/dashboard.js').toString('base64'));
+function mockClient(results){const calls=[];return {calls,from(table){const call={table};calls.push(call);const chain={select(v){call.select=v;return chain},eq(k,v){call[k]=v;return chain},is(){return chain},order(){return chain},limit(){return Promise.resolve(results[table])}};return chain}}}
+const own={id:'own',updated_at:'2026-10-15',status:'PUBLISHED'},pending={id:'pending',updated_at:'2026-10-14'};
+const client=mockClient({cargo_posts:{data:[own]},cargo_offers:{data:[{cargo:pending,status:'PENDING'},{cargo:pending,status:'REJECTED'},{cargo:null},{cargo:{id:'deleted',deleted_at:'2026-10-15'}}]}});
+assert.deepEqual((await module.fetchTransportDashboard(client,'user')).data.map(c=>c.id),['own','pending']);
+assert.equal(client.calls[0].owner_id,'user');assert.equal(client.calls[1].provider_id,'user');
+const noUser=mockClient({});assert.deepEqual((await module.fetchTransportDashboard(noUser,null)).data,[]);assert.equal(noUser.calls.length,0);
+assert.equal((await module.fetchTransportDashboard(mockClient({cargo_posts:{error:{message:'offline'}},cargo_offers:{data:[]}}),'user')).error.message,'offline');
+let concurrent=0,max=0;const ordered=await module.mapLimited([1,2,3,4,5],2,async n=>{max=Math.max(max,++concurrent);await new Promise(r=>setTimeout(r,6-n));--concurrent;return n*2});assert.deepEqual(ordered,[2,4,6,8,10]);assert.equal(max,2);
+const app=fs.readFileSync('app.js','utf8');
+const panel=app.slice(app.indexOf('function shipmentOfferPanel('),app.indexOf('const decidingOffers='));
+const esc=s=>String(s).replaceAll('<','&lt;').replaceAll('"','&quot;');
+const ctx=vm.createContext({state:{lang:'en'},localeMap:{en:'en-US'},esc,shipmentCopy:k=>k});vm.runInContext(panel,ctx);
+const offer={offer_id:'o',offer_status:'PENDING',can_manage:false,provider_display_name:'<img>',proposed_price:500,requested_truck_count:1};
+assert.ok(ctx.shipmentOfferPanel({id:'c'},[offer]).includes('pending'));assert.ok(!ctx.shipmentOfferPanel({id:'c'},[offer]).includes('data-offer-decision'));assert.ok(ctx.shipmentOfferPanel({id:'c'},[{...offer,can_manage:true}]).includes('data-offer-decision'));assert.ok(!ctx.shipmentOfferPanel({id:'c'},[offer]).includes('<img>'));
+const load=app.slice(app.indexOf('async function loadShipmentMessages('),app.indexOf('async function sendShipmentChat('));
+const waiting=[];let renders=0;const chat=vm.createContext({state:{session:{user:{id:'u'}}},chatRequest:0,activeShipmentRoom:{id:'A'},getShipmentMessages:()=>new Promise(resolve=>waiting.push(resolve)),renderShipmentMessages:()=>renders++,shipmentMessages:[]});vm.runInContext(load,chat);
+const stale=chat.loadShipmentMessages({id:'A'});chat.activeShipmentRoom={id:'B'};waiting.shift()({data:[{body:'private A'}]});await stale;assert.equal(renders,0);
+const first=chat.loadShipmentMessages({id:'B'}),second=chat.loadShipmentMessages({id:'B'});waiting[1]({data:[{body:'latest B'}]});await second;waiting[0]({data:[{body:'older B'}]});await first;assert.equal(renders,1);assert.equal(chat.shipmentMessages[0].body,'latest B');
+const afterLogout=chat.loadShipmentMessages({id:'B'});chat.state.session=null;waiting.at(-1)({data:[{body:'private'}]});await afterLogout;assert.equal(renders,1);
+console.log('PASS: dashboard ownership, pending requests, deduplication, errors, bounded concurrency, provider permissions, XSS escaping, room switching, out-of-order responses and logout isolation');

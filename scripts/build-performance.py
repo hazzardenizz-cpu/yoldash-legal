@@ -17,7 +17,7 @@ for file in css:s=re.sub(r'<link\b[^>]*href="'+re.escape(file)+r'(?:\?[^" ]*)?"[
 s=re.sub(r'<link rel="stylesheet" href="/assets/site\.[a-f0-9]+\.css">','',s)
 s=s.replace('</head>',f'<link rel="stylesheet" href="/assets/{names["site"]}">\n</head>')
 s=re.sub(r'src="(?:app\.js(?:\?[^" ]*)?|/assets/app\.[a-f0-9]+\.js)"',f'src="/assets/{names["app"]}"',s)
-p.write_text(s)
+p.write_text(re.sub(r"\n[ \t]*\n(?:[ \t]*\n)+", "\n\n", s))
 config=root/'vercel.json';v=json.loads(config.read_text())
 if not any(h['source']=='/assets/(.*)' for h in v['headers']):v['headers'].append({'source':'/assets/(.*)','headers':[{'key':'Cache-Control','value':'public, max-age=31536000, immutable'}]})
 config.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')

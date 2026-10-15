@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fa" dir="rtl" data-theme="light">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head><meta charset="utf-8">
 <script src="/analytics.js" defer></script>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -27,9 +27,6 @@
 
   <title>یولداش | اعلام بار و پیدا کردن راننده ایران–ترکیه</title>
 
-
-
-
 <meta property="og:image" content="https://www.getyoldash.com/brand/yoldash-social.png">
 <meta property="og:image:alt" content="یولداش؛ پلتفرم حمل‌ونقل جاده‌ای">
 <meta name="twitter:image" content="https://www.getyoldash.com/brand/yoldash-social.png">
@@ -39,8 +36,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
 
-
-<link rel="stylesheet" href="/assets/site.58a2b27889af.css">
+<link rel="stylesheet" href="/assets/site.bf846cbf7d13.css">
 </head>
 <body>
 <noscript><section class="seo-fallback" lang="fa" dir="rtl"><h2>یولداش؛ اعلام بار و حمل‌ونقل جاده‌ای</h2><p>یولداش به صاحبان بار، رانندگان و شرکت‌های حمل‌ونقل کمک می‌کند بار و وسیلهٔ مناسب مسیر را پیدا کنند. برای استفاده از بازار زندهٔ بار، جاوااسکریپت را فعال کنید؛ راهنماهای حمل‌ونقل بدون آن نیز در دسترس هستند.</p><nav aria-label="راهنماهای یولداش"><a href="/fa/load-board">راهنمای اعلام بار</a> · <a href="/fa/iran-turkey-road-freight">حمل بار ایران و ترکیه</a> · <a href="/fa/cmr-road-freight">بارنامه CMR</a> · <a href="/tr">Türkçe</a> · <a href="/en">English</a></nav></section></noscript>
@@ -75,7 +71,7 @@
               <div><b data-i18n="notifications">اعلان‌ها</b><small id="notificationUnreadLabel">—</small></div>
               <button type="button" id="markAllNotificationsRead" data-i18n="markAllRead">همه خوانده شد</button>
             </div>
-            <div class="notification-list" id="notificationList">
+            <section id="nearbySettings" class="nearby-settings" hidden><b id="nearbyTitle"></b><label><span id="nearbyModeLabel"></span><select id="nearbyMode"><option value="OFF">خاموش</option><option value="NEARBY_200">۲۰۰ km</option><option value="NEARBY_400">۴۰۰ km</option><option value="ALL">همه بارها</option></select></label><p id="nearbyHint"></p><button type="button" class="btn secondary" id="nearbyLocation"></button><p id="nearbyStatus" role="status"></p></section><div class="notification-list" id="notificationList">
               <div class="notification-empty" data-i18n="noNotifications">اعلانی ندارید</div>
             </div>
           </div>
@@ -99,7 +95,6 @@
               <span><b>Web + Android</b><small data-i18n="sharedAccount">حساب مشترک وب و اپ</small></span>
             </div>
           </div>
-
 
         </section>
 
@@ -214,7 +209,7 @@
 
       <section class="generic-page page" id="page-shipments"><div class="panel glass full"><div class="page-title"><div><span class="kicker" data-i18n="transportManagement">مدیریت حمل</span><h1 class="page-heading" data-i18n="myShipments">حمل‌های من</h1></div><button class="btn secondary" id="refreshShipments">↻ <span data-i18n="refresh">به‌روزرسانی</span></button></div><p class="muted" data-i18n="shipmentsDesc">همه حمل‌های فعال، تحویل‌شده و در انتظار شما اینجا مدیریت می‌شوند.</p><div class="cargo-list expanded" id="shipmentList"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForShipments">برای مشاهده حمل‌های خود وارد حساب Yoldash شوید.</span></div></div></div></section>
 
-      <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><button class="chat-person active chat-room-choice" id="publicChatRoom" type="button"><span class="avatar green">YG</span><span><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></span><time id="chatTime">—</time></button><div id="shipmentChatRooms"><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green" id="chatRoomAvatar">YG</span><div><b id="chatRoomTitle" data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
+      <section class="generic-page page" id="page-chat"><div class="chat-shell glass real-chat"><div class="chat-list"><div class="page-title mini"><div><span class="kicker" data-i18n="communication">ارتباطات</span><h2 data-i18n="chat">گفتگو</h2></div></div><button class="chat-person active chat-room-choice" id="publicChatRoom" type="button"><span class="avatar green">YG</span><span><b data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small id="chatMemberStatus" data-i18n="sharedCommunity">جامعه مشترک وب و اپ</small></span><time id="chatTime">—</time></button><div id="shipmentChatRooms"><div class="chat-person placeholder"><span class="avatar">⇄</span><div><b data-i18n="shipmentChat">گفتگوی محموله</b><small data-i18n="shipmentChatHint">پس از پذیرش پیشنهاد فعال می‌شود</small></div></div></div></div><div class="chat-room"><div class="chat-room-head"><span class="avatar green" id="chatRoomAvatar">YG</span><div><b id="chatRoomTitle" data-i18n="publicChat">گفتگوی عمومی Yoldash</b><small><i></i> <span id="chatOnlineLabel" data-i18n="onlineNow">آنلاین</span></small></div></div><div class="messages" id="chatMessages"><div class="empty-inline"><b data-i18n="loginRequired">ورود لازم است</b><span data-i18n="loginForChat">برای ورود به گفتگوی Yoldash وارد حساب شوید.</span></div></div><div class="composer"><button type="button" disabled title="Media in next phase">＋</button><input id="chatInput" maxlength="2000" aria-label="پیام" data-i18n-placeholder="message" placeholder="پیام بنویسید..." disabled><button class="send" id="sendChat" disabled>➤</button></div></div></div></section>
 
       <section class="generic-page page" id="page-drivers">
         <div class="driver-hub-shell">
@@ -517,7 +512,7 @@
     <form id="offerForm" class="modal glass">
       <div class="modal-head"><div><span class="kicker" data-i18n="transportRequest">درخواست حمل</span><h2 id="offerRoute">—</h2></div><button type="button" class="close" data-close="offerModal">×</button></div>
       <input id="offerCargoId" type="hidden">
-      <div class="form-grid"><label><span data-i18n="offerPrice">قیمت پیشنهادی</span><input id="offerPrice" type="number" min="1" step="0.01"></label><label><span data-i18n="currency">ارز</span><select id="offerCurrency"><option>USD</option><option>EUR</option><option>TRY</option></select></label><label><span data-i18n="requestedTruckCount">تعداد کامیون پیشنهادی</span><input id="offerTruckCount" type="number" min="1" value="1"></label><label><span data-i18n="message">پیام</span><input id="offerMessage" maxlength="500"></label></div>
+      <div class="form-grid"><label><span data-i18n="offerPrice">قیمت پیشنهادی</span><input id="offerPrice" required type="number" min="1" step="0.01"></label><label><span data-i18n="currency">ارز</span><select id="offerCurrency"><option>USD</option><option>EUR</option><option>TRY</option></select></label><label><span data-i18n="requestedTruckCount">تعداد کامیون پیشنهادی</span><input id="offerTruckCount" required type="number" step="1" min="1" value="1"></label><label><span data-i18n="message">پیام</span><input id="offerMessage" maxlength="500"></label></div>
       <div class="modal-actions"><button type="button" class="btn secondary" data-close="offerModal" data-i18n="cancel">انصراف</button><button type="submit" class="btn primary" id="submitOffer" data-i18n="sendRequest">ارسال درخواست</button></div>
     </form>
   </dialog>
@@ -528,7 +523,7 @@
       <div><strong>English</strong><a href="/en">English</a> <a href="/en/about">About Yoldash</a><a href="/en/turkey-iran-road-freight">Turkey–Iran Freight</a><a href="/en/cmr-road-freight">CMR</a><a href="/en/turkey-freight-insurance">Freight Insurance</a></div>
     </section>
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <script type="module" src="/assets/app.8c75a1ff590e.js"></script>
+  <script type="module" src="/assets/app.a96dacb76e54.js"></script>
 <nav class="social-float" aria-label="Yoldash social media">
 <a class="social-icon social-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5ZM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A10 10 0 1 1 12 22Zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-1 1.1c-.2.2-.4.2-.7.1a8.2 8.2 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.3 3.3 1.5 3.5c.2.2 2.5 3.8 6.1 5.3.9.4 1.6.6 2.1.7.9.3 1.7.2 2.3.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></a>
 <a class="social-icon social-instagram" href="https://www.instagram.com/yoldashapplication/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @yoldashapplication" title="Instagram · @yoldashapplication"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>

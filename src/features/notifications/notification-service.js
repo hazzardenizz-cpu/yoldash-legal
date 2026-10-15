@@ -45,3 +45,9 @@ export function subscribeToUserNotifications(userId, onChange) {
 export function unsubscribeFromUserNotifications(channel) {
   if (channel) return supabase.removeChannel(channel);
 }
+
+export const getCargoNotificationPreference=()=>supabase.rpc('get_notification_preference');
+export const setCargoNotificationMode=mode=>supabase.rpc('set_cargo_notification_mode',{p_mode:mode});
+export const updateNotificationLocation=coords=>supabase.rpc('update_driver_notification_location',{
+  p_latitude:coords.latitude,p_longitude:coords.longitude,p_accuracy_meters:coords.accuracy
+});

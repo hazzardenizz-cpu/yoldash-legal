@@ -1,3 +1,4 @@
+import { fetchTransportDashboard } from './dashboard.js';
 import { supabase } from '../../core/supabase.js';
 
 export async function getCargoOfferSnapshot(cargoId) {
@@ -22,8 +23,8 @@ export async function submitCargoOffer({
   });
 }
 
-export async function getMyTransportCargo() {
-  return supabase.rpc('get_my_transport_cargo');
+export async function getMyTransportCargo(userId) {
+  return fetchTransportDashboard(supabase,userId);
 }
 
 // These commands are intentionally RPC calls.  The database verifies that only
