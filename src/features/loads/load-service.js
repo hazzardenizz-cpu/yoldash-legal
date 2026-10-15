@@ -1,9 +1,9 @@
 import { supabase } from '../../core/supabase.js';
 
-export async function fetchOpenLoads(query = '', limit = 50) {
+export async function fetchOpenLoads(query = '', limit = 50, offset = 0) {
   const rpc = await supabase.rpc('get_open_cargo_posts', {
     p_query: query || '',
-    p_offset: 0,
+    p_offset: offset,
     p_limit: limit
   });
 
@@ -20,9 +20,12 @@ export async function fetchOpenLoads(query = '', limit = 50) {
     .select('*')
     .eq('status', 'PUBLISHED')
     .is('deleted_at', null)
+    .eq('accepting_requests',true)
+    .gt('remaining_truck_count',0)
     .gt('expires_at', new Date().toISOString())
-    .order('published_at', { ascending: false })
-    .limit(limit);
+    .order('announced_at', { ascending: false })
+    .order('id', { ascending: false })
+    .range(offset,offset+limit-1);
 
   return {
     data: fallback.error ? [] : (fallback.data || []),

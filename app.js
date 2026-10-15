@@ -1,3 +1,6 @@
+import { transportStatusLabel } from './src/features/transport/status.js';
+import { normalizeSearch,matchesSearch } from './src/features/loads/search.js';
+import { readStored } from './src/core/storage.js';
 import { mapLimited } from './src/features/transport/dashboard.js';
 import {distanceKm,sortBoardLoads} from './src/features/loads/board-sort.js';
 // Only Super Admin maps need Leaflet; keep it out of the public startup graph.
@@ -169,6 +172,7 @@ function applyLanguage(next, persist=true){
     if(heading){if(!heading.id) heading.id=dialog.id+'Title';dialog.setAttribute('aria-labelledby',heading.id);}
   });
   $('#globalSearch')?.setAttribute('aria-label',t('searchLoads'));
+  $('#chatInput')?.setAttribute('aria-label',t('message'));$('#sendChat')?.setAttribute('aria-label',t('sendChatMessage'));
   $('#loadSearch')?.setAttribute('aria-label',t('searchLoads'));
   renderLoads();
   renderProfileUI();
@@ -179,7 +183,7 @@ function applyLanguage(next, persist=true){
   if (state.session) renderChatFromCache?.();
 }
 function page(name, updateHistory=true){
-  if (!document.getElementById('page-'+name)) return;
+  if(!document.getElementById('page-'+name))name='home';
 
   // Chat is available only after sign-in.  Opening the sign-in dialog here gives
   // guest users a clear next step instead of displaying an inactive chat screen.
@@ -354,7 +358,7 @@ function cargoCard(c, shipment=false){
       <div class="cargo-card-badges">
         <span class="cargo-scope-pill">${esc(scopeLabel)}</span>
         ${!shipment&&$('#boardSort')?.value==='nearest'&&boardPosition?`<span class="cargo-scope-pill">${distanceKm(boardPosition,c)!=null?`${distanceKm(boardPosition,c).toLocaleString(localeMap[state.lang],{maximumFractionDigits:1})} ${t('kmAway')}`:t('distanceUnknown')}</span>`:''}
-        <span class="status-pill">${esc(c.status==='PUBLISHED'||!c.status?t('publishedStatus'):c.status)}</span>
+        <span class="status-pill">${esc(transportStatusLabel(c.status||'PUBLISHED',state.lang))}</span>
       </div>
     </div>
 
@@ -453,7 +457,7 @@ function loadPublishedAtMs(load){
   return Number.isFinite(ms)?ms:0;
 }
 function getLoadBoardSeenAt(){
-  const raw=Number(localStorage.getItem(loadBoardSeenStorageKey()) || 0);
+  const raw=Number(readStored(loadBoardSeenStorageKey(),'0'));
   return Number.isFinite(raw) && raw>0 ? raw : 0;
 }
 function isLoadBoardActive(){
@@ -505,7 +509,8 @@ function requestBoardLocation(){
 let loadsLoading=true;
 let loadsLoadError=false;
 function renderLoads(){
-  const q = ($('#loadSearch')?.value || '').trim().toLocaleLowerCase();
+  const more=$('#loadMoreCargo');if(more){more.hidden=!loadsHaveMore;more.textContent=t('loadMoreCargo');more.disabled=loadsLoading;}
+  const q=normalizeSearch($('#loadSearch')?.value);
   const origin=$('#boardOrigin')?.value||'';
   const destination=$('#boardDestination')?.value||'';
   const truck=$('#boardTruck')?.value||'';
@@ -514,7 +519,7 @@ function renderLoads(){
   const count=Number($('#boardTruckCount')?.value||0);
   const mode=$('#boardSort')?.value||'latest';
   const currency=$('#boardCurrency')?.value||'';
-  const cityMatches=(c,which,q)=>!q||[cityName(c,which),c[which+'_city'],c[which+'_city_name_fa'],c[which+'_city_name_tr'],c[which+'_city_name_en']].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+  const cityMatches=(c,which,q)=>!q||[cityName(c,which),c[which+'_city'],c[which+'_city_name_fa'],c[which+'_city_name_tr'],c[which+'_city_name_en']].some(v=>normalizeSearch(v).includes(normalizeSearch(q)));
   const filtered = sortBoardLoads(state.loads.filter(c=>{
     if(!cityMatches(c,'origin',originCity)||!cityMatches(c,'destination',destinationCity)) return false;
     const available=Number(c.remaining_truck_count??c.truck_count??1);
@@ -526,7 +531,7 @@ function renderLoads(){
     if(state.loadFilter==='international' && c.origin_country_code===c.destination_country_code) return false;
     if(state.loadFilter==='domestic' && c.origin_country_code!==c.destination_country_code) return false;
     if(!q) return true;
-    return [
+    return matchesSearch([
       cityName(c,'origin'),
       cityName(c,'destination'),
       c.cargo_type,
@@ -534,7 +539,7 @@ function renderLoads(){
       c.owner_display_name,
       c.origin_country_code,
       c.destination_country_code
-    ].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+    ],q);
   }),mode,boardPosition);
   const activeFilterCount=[origin,destination,truck,originCity,destinationCity,count,currency,mode!=='latest',state.loadFilter!=='all'].filter(Boolean).length;
   const filterCount=$('#boardFilterCount');
@@ -547,6 +552,7 @@ function renderLoads(){
   const home = $('#cargoList');
   const all = $('#cargoListAll');
 
+  const feedback=$('#boardDataStatus');if(feedback){feedback.hidden=!(loadsLoadError&&state.loads.length);feedback.textContent=t('staleCargoData');}
   const pending=loadsLoading&&!state.loads.length;
   const failed=loadsLoadError&&!state.loads.length;
   const loadFeedback=pending?`<div class="board-feedback" role="status"><span class="loading-card" aria-hidden="true"></span><p>${esc(t('loadsLoading'))}</p></div>`:failed?`<div class="board-feedback" role="status"><p>${esc(t('loadsLoadFailed'))}</p><button type="button" class="btn secondary" data-retry-loads>${esc(t('retryLoads'))}</button></div>`:null;
@@ -581,23 +587,30 @@ function bindCargoActions(){
   });
   $$('[data-share-cargo]').forEach(btn=>btn.onclick=()=>shareCargo(btn.dataset.shareCargo));
 }
-async function loadLoads(query=''){
-  if(loadsLoading && state.loads.length) return;
-  loadsLoading=true;
-  loadsLoadError=false;
-  if(!state.loads.length) renderLoads();
-  try{
-    const result = await fetchOpenLoads(query, 50);
-    if(result.rpcError) console.warn('get_open_cargo_posts failed, using public table fallback', result.rpcError);
-    if(result.error) throw result.error;
-    state.loads=result.data;
-  }catch(error){
-    loadsLoadError=true;
-    if(state.loads.length) toast(humanError(error),'error');
-  }finally{
-    loadsLoading=false;
-    renderLoads();
-  }
+let loadFlight=null;
+let loadsHaveMore=false;
+const loadPageSize=50;
+function loadLoads(query='',append=false){
+  if(loadFlight)return loadFlight;
+  loadsLoading=true;loadsLoadError=false;
+  if(!state.loads.length)renderLoads();
+  const more=$('#loadMoreCargo');if(more)more.disabled=true;
+  loadFlight=(async()=>{
+    try{
+      let offset=append?state.loads.length:0,rows=[],hasMore=false;
+      const target=append?loadPageSize:Math.max(loadPageSize,state.loads.length);
+      do{
+        const result=await fetchOpenLoads(query,loadPageSize,offset);
+        if(result.error)throw result.error;
+        const page=result.data||[];rows.push(...page);offset+=page.length;
+        hasMore=page.length===loadPageSize;
+      }while(!append&&hasMore&&rows.length<target);
+      state.loads=[...new Map((append?[...state.loads,...rows]:rows).map(c=>[c.id,c])).values()];
+      loadsHaveMore=hasMore;
+    }catch(error){loadsLoadError=true;if(state.loads.length)toast(humanError(error),'error');}
+    finally{loadsLoading=false;loadFlight=null;renderLoads();if(more)more.disabled=false;}
+  })();
+  return loadFlight;
 }
 
 function scheduleLoadRefresh(delay=500){
@@ -920,7 +933,7 @@ function renderDriverHub(){
     if(state.driverScope==='mine'&&r.user_id!==uid) return false;
     if(state.driverFilter!=='all'&&r.listing_type!==state.driverFilter) return false;
     if(!q) return true;
-    return [r.title,r.description,r.city,r.country_code,r.truck_type,r.first_name,r.last_name].some(v=>String(v||'').toLocaleLowerCase().includes(q));
+    return [r.title,r.description,r.city,r.country_code,r.truck_type,r.first_name,r.last_name].some(v=>normalizeSearch(v).includes(normalizeSearch(q)));
   });
   if($('#driverListingCount')) $('#driverListingCount').textContent=String((state.driverListings||[]).filter(r=>r.status==='ACTIVE').length);
   if(!rows.length){el.innerHTML=emptyBlock('noDriverListings');return;}
@@ -1290,9 +1303,9 @@ async function loadShipments(){
 
 function shipmentCopy(key){
   const copy={
-    fa:{offerUnavailable:'این بار در حال حاضر درخواست جدید نمی‌پذیرد.',decisionChanged:'وضعیت این پیشنهاد قبلاً تغییر کرده است؛ فهرست به‌روز شد.',offersFailed:'دریافت پیشنهادها انجام نشد؛ به‌روزرسانی را بزنید.',positivePrice:'کرایه‌ای بیشتر از صفر وارد کنید.',acceptedChatRetry:'پیشنهاد پذیرفته شد؛ برای ورود به گفتگو، بخش گفتگو را باز کنید.',priceOffer:'پیشنهاد کرایه',pending:'در انتظار بررسی',confirmAccept:'آیا این پیشنهاد کرایه را تأیید می‌کنید؟ پس از تأیید، گفت‌وگوی خصوصی فعال می‌شود.',confirmReject:'آیا این درخواست حمل را رد می‌کنید؟',requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
-    tr:{offerUnavailable:'Bu yük şu anda yeni talep kabul etmiyor.',decisionChanged:'Bu teklifin durumu zaten değişti. Liste yenilendi.',offersFailed:'Teklifler alınamadı. Yenileyin.',positivePrice:'Sıfırdan büyük bir navlun girin.',acceptedChatRetry:'Teklif kabul edildi. Sohbet bölümünden devam edin.',priceOffer:'Navlun teklifi',pending:'Değerlendiriliyor',confirmAccept:'Bu navlun teklifini kabul ediyor musunuz? Kabulden sonra özel sohbet açılır.',confirmReject:'Bu taşıma talebini reddetmek istiyor musunuz?',requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
-    en:{offerUnavailable:'This cargo is not currently accepting new requests.',decisionChanged:'This offer has already changed. The list was refreshed.',offersFailed:'Could not load offers. Please refresh.',positivePrice:'Enter a freight price greater than zero.',acceptedChatRetry:'Offer accepted. Open Chats to continue.',priceOffer:'Freight offer',pending:'Pending review',confirmAccept:'Accept this freight offer? A private chat will become available.',confirmReject:'Reject this transport request?',requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
+    fa:{openAcceptedChat:'گفت‌وگوی این حمل',offerUnavailable:'این بار در حال حاضر درخواست جدید نمی‌پذیرد.',decisionChanged:'وضعیت این پیشنهاد قبلاً تغییر کرده است؛ فهرست به‌روز شد.',offersFailed:'دریافت پیشنهادها انجام نشد؛ به‌روزرسانی را بزنید.',positivePrice:'کرایه‌ای بیشتر از صفر وارد کنید.',acceptedChatRetry:'پیشنهاد پذیرفته شد؛ برای ورود به گفتگو، بخش گفتگو را باز کنید.',priceOffer:'پیشنهاد کرایه',pending:'در انتظار بررسی',confirmAccept:'آیا این پیشنهاد کرایه را تأیید می‌کنید؟ پس از تأیید، گفت‌وگوی خصوصی فعال می‌شود.',confirmReject:'آیا این درخواست حمل را رد می‌کنید؟',requests:'درخواست‌های حمل',noRequests:'درخواستی برای این بار ثبت نشده است.',driver:'راننده',trucks:'تعداد کامیون',message:'پیام',accept:'قبول درخواست',reject:'رد درخواست',accepted:'پذیرفته شد',rejected:'رد شد',requestAccepted:'درخواست پذیرفته شد و گفت‌وگوی خصوصی باز شد.',requestRejected:'درخواست رد شد.',privateChats:'گفتگوهای خصوصی حمل',route:'مسیر حمل',privateChat:'گفتگوی خصوصی حمل',chatReady:'پس از تأیید درخواست، گفت‌وگوی خصوصی فعال می‌شود.',sending:'در حال ارسال…'},
+    tr:{openAcceptedChat:'Bu taşımanın sohbeti',offerUnavailable:'Bu yük şu anda yeni talep kabul etmiyor.',decisionChanged:'Bu teklifin durumu zaten değişti. Liste yenilendi.',offersFailed:'Teklifler alınamadı. Yenileyin.',positivePrice:'Sıfırdan büyük bir navlun girin.',acceptedChatRetry:'Teklif kabul edildi. Sohbet bölümünden devam edin.',priceOffer:'Navlun teklifi',pending:'Değerlendiriliyor',confirmAccept:'Bu navlun teklifini kabul ediyor musunuz? Kabulden sonra özel sohbet açılır.',confirmReject:'Bu taşıma talebini reddetmek istiyor musunuz?',requests:'Taşıma talepleri',noRequests:'Bu yük için henüz talep yok.',driver:'Sürücü',trucks:'Kamyon sayısı',message:'Mesaj',accept:'Talebi kabul et',reject:'Talebi reddet',accepted:'Kabul edildi',rejected:'Reddedildi',requestAccepted:'Talep kabul edildi; özel sohbet açıldı.',requestRejected:'Talep reddedildi.',privateChats:'Özel taşıma sohbetleri',route:'Taşıma rotası',privateChat:'Özel taşıma sohbeti',chatReady:'Talep onaylandığında özel sohbet etkinleşir.',sending:'Gönderiliyor…'},
+    en:{openAcceptedChat:'Open shipment chat',offerUnavailable:'This cargo is not currently accepting new requests.',decisionChanged:'This offer has already changed. The list was refreshed.',offersFailed:'Could not load offers. Please refresh.',positivePrice:'Enter a freight price greater than zero.',acceptedChatRetry:'Offer accepted. Open Chats to continue.',priceOffer:'Freight offer',pending:'Pending review',confirmAccept:'Accept this freight offer? A private chat will become available.',confirmReject:'Reject this transport request?',requests:'Transport requests',noRequests:'No request has been sent for this load yet.',driver:'Driver',trucks:'Trucks',message:'Message',accept:'Accept request',reject:'Reject request',accepted:'Accepted',rejected:'Rejected',requestAccepted:'Request accepted and private chat opened.',requestRejected:'Request rejected.',privateChats:'Private shipment chats',route:'Shipment route',privateChat:'Private shipment chat',chatReady:'Private chat becomes available after a request is accepted.',sending:'Sending…'}
   };
   return copy[state.lang]?.[key]||copy.en[key]||key;
 }
@@ -1302,12 +1315,13 @@ function shipmentOfferPanel(cargo, rows){
   const offerRow=offer=>{
     const price=offer.proposed_price==null?'—':`${Number(offer.proposed_price).toLocaleString(localeMap[state.lang])} ${offer.currency_code||''}`;
     const isPending=offer.offer_status==='PENDING';
-    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${isPending&&canManage?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
+    return `<div class="shipment-offer-row"><div><b>${esc(offer.provider_display_name||'Yoldash')}</b><small>${shipmentCopy('driver')} · ${shipmentCopy('trucks')}: ${esc(offer.requested_truck_count||1)} · ${shipmentCopy('priceOffer')}: ${esc(price)}</small>${offer.message?`<p>${esc(offer.message)}</p>`:''}</div><div class="shipment-offer-actions"><span class="shipment-offer-status ${String(offer.offer_status||'').toLowerCase()}">${esc(offer.offer_status==='ACCEPTED'?shipmentCopy('accepted'):offer.offer_status==='REJECTED'?shipmentCopy('rejected'):offer.offer_status==='PENDING'?shipmentCopy('pending'):offer.offer_status||'—')}</span>${offer.offer_status==='ACCEPTED'?`<button type="button" class="btn secondary" data-offer-room="${esc(offer.offer_id)}">${shipmentCopy('openAcceptedChat')}</button>`:''}${isPending&&canManage?`<button class="btn primary" data-offer-decision="ACCEPTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('accept')}</button><button class="btn secondary" data-offer-decision="REJECTED" data-offer-id="${esc(offer.offer_id)}">${shipmentCopy('reject')}</button>`:''}</div></div>`;
   };
   return `<section class="shipment-offers" data-cargo-offers="${esc(cargo.id)}"><div class="shipment-offers-head"><b>${shipmentCopy('requests')}</b><small>${offers.length}</small></div>${offers.length?offers.map(offerRow).join(''):`<p class="shipment-empty">${shipmentCopy('noRequests')}</p>`}</section>`;
 }
 const decidingOffers=new Set();
 function bindShipmentOfferActions(){
+  $$('[data-offer-room]').forEach(button=>button.onclick=async()=>{if(button.disabled)return;button.disabled=true;try{const {data,error}=await getShipmentRoomForOffer(button.dataset.offerRoom);if(error)throw error;const room=Array.isArray(data)?data[0]:data;if(!room)throw new Error(shipmentCopy('acceptedChatRetry'));await openShipmentRoom(room);page('chat');}catch(error){toast(humanError(error),'error');}finally{button.disabled=false;}});
   $$('[data-offer-decision]').forEach(button=>button.onclick=async()=>{
     const offerId=button.dataset.offerId, status=button.dataset.offerDecision;
     if(!offerId||!status||decidingOffers.has(offerId)) return;
@@ -1948,7 +1962,7 @@ function bindUI(){
   ['createLoadBtn','createLoadBtn2','quickLoad'].forEach(id=>$('#'+id)?.addEventListener('click',openLoadModal));
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
-  $('#refreshShipments').onclick=loadShipments;
+  $('#refreshShipments').onclick=loadShipments;$('#loadMoreCargo').onclick=()=>loadLoads('',true);
   $('#nearbyMode').onchange=saveNearbyMode;$('#nearbyLocation').onclick=shareNearbyLocation;
   $('#notificationBtn')?.addEventListener('click',async(e)=>{e.stopPropagation();if(!state.session){$('#authModal')?.showModal();return;}const panel=$('#notificationPanel');panel?.classList.toggle('hidden');if(panel&&!panel.classList.contains('hidden'))await Promise.all([loadNotifications(),loadNearbySettings()]);});
   $('#markAllNotificationsRead')?.addEventListener('click',markAllNotificationsRead);

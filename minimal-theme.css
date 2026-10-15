@@ -119,3 +119,9 @@ html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .btn.primary span {
 .shipment-group{min-width:0;display:grid;gap:12px}.shipment-offer-row{overflow-wrap:anywhere}.shipment-offer-actions{flex-wrap:wrap}.shipment-offer-actions button:disabled{opacity:.6;cursor:wait}.bubble{white-space:pre-wrap;overflow-wrap:anywhere}
 
 #themeToggle[hidden],.nearby-settings[hidden]{display:none!important}.nearby-settings{padding:14px;border-bottom:1px solid var(--line, #263d5e);display:grid;gap:10px}.nearby-settings label{display:grid;gap:6px}.nearby-settings select{background:#0e1b31;color:#fff;border:1px solid #263d5e;border-radius:10px;min-height:44px;padding:8px}.nearby-settings p{font-size:12px;line-height:1.7;margin:0;color:#afbdd2}.nearby-settings button{white-space:normal}.notification-panel{max-height:85vh;overflow-y:auto}
+
+/* Keyboard, touch and motion support across the shared application. */
+:where(button,a,input,select,textarea):focus-visible{outline:3px solid #ffbd45;outline-offset:3px}
+:where(button,input,select){min-height:44px}.board-more{text-align:center;padding:20px}.board-data-status{padding:12px;border:1px solid #ba8a35;border-radius:12px;color:#ffdb9b;font-size:14px}
+:where(.board-more,.board-data-status)[hidden]{display:none!important}.messages{overscroll-behavior:contain}.composer{grid-template-columns:minmax(0,1fr) auto}.composer input{min-width:0}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

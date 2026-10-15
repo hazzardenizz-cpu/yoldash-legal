@@ -1,5 +1,6 @@
+import { readStored } from './storage.js';
 export const state = {
-  lang: localStorage.getItem('yoldash_lang') || 'fa',
+  lang: (['fa','tr','en'].includes(readStored('yoldash_lang'))?readStored('yoldash_lang'):'fa'),
   session: null,
   profile: null,
   businessProfile: null,

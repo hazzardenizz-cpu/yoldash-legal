@@ -10,6 +10,8 @@ function truck(v){
   return ({CURTAIN:'Curtainsider',FLATBED:'Flatbed',TANKER:'Tanker',REFRIGERATED:'Refrigerated',LIGHT_TRUCK:'Light truck'})[v]||v||'—';
 }
 export default async function handler(req,res){
+  res.setHeader('Cache-Control','no-store');
+  if(req.method&& !['GET','HEAD'].includes(req.method)){res.setHeader('Allow','GET, HEAD');res.status(405).send('Method not allowed');return;}
   const id=String(req.query?.id||'').trim();
   res.setHeader('X-Robots-Tag','noindex, follow');
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)){res.status(404).send('Not found');return;}
@@ -17,14 +19,14 @@ export default async function handler(req,res){
     'id','status','cargo_type','required_truck_type','origin_country_code','origin_city',
     'destination_country_code','destination_city','origin_city_name_en','origin_city_name_fa','origin_city_name_tr',
     'destination_city_name_en','destination_city_name_fa','destination_city_name_tr','weight_kg','truck_count',
-    'remaining_truck_count','loading_at','freight_price','currency_code','description','published_at','expires_at'
+    'remaining_truck_count','accepting_requests','loading_at','freight_price','currency_code','description','published_at','expires_at'
   ].join(',');
   const url=SUPABASE_URL+'/rest/v1/cargo_posts?select='+encodeURIComponent(select)+'&id=eq.'+encodeURIComponent(id)+'&status=eq.PUBLISHED&deleted_at=is.null&limit=1';
-  let r;
-  try{r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});}catch(error){res.setHeader('Cache-Control','no-store');res.setHeader('Retry-After','60');res.status(503).send('Load information is temporarily unavailable. Please try again.');return;}
+  let r,rows;
+  try{r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY},signal:AbortSignal.timeout(10000)});if(r.ok){rows=await r.json();if(!Array.isArray(rows))throw new Error('Invalid upstream response');}}catch(error){res.setHeader('Cache-Control','no-store');res.setHeader('Retry-After','60');res.status(503).send('Load information is temporarily unavailable. Please try again.');return;}
   if(!r.ok){res.status(502).send('Unable to load cargo');return;}
-  const rows=await r.json(); const c=rows?.[0];
-  if(!c || (c.expires_at && new Date(c.expires_at)<=new Date())){res.status(404).send('This load is no longer active.');return;}
+  const c=rows?.[0];
+  if(!c||c.accepting_requests===false||(c.remaining_truck_count!=null&&Number(c.remaining_truck_count)<=0) || (c.expires_at && new Date(c.expires_at)<=new Date())){res.status(404).send('This load is no longer active.');return;}
   const from=city(c,'origin'),to=city(c,'destination'),cargo=c.cargo_type||'Road freight';
   const title=from+' → '+to+' · '+cargo+' | Yoldash Load';
   const description='Active Yoldash road-freight load from '+from+' to '+to+'. Cargo: '+cargo+'. View vehicle, weight, loading and freight details.';

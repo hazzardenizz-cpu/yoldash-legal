@@ -1,0 +1,12 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const local=async path=>import('data:text/javascript;base64,'+fs.readFileSync(path).toString('base64'));
+const {readStored}=await local('src/core/storage.js');assert.equal(readStored('x','fa',{getItem(){throw Error('blocked')}}),'fa');assert.equal(readStored('x','fa',{getItem(){return 'tr'}}),'tr');
+const {matchesSearch,normalizeSearch}=await local('src/features/loads/search.js');assert.equal(normalizeSearch('كيش'),'کیش');assert.ok(matchesSearch(['كيش','تهران'],'کیش تهران'));assert.ok(matchesSearch(['مواد\u200cغذایی'],'مواد غذایی'));assert.ok(!matchesSearch(['Istanbul','Tehran'],'istanbul berlin'));
+const {transportStatusLabel}=await local('src/features/transport/status.js');assert.equal(transportStatusLabel('IN_TRANSIT','fa'),'در مسیر');assert.equal(transportStatusLabel('PICKUP','tr'),'Yükleme');
+const source=fs.readFileSync('app.js','utf8'),block=source.slice(source.indexOf('let loadFlight='),source.indexOf('function scheduleLoadRefresh'));
+let calls=[],renders=0,reject=false;const first=Array.from({length:50},(_,i)=>({id:'cargo'+i})),second=[{id:'cargo50'}];let release;const more={};const ctx=vm.createContext({state:{loads:[]},loadsLoading:false,loadsLoadError:false,renderLoads:()=>renders++,$:()=>more,toast:()=>{},humanError:e=>e.message,fetchOpenLoads:async(q,n,offset)=>{calls.push(offset);if(reject)return {error:Error('offline')};if(!release&&offset===0)await new Promise(resolve=>release=resolve);return {data:offset===0?first:second}}});vm.runInContext(block,ctx);
+const a=ctx.loadLoads(),b=ctx.loadLoads();assert.equal(a,b);assert.equal(calls.length,1);release();await a;assert.equal(ctx.state.loads.length,50);
+await ctx.loadLoads('',true);assert.deepEqual(calls,[0,50]);assert.equal(ctx.state.loads.length,51);
+await ctx.loadLoads();assert.equal(ctx.state.loads.length,51);assert.deepEqual(calls,[0,50,0,50]);reject=true;await ctx.loadLoads();assert.equal(ctx.state.loads.length,51);assert.equal(ctx.loadsLoadError,true);assert.equal(more.disabled,false);
+const html=fs.readFileSync('index.html','utf8');assert.equal((html.match(/id="loadMoreCargo"/g)||[]).length,1);assert.ok(html.includes('aria-live="polite" id="loadBoardResultCount"'));
+console.log('PASS: blocked browser storage, multilingual search, status labels, one in-flight feed request, pagination, multi-page refresh and preserving data on failure');
