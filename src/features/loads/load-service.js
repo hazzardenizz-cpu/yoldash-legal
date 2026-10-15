@@ -1,11 +1,12 @@
+import { withReadDeadline } from '../../core/read-query.js';
 import { supabase } from '../../core/supabase.js';
 
 export async function fetchOpenLoads(query = '', limit = 50, offset = 0) {
-  const rpc = await supabase.rpc('get_open_cargo_posts', {
+  const rpc = await withReadDeadline(supabase.rpc('get_open_cargo_posts', {
     p_query: query || '',
     p_offset: offset,
     p_limit: limit
-  });
+  }));
 
   if (!rpc.error) {
     return {
@@ -15,7 +16,7 @@ export async function fetchOpenLoads(query = '', limit = 50, offset = 0) {
     };
   }
 
-  const fallback = await supabase
+  const fallback = await withReadDeadline(supabase
     .from('cargo_posts')
     .select('*')
     .eq('status', 'PUBLISHED')
@@ -25,7 +26,7 @@ export async function fetchOpenLoads(query = '', limit = 50, offset = 0) {
     .gt('expires_at', new Date().toISOString())
     .order('announced_at', { ascending: false })
     .order('id', { ascending: false })
-    .range(offset,offset+limit-1);
+    .range(offset,offset+limit-1));
 
   return {
     data: fallback.error ? [] : (fallback.data || []),

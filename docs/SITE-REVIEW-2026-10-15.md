@@ -34,3 +34,13 @@ Leaked-password protection remains disabled; no supported configuration tool was
 - Added web shipment stage controls and history based on server-provided capabilities. Tests cover the full SELECTED → COMPLETED lifecycle, owner/provider responsibilities, stale-status rejection and history isolation.
 - Added GitHub Actions checks for regressions, SEO, asset hashes and release rebuild consistency. These checks do not by themselves gate Vercel's automatic deployment.
 - No synthetic accounts or test shipments are retained.
+
+## Follow-up: notifications and read reliability
+
+- Unread badges now use the authenticated server's total count, independent of the 40 displayed notifications.
+- Deduplicate simultaneous notification reads; force a fresh read after mark-read operations, and ignore older or cross-account responses.
+- Clear private views immediately on account transitions; reject late profile and business-profile responses.
+- Show notification refresh errors and a retry control instead of silently retaining stale data.
+- Bound cargo and notification reads to 15 seconds with query cancellation. Writes are not automatically retried.
+- Notification cargo navigation waits for the feed and explains when the target cargo is unavailable.
+- Added automated regression coverage for these cases to the quality workflow.

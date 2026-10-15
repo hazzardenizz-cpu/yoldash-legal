@@ -60,3 +60,11 @@ translations.en.cargoHasTransportHistory='This load has accepted transport histo
 Object.assign(translations.fa,{shipmentProgress:'پیگیری مراحل حمل',confirmStage:'تأیید مرحله',statusHistory:'تاریخچهٔ وضعیت',stageUpdated:'مرحلهٔ حمل ثبت شد.',noStatusHistory:'هنوز تغییری ثبت نشده است.',lifecycleFailed:'دریافت مراحل حمل انجام نشد؛ دوباره به‌روزرسانی کنید.'});
 Object.assign(translations.tr,{shipmentProgress:'Taşıma aşamaları',confirmStage:'Aşamayı onayla',statusHistory:'Durum geçmişi',stageUpdated:'Taşıma aşaması kaydedildi.',noStatusHistory:'Henüz durum değişikliği yok.',lifecycleFailed:'Taşıma aşamaları alınamadı. Yenileyin.'});
 Object.assign(translations.en,{shipmentProgress:'Shipment progress',confirmStage:'Confirm stage',statusHistory:'Status history',stageUpdated:'Shipment stage updated.',noStatusHistory:'No status changes yet.',lifecycleFailed:'Could not load shipment stages. Please refresh.'});
+
+translations.fa.notificationsFailed='اعلان‌ها به‌روز نشدند؛ اطلاعات نمایش‌داده‌شده ممکن است قدیمی باشد.';
+translations.tr.notificationsFailed='Bildirimler güncellenemedi; gösterilen bilgiler eski olabilir.';
+translations.en.notificationsFailed='Notifications could not refresh; displayed information may be out of date.';
+
+Object.assign(translations.fa,{readRequestTimeout:'دریافت اطلاعات طول کشید؛ اتصال را بررسی و دوباره تلاش کنید.',notificationCargoUnavailable:'این بار در فهرست فعلی نیست؛ ممکن است منقضی یا بسته شده باشد.'});
+Object.assign(translations.tr,{readRequestTimeout:'Veri alımı zaman aşımına uğradı. Bağlantınızı kontrol edip tekrar deneyin.',notificationCargoUnavailable:'Bu yük mevcut listede yok; süresi dolmuş veya kapanmış olabilir.'});
+Object.assign(translations.en,{readRequestTimeout:'Loading data timed out. Check your connection and try again.',notificationCargoUnavailable:'This cargo is not in the current list; it may have expired or closed.'});

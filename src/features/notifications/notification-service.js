@@ -1,12 +1,13 @@
+import { withReadDeadline } from '../../core/read-query.js';
 import { supabase } from '../../core/supabase.js';
 
 export async function listUserNotifications(userId, limit = 40) {
-  return supabase
+  return withReadDeadline(supabase
     .from('user_notifications')
     .select('id,type,cargo_id,offer_id,assignment_id,room_id,actor_name,message_preview,origin_city,destination_city,read_at,created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .limit(limit));
 }
 
 export async function markUserNotificationRead({ userId, id }) {
@@ -51,3 +52,5 @@ export const setCargoNotificationMode=mode=>supabase.rpc('set_cargo_notification
 export const updateNotificationLocation=coords=>supabase.rpc('update_driver_notification_location',{
   p_latitude:coords.latitude,p_longitude:coords.longitude,p_accuracy_meters:coords.accuracy
 });
+
+export const getNotificationUnreadCount=()=>withReadDeadline(supabase.rpc('get_my_notification_unread_count'));

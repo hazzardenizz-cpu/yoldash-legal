@@ -127,3 +127,5 @@ html[data-theme="dark"] .btn.primary,html[data-theme="dark"] .btn.primary span {
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
 .shipment-lifecycle{padding:18px;border:1px solid #263d5e;border-radius:18px;background:#0e1b31}.shipment-lifecycle h3{margin:0 0 12px}.shipment-stage{display:grid;gap:12px;padding:14px 0;border-top:1px solid #263d5e}.shipment-stage>div:first-child{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.shipment-stage-actions{display:flex;gap:8px;flex-wrap:wrap}.assignment-history[hidden]{display:none!important}.assignment-history ol{padding-inline-start:20px;display:grid;gap:12px}.assignment-history time{display:block;color:#afbdd2;font-size:12px}.assignment-history p{overflow-wrap:anywhere}.shipment-stage-actions button{white-space:normal}
+
+.notification-feedback[hidden]{display:none!important}.notification-feedback{padding:12px;background:#322512;border-bottom:1px solid #a5792c}.notification-feedback p{font-size:13px;line-height:1.6;color:#ffdfac;margin:0 0 10px}

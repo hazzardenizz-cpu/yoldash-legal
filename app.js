@@ -73,6 +73,7 @@ import {
 } from './src/features/chat/chat-service.js';
 import {
   listUserNotifications,
+  getNotificationUnreadCount,
   getCargoNotificationPreference,setCargoNotificationMode,updateNotificationLocation,
   markUserNotificationRead,
   markAllUserNotificationsRead,
@@ -98,6 +99,7 @@ function toast(message, type='ok'){
 function humanError(error){
   const msg = String(error?.message || error || '').toLowerCase();
   if (!navigator.onLine || msg.includes('failed to fetch') || msg.includes('network')) return t('networkError');
+  if(msg.includes('read_request_timeout'))return t('readRequestTimeout');
   if(msg.includes('cargo_has_transport_history'))return t('cargoHasTransportHistory');
   if (msg.includes('email not confirmed')) return t('verificationRequired');
   if (msg.includes('invalid login credentials')) return state.lang==='fa'?'ایمیل یا رمز عبور صحیح نیست.':state.lang==='tr'?'E-posta veya şifre hatalı.':'Incorrect email or password.';
@@ -674,9 +676,10 @@ async function loadProfile(){
   const uid=state.session.user.id;
   const {data,error}=await getProfile(uid);
   if(error){ console.error(error); return; }
-  state.profile=data;
-  state.businessProfile = await fetchBusinessProfile(data.business_user_type,uid);
-  populateProfileEditor();
+  if(uid!==state.session?.user?.id)return;
+  const business=await fetchBusinessProfile(data.business_user_type,uid);
+  if(uid!==state.session?.user?.id)return;
+  state.profile=data;state.businessProfile=business;populateProfileEditor();
 }
 async function fetchBusinessProfile(type,uid){
   const {data,error}=await getBusinessProfile(type,uid);
@@ -1798,42 +1801,46 @@ function renderNotifications(rows=[]){
   }).join('');
   $$('[data-notification-id]').forEach(btn=>btn.onclick=()=>openNotification(btn));
 }
-async function loadNotifications(){
-  const count=$('#notificationCount');
-  const label=$('#notificationUnreadLabel');
-  if(!state.session){
-    if(count){count.textContent='0';count.classList.add('hidden');}
-    if(label) label.textContent='';
-    renderNotifications([]);
-    return;
-  }
-  try{
-    const {data,error}=await listUserNotifications(state.session.user.id,40);
-    if(error) throw error;
-    const rows=data||[];
-    const unread=rows.filter(n=>!n.read_at).length;
-    if(count){
-      count.textContent=unread>99?'99+':String(unread);
-      count.classList.toggle('hidden',unread===0);
-    }
-    if(label) label.textContent=unread?`${unread} ${t('unreadNotifications')}`:t('noNotifications');
-    renderNotifications(rows);
-  }catch(err){
-    console.warn('notifications',err);
-  }
+let notificationFlight=null,notificationRequest=0,notificationOwner=null;
+function loadNotifications(force=false){
+  const uid=state.session?.user?.id,count=$('#notificationCount'),label=$('#notificationUnreadLabel'),feedback=$('#notificationFeedback');
+  if(!uid){++notificationRequest;notificationFlight=null;notificationOwner=null;if(count){count.textContent='0';count.classList.add('hidden');}if(label)label.textContent='';if(feedback)feedback.hidden=true;renderNotifications([]);return Promise.resolve();}
+  if(!force&&notificationFlight?.uid===uid)return notificationFlight.promise;
+  if(notificationOwner!==uid){notificationOwner=uid;renderNotifications([]);if(count){count.textContent='0';count.classList.add('hidden');}if(label)label.textContent=t('loading');}
+  const request=++notificationRequest,flight={uid,promise:null};
+  if(feedback)feedback.hidden=true;
+  flight.promise=(async()=>{
+    try{
+      const [list,total]=await Promise.all([listUserNotifications(uid,40),getNotificationUnreadCount()]);
+      if(request!==notificationRequest||uid!==state.session?.user?.id)return;
+      if(list.error)throw list.error;
+      const rows=list.data||[];
+      if(total.error)throw total.error;
+      const unread=Math.max(0,Number(total.data)||0);
+      if(count){count.textContent=unread>99?'99+':String(unread);count.classList.toggle('hidden',unread===0);}
+      if(label)label.textContent=unread?`${unread} ${t('unreadNotifications')}`:t('noNotifications');
+      renderNotifications(rows);
+    }catch(error){
+      if(request!==notificationRequest||uid!==state.session?.user?.id)return;
+      if(feedback){feedback.hidden=false;$('#notificationStatus').textContent=t('notificationsFailed');$('#retryNotifications').textContent=t('retryLoads');}
+    }finally{if(notificationFlight===flight)notificationFlight=null;}
+  })();notificationFlight=flight;return flight.promise;
 }
+
 async function markNotificationRead(id){
   if(!state.session||!id) return;
   const {error}=await markUserNotificationRead({userId:state.session.user.id,id});
   if(error) console.warn('mark notification read',error);
 }
 async function openNotification(btn){
+  const uid=state.session?.user?.id;if(!uid)return;
   const id=btn.dataset.notificationId;
   const cargoId=btn.dataset.notificationCargo;
   const roomId=btn.dataset.notificationRoom;
   const offerId=btn.dataset.notificationOffer;
   await markNotificationRead(id);
-  await loadNotifications();
+  await loadNotifications(true);
+  if(uid!==state.session?.user?.id)return;
   $('#notificationPanel')?.classList.add('hidden');
   if(roomId || offerId){
     await loadShipmentRooms(true);
@@ -1842,12 +1849,14 @@ async function openNotification(btn){
       const result=await getShipmentRoomForOffer(offerId);
       room=(result.data||[])[0];
     }
-    if(room){page('chat');await openShipmentRoom(room);return;}
+    if(uid!==state.session?.user?.id)return;
+    if(room){await openShipmentRoom(room);page('chat');return;}
   }
   if(cargoId){
-    page('loads');
+    page('loads');await loadLoads();
+    if(uid!==state.session?.user?.id)return;
     const card=document.querySelector(`[data-cargo-id="${CSS.escape(cargoId)}"]`);
-    card?.scrollIntoView({behavior:'smooth',block:'center'});
+    if(card)card.scrollIntoView({behavior:'smooth',block:'center'});else toast(t('notificationCargoUnavailable'),'error');
   }
 }
 async function markAllNotificationsRead(){
@@ -1855,8 +1864,8 @@ async function markAllNotificationsRead(){
   try{
     const {error}=await markAllUserNotificationsRead(state.session.user.id);
     if(error) throw error;
-    await loadNotifications();
-  }catch(err){ console.warn('mark all notifications read',err); }
+    await loadNotifications(true);
+  }catch(err){toast(humanError(err),'error'); console.warn('mark all notifications read',err); }
 }
 function nearbyCopy(key){
  const copy={fa:{title:'اعلان بارهای نزدیک',mode:'شعاع دریافت بار',off:'خاموش',all:'همه بارها',locate:'ارسال موقعیت فعلی برای اعلان بار',hint:'برای شعاع ۲۰۰ یا ۴۰۰ کیلومتر، موقعیت دقیق با عمر کمتر از ۱۵ دقیقه لازم است. این دکمه موقعیت شما را برای یولداش ارسال می‌کند. دریافت در پس‌زمینه به اپ و مجوزهای دستگاه وابسته است.',saved:'تنظیم اعلان ذخیره شد.',ready:'موقعیت ثبت شد؛ برای ۱۵ دقیقه آینده قابل استفاده است.',failed:'موقعیت دریافت نشد؛ مجوز مکان دستگاه را بررسی و دوباره تلاش کنید.',working:'در حال انجام…'},tr:{title:'Yakındaki yük bildirimleri',mode:'Bildirim alanı',off:'Kapalı',all:'Tüm yükler',locate:'Bildirimler için konumumu paylaş',hint:'200/400 km için 15 dakikadan yeni, doğru bir konum gerekir. Bu düğme konumunuzu Yoldash ile paylaşır. Arka plan bildirimleri uygulamaya ve cihaz izinlerine bağlıdır.',saved:'Tercih kaydedildi.',ready:'Konum kaydedildi; 15 dakika geçerlidir.',failed:'Konum alınamadı. Konum iznini kontrol edin.',working:'İşleniyor…'},en:{title:'Nearby cargo alerts',mode:'Alert radius',off:'Off',all:'All cargo',locate:'Share current location for cargo alerts',hint:'200/400 km alerts require an accurate location less than 15 minutes old. This button shares your location with Yoldash. Background delivery depends on the app and device permissions.',saved:'Preference saved.',ready:'Location saved; usable for the next 15 minutes.',failed:'Could not get location. Check location permission and retry.',working:'Working…'}};
@@ -1990,6 +1999,7 @@ function bindUI(){
   $('#refreshShipments').onclick=loadShipments;$('#loadMoreCargo').onclick=()=>loadLoads('',true);
   $('#nearbyMode').onchange=saveNearbyMode;$('#nearbyLocation').onclick=shareNearbyLocation;
   $('#notificationBtn')?.addEventListener('click',async(e)=>{e.stopPropagation();if(!state.session){$('#authModal')?.showModal();return;}const panel=$('#notificationPanel');panel?.classList.toggle('hidden');if(panel&&!panel.classList.contains('hidden'))await Promise.all([loadNotifications(),loadNearbySettings()]);});
+  $('#retryNotifications').onclick=()=>loadNotifications(true);
   $('#markAllNotificationsRead')?.addEventListener('click',markAllNotificationsRead);
   $('#refreshAdminUserMap')?.addEventListener('click',()=>loadAdminUserMap(false));
   document.addEventListener('click',e=>{const p=$('#notificationPanel');if(p&&!p.classList.contains('hidden')&&!p.contains(e.target)&&!$('#notificationBtn')?.contains(e.target))p.classList.add('hidden');});
@@ -2160,7 +2170,9 @@ async function init(){
           const current=await getCurrentSession();
           session=current.data?.session||null;
         }
+        const accountChanged=state.session?.user?.id!==session?.user?.id||notificationOwner!==session?.user?.id;
         state.session=session;
+        if(accountChanged){state.profile=null;state.businessProfile=null;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;shipmentCargoCache=[];++shipmentRequest;++chatRequest;++publicChatRequest;if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}renderChatFromCache();$('#shipmentList').innerHTML=emptyBlock(session?'loading':'loginRequired');loadNotifications();}
         if(session) await loadProfile();
         else {state.profile=null;state.businessProfile=null;shipmentCargoCache=[];++shipmentRequest;chatCache=[];shipmentRooms=[];shipmentMessages=[];activeShipmentRoom=null;if(shipmentRealtimeChannel){unsubscribeFromShipmentRoom(shipmentRealtimeChannel);shipmentRealtimeChannel=null;}}
         renderProfileUI();
