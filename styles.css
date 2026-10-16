@@ -859,3 +859,11 @@ html[data-theme="light"] :is(input,textarea,select){
   color-scheme:light;
 }
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none!important}}
+
+/* Admin location freshness legend: 0-15 yellow, 15-60 blue, over 60 red */
+.admin-map-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border-radius:12px;border:1px solid var(--v2-line);background:var(--v2-surface2);color:var(--v2-text);font-size:12px}
+.admin-map-legend>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.admin-map-legend small{color:var(--v2-muted);font-size:11px;line-height:1.5}
+.map-age-dot{width:12px;height:12px;display:inline-block;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.map-age-dot.fresh{background:#f6b817}.map-age-dot.aging{background:#2f80ed}.map-age-dot.stale{background:#ef4444}
+@media(max-width:650px){.admin-map-legend{gap:8px}.admin-map-legend small{flex-basis:100%}}
