@@ -833,3 +833,29 @@ html[dir="rtl"] .cargo-detail-route>i{transform:rotate(180deg)}
 @media(max-width:900px){body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))}.mobile-bottom{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));bottom:calc(8px + env(safe-area-inset-bottom,0px));background:var(--v2-surface);border-color:var(--v2-line)}.mobile-bottom button{min-height:52px;color:var(--v2-muted)}.mobile-bottom button.active{color:var(--v2-primary);background:var(--v2-primary-soft)}.mobile-bottom i{font-style:normal}.mobile-bottom button:focus-visible{outline:2px solid var(--v2-primary);outline-offset:-2px}.mobile-bottom button span{font-size:10px}.knowledge-intro{padding:20px}}
 @media(max-width:560px){.knowledge-grid{grid-template-columns:1fr}.knowledge-card{padding:20px}}
 @media(prefers-reduced-motion:reduce){.knowledge-card{transition:none}.knowledge-card:hover{transform:none}}
+
+
+/* Yoldash accessible day/night themes — keep legacy and V2 tokens aligned */
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f4f7fb;--bg2:#edf3fb;--surface:#ffffff;--surface2:#f3f7fc;--surface3:#e8eff9;
+  --line:#d4dfed;--text:#142337;--muted:#526580;--amber:#b56a00;--amber2:#9a5b00;
+  --green:#087b59;--blue:#245fc6;--violet:#6744ba;--danger:#ba273f;
+  --shadow:0 14px 40px rgba(19,37,66,.09);
+}
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="light"] .glass{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(244,248,253,.94));
+  border-color:rgba(133,152,180,.35);
+}
+html[data-theme="light"] .nav-item{color:var(--v2-muted)}
+html[data-theme="light"] .ambient{opacity:.10!important}
+html[data-theme="light"] .theme-toggle,
+html[data-theme="dark"] .theme-toggle{
+  display:grid!important;visibility:visible!important;opacity:1!important;cursor:pointer!important;
+}
+.theme-toggle:focus-visible{outline:3px solid var(--v2-primary)!important;outline-offset:3px}
+html[data-theme="light"] :is(input,textarea,select){
+  color-scheme:light;
+}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none!important}}
