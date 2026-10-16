@@ -867,3 +867,12 @@ html[data-theme="light"] :is(input,textarea,select){
 .map-age-dot{width:12px;height:12px;display:inline-block;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
 .map-age-dot.fresh{background:#f6b817}.map-age-dot.aging{background:#2f80ed}.map-age-dot.stale{background:#ef4444}
 @media(max-width:650px){.admin-map-legend{gap:8px}.admin-map-legend small{flex-basis:100%}}
+
+/* Cargo owner offer inbox - light/dark adaptive */
+.shipment-inbox-overview{display:flex;align-items:center;flex-wrap:wrap;gap:16px;padding:18px 20px;margin:18px 0;border-radius:18px;background:var(--v2-surface2);border:1px solid var(--v2-line);color:var(--v2-text)}
+.shipment-inbox-overview>div{display:flex;flex-direction:column;gap:4px;min-width:140px}
+.shipment-inbox-overview strong{font-size:28px;color:var(--v2-primary);font-variant-numeric:tabular-nums}
+.shipment-inbox-overview p{flex:1;min-width:180px;max-width:590px;margin:0;color:var(--v2-muted);line-height:1.8}
+.shipment-inbox-overview small{color:var(--v2-muted)}
+.shipment-inbox-overview .btn{min-height:44px}
+@media(max-width:640px){.shipment-inbox-overview{align-items:stretch;flex-direction:column;padding:14px}.shipment-inbox-overview .btn{width:100%}}
