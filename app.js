@@ -86,6 +86,7 @@ import {
   getSuperAdminUserMap
 } from './src/features/admin/admin-service.js';
 import { fetchFxRates } from './src/features/fx/fx-service.js';
+import { submitSharedLocation } from './src/features/location/location-service.js';
 
 
 
@@ -1971,6 +1972,47 @@ function canonicalFallback(){
   }
 }
 
+function isValidSharedLocationUrl(value){
+  try{
+    const url=new URL(value);
+    const host=url.hostname.toLowerCase();
+    return url.protocol==='https:' && (host==='google.com'||host.endsWith('.google.com')||host==='goo.gl'||host==='maps.app.goo.gl');
+  }catch{ return false; }
+}
+
+function openLocationSubmit(){
+  if(!state.session){
+    $('#authModal')?.showModal();
+    toast(t('locationSignInRequired'),'error');
+    return;
+  }
+  $('#locationSubmitForm')?.reset();
+  $('#locationSubmitModal')?.showModal();
+}
+
+async function submitLocationForm(event){
+  event.preventDefault();
+  if(!state.session){ openLocationSubmit(); return; }
+  const name=$('#locationName')?.value.trim()||'';
+  const gpsUrl=$('#locationGpsUrl')?.value.trim()||'';
+  if(name.length<3||name.length>120){ toast(t('locationNameError'),'error'); return; }
+  if(!isValidSharedLocationUrl(gpsUrl)){ toast(t('locationMapLinkError'),'error'); return; }
+  const button=$('#submitLocationButton');
+  if(button){ button.disabled=true; button.dataset.previousText=button.textContent; button.textContent=t('loading'); }
+  try{
+    const {error}=await submitSharedLocation(name,gpsUrl);
+    if(error) throw error;
+    $('#locationSubmitModal')?.close();
+    event.currentTarget.reset();
+    toast(t('locationSubmitted'));
+  }catch(error){
+    const message=String(error?.message||'').toLowerCase();
+    toast(message.includes('duplicate') ? t('locationDuplicate') : humanError(error),'error');
+  }finally{
+    if(button){ button.disabled=false; button.textContent=button.dataset.previousText||t('submitLocation'); }
+  }
+}
+
 function bindUI(){
   window.addEventListener('popstate',()=>page(new URL(location.href).searchParams.get('page')||'home',false));
   $$('[data-lang]').forEach(b=>b.addEventListener('click',()=>applyLanguage(b.dataset.lang)));
@@ -1991,6 +2033,8 @@ function bindUI(){
     }
   };
   ['createLoadBtn','createLoadBtn2','quickLoad'].forEach(id=>$('#'+id)?.addEventListener('click',openLoadModal));
+  $('#openLocationSubmit')?.addEventListener('click',openLocationSubmit);
+  $('#locationSubmitForm')?.addEventListener('submit',submitLocationForm);
   $('#authBtn').onclick=()=>$('#authModal').showModal(); $('#openBoardBtn').onclick=()=>page('loads'); $('#seeAll').onclick=()=>page('loads');
   $('#quickBrowse').onclick=()=>page('drivers'); $('#quickChat').onclick=()=>page('chat'); $('#driverBrowseLoads').onclick=()=>page('loads');
   $('#refreshShipments').onclick=loadShipments;$('#loadMoreCargo').onclick=()=>loadLoads('',true);
