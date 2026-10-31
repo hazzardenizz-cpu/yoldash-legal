@@ -266,6 +266,13 @@
               <a class="service-link" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer"><span data-i18n="requestService">درخواست خدمت</span> ↗</a>
             </article>
 
+            <article class="service-tile glass service-location">
+              <div class="service-top"><span class="service-icon blue">⌖</span><span class="service-pill active" data-i18n="availableNow">فعال</span></div>
+              <h2 data-i18n="sharedLocations">موقعیت‌ها</h2>
+              <p data-i18n="sharedLocationsDesc">موقعیت یک مکان را با نام و لینک Google Maps ثبت کنید تا پس از بررسی در اپ و وب قابل استفاده باشد.</p>
+              <button class="service-link service-action" type="button" id="openLocationSubmit"><span data-i18n="addLocation">افزودن موقعیت</span> ↗</button>
+            </article>
+
             <article class="service-tile glass">
               <div class="service-top"><span class="service-icon green">▤</span><span class="service-pill" data-i18n="comingSoon">به‌زودی</span></div>
               <h2>CMR</h2>
@@ -311,6 +318,23 @@
   </div>
 
 <nav class="mobile-bottom glass" aria-label="منوی اصلی موبایل"><button type="button" data-page="home" class="active"><i aria-hidden="true">⌂</i><span data-i18n="home">خانه</span></button><button type="button" data-page="loads"><i aria-hidden="true">▦</i><span data-i18n="loadBoard">اعلام بار</span></button><button type="button" data-page="shipments"><i aria-hidden="true">⇄</i><span data-i18n="myShipments">حمل‌های من</span></button><button type="button" data-page="chat"><i aria-hidden="true">◌</i><span data-i18n="chat">گفتگو</span></button><button type="button" data-page="knowledge"><i aria-hidden="true">▤</i><span data-i18n="knowledge">دانشنامه</span></button></nav>
+  <dialog id="locationSubmitModal">
+    <form id="locationSubmitForm" class="modal glass yd-location-form">
+      <div class="modal-head yd-modal-head">
+        <div>
+          <span class="kicker" data-i18n="sharedLocations">موقعیت‌ها</span>
+          <h2 data-i18n="addLocation">افزودن موقعیت</h2>
+          <p class="yd-modal-subtitle" data-i18n="locationSubmitIntro">این موقعیت پس از تأیید مدیر، در اپ و وب Yoldash قابل استفاده می‌شود.</p>
+        </div>
+        <button type="button" class="close" data-close="locationSubmitModal" aria-label="Close">×</button>
+      </div>
+      <label><span data-i18n="locationName">نام موقعیت</span><input id="locationName" name="locationName" type="text" maxlength="120" required data-i18n-placeholder="locationNameHint" placeholder="مثلاً گمرک بازرگان"></label>
+      <label><span data-i18n="locationMapLink">لینک Google Maps</span><input id="locationGpsUrl" name="locationGpsUrl" type="url" maxlength="1000" inputmode="url" required dir="ltr" data-i18n-placeholder="locationMapLinkHint" placeholder="https://maps.google.com/..."></label>
+      <p class="location-privacy-note" data-i18n="locationPrivacyNote">فقط مکان‌های عمومی یا تجاری را ثبت کنید؛ آدرس منزل، اطلاعات خصوصی یا موقعیت زندهٔ افراد را وارد نکنید.</p>
+      <div class="modal-actions"><button class="btn secondary" type="button" data-close="locationSubmitModal" data-i18n="cancel">انصراف</button><button class="btn primary" id="submitLocationButton" type="submit" data-i18n="submitLocation">ارسال برای بررسی</button></div>
+    </form>
+  </dialog>
+
   <dialog id="cargoDetailsModal">
     <section class="modal glass cargo-details-modal">
       <div class="modal-head yd-modal-head">
