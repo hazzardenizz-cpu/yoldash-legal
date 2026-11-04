@@ -54,6 +54,10 @@
   },
   "rewrites": [
     {
+      "source": "/.well-known/assetlinks.json",
+      "destination": "/api/assetlinks"
+    },
+    {
       "source": "/load/:id",
       "destination": "/api/public-load?id=:id"
     },
