@@ -880,3 +880,5 @@ html[data-theme="light"] :is(input,textarea,select){
 /* Shared locations service: same review workflow as the Android app. */
 .service-action{margin-top:auto;border:0;background:transparent;padding:0;color:var(--amber);font:inherit;font-size:11px;font-weight:800;text-align:start;cursor:pointer}.service-action:hover{color:var(--amber2)}
 .yd-location-form{width:min(560px,calc(100vw - 30px))}.yd-location-form label{display:block;margin-top:14px}.yd-location-form input{width:100%;box-sizing:border-box}.location-privacy-note{margin:16px 0 0;padding:12px 13px;border:1px solid rgba(255,168,0,.28);border-radius:13px;background:rgba(255,168,0,.08);color:var(--text);font-size:11px;line-height:1.8}
+
+.admin-map-window{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.admin-map-window select{min-height:44px;max-width:100%;padding:8px 12px;background:var(--bg-secondary,#111c30);color:var(--text-primary,#fff);border:1px solid var(--border,#607089);border-radius:10px;font:inherit}.admin-map-window select:focus-visible{outline:2px solid #f6b817;outline-offset:3px}

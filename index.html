@@ -36,7 +36,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
 
-<link rel="stylesheet" href="/assets/site.aab59acc33d7.css">
+<link rel="stylesheet" href="/assets/site.41bd37c49978.css">
 </head>
 <body>
 <noscript><section class="seo-fallback" lang="fa" dir="rtl"><h2>یولداش؛ اعلام بار و حمل‌ونقل جاده‌ای</h2><p>یولداش به صاحبان بار، رانندگان و شرکت‌های حمل‌ونقل کمک می‌کند بار و وسیلهٔ مناسب مسیر را پیدا کنند. برای استفاده از بازار زندهٔ بار، جاوااسکریپت را فعال کنید؛ راهنماهای حمل‌ونقل بدون آن نیز در دسترس هستند.</p><nav aria-label="راهنماهای یولداش"><a href="/fa/load-board">راهنمای اعلام بار</a> · <a href="/fa/iran-turkey-road-freight">حمل بار ایران و ترکیه</a> · <a href="/fa/cmr-road-freight">بارنامه CMR</a> · <a href="/tr">Türkçe</a> · <a href="/en">English</a></nav></section></noscript>
@@ -142,10 +142,24 @@
               <div>
                 <span class="kicker" data-i18n="superAdminOnly">فقط Super Admin</span>
                 <h2 data-i18n="yoldashUsersMap">نقشه کاربران Yoldash</h2>
-                <small data-i18n="mapPrivacyNote">فقط کاربران دارای موقعیت مجاز و به‌روزشده در ۶۰ دقیقهٔ گذشته نمایش داده می‌شوند.</small>
+                <small data-i18n="mapPrivacyNote">کاربران بر اساس آخرین موقعیت ثبت‌شده در بازهٔ انتخابی نمایش داده می‌شوند.</small>
               </div>
               <div class="admin-map-actions">
-                <span class="admin-map-count"><b id="adminMapUserCount">0</b> <span data-i18n="usersWithLocation">کاربر فعال در ساعت گذشته</span></span>
+                <label class="admin-map-window" for="adminMapWindow"><span data-i18n="mapWindowLabel">بازهٔ نمایش</span>
+                  <select id="adminMapWindow" aria-describedby="adminMapWindowNote">
+                    <option value="15" data-i18n="mapWindow15">۱۵ دقیقه</option>
+                    <option value="30" data-i18n="mapWindow30">۳۰ دقیقه</option>
+                    <option value="60" data-i18n="mapWindow60" selected>۱ ساعت</option>
+                    <option value="120" data-i18n="mapWindow120">۲ ساعت</option>
+                    <option value="360" data-i18n="mapWindow360">۶ ساعت</option>
+                    <option value="720" data-i18n="mapWindow720">۱۲ ساعت</option>
+                    <option value="1440" data-i18n="mapWindow1440">۲۴ ساعت</option>
+                    <option value="10080" data-i18n="mapWindow10080">۷ روز</option>
+                    <option value="43200" data-i18n="mapWindow43200">۳۰ روز</option>
+                    <option value="0" data-i18n="mapWindowAll">همهٔ زمان‌ها</option>
+                  </select>
+                </label>
+                <span class="admin-map-count"><b id="adminMapUserCount">0</b> <span data-i18n="usersWithLocation">کاربر در بازهٔ انتخابی</span></span>
                 <span class="admin-map-sync">آخرین دریافت: <b id="adminMapLastSync">—</b></span>
                 <button class="text-link" type="button" id="refreshAdminUserMap" data-i18n="refresh">به‌روزرسانی</button>
               </div>
@@ -153,11 +167,12 @@
             <div class="admin-map-legend" role="note" aria-label="راهنمای تازگی موقعیت">
               <span><i class="map-age-dot fresh"></i><b>زرد</b> تا ۱۵ دقیقه</span>
               <span><i class="map-age-dot aging"></i><b>آبی</b> ۱۵ تا ۶۰ دقیقه</span>
-              <small>موقعیت‌های قدیمی‌تر از ۶۰ دقیقه خودکار پنهان می‌شوند. رنگ‌ها زمان آخرین موقعیت ثبت‌شده را نشان می‌دهند.</small>
+              <span><i class="map-age-dot stale"></i><b data-i18n="mapOldLocation">قرمز: بیشتر از ۱ ساعت</b></span>
+              <small id="adminMapWindowNote" data-i18n="mapWindowNote">مبنای بازه و رنگ‌ها آخرین ارسال موقعیت است، نه آنلاین بودن لحظه‌ای.</small>
             </div>
             <div class="admin-map-shell">
               <div id="adminUserMap" class="admin-user-map" aria-label="Yoldash users map"></div>
-              <div id="adminMapEmpty" class="admin-map-empty hidden" data-i18n="noLocationUsers">در ۶۰ دقیقهٔ گذشته موقعیت فعالی ثبت نشده است.</div>
+              <div id="adminMapEmpty" class="admin-map-empty hidden" data-i18n="noLocationUsers">در بازهٔ انتخابی کاربری با موقعیت ثبت‌شده وجود ندارد.</div>
             </div>
           </div>
         </section>
@@ -553,7 +568,7 @@
       <div><strong>English</strong><a href="/en">English</a> <a href="/en/about">About Yoldash</a><a href="/en/turkey-iran-road-freight">Turkey–Iran Freight</a><a href="/en/cmr-road-freight">CMR</a><a href="/en/turkey-freight-insurance">Freight Insurance</a></div>
     </section>
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <script type="module" src="/assets/app.38b03f207eec.js"></script>
+  <script type="module" src="/assets/app.bf2a78d6538f.js"></script>
 <script type="module" src="/location-service-ui.js"></script>
 <nav class="social-float" aria-label="Yoldash social media">
 <a class="social-icon social-whatsapp" href="https://wa.me/905326629800" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Yoldash" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5ZM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.3-.4A10 10 0 1 1 12 22Zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-1 1.1c-.2.2-.4.2-.7.1a8.2 8.2 0 0 1-2.5-1.6 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.3 3.3 1.5 3.5c.2.2 2.5 3.8 6.1 5.3.9.4 1.6.6 2.1.7.9.3 1.7.2 2.3.1.7-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></a>

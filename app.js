@@ -1,4 +1,4 @@
-import { recentMapRows } from './src/features/admin/map-freshness.js';
+import { recentMapRows, mapWindowMinutes } from './src/features/admin/map-freshness.js';
 import { cargoCityFields } from './src/features/loads/city-fields.js';
 import { renderLifecycle } from './src/features/transport/lifecycle-view.js';
 import { transportStatusLabel } from './src/features/transport/status.js';
@@ -1502,6 +1502,8 @@ async function loadUnread(){
 }
 
 
+let adminMapRequest=0;
+let adminMapWindow=mapWindowMinutes(readStored('yoldash-admin-map-window','60'));
 async function syncSuperAdminMapAccess(){
   const panel=$('#adminUserMapPanel');
   if(!panel) return;
@@ -1615,7 +1617,7 @@ function separateAdminMapMarkers(items,map){
 }
 
 function renderAdminUserMap(rows=[]){
-  rows=recentMapRows(rows);
+  rows=recentMapRows(rows,Date.now(),adminMapWindow);
   state.adminMapRows=rows;
   const mapEl=$('#adminUserMap');
   const empty=$('#adminMapEmpty');
@@ -1729,6 +1731,7 @@ function renderAdminUserMap(rows=[]){
 
 async function loadAdminUserMap(silent=false){
   if(!state.session||!state.isSuperAdmin) return;
+  const request=++adminMapRequest, minutes=adminMapWindow;
   const btn=$('#refreshAdminUserMap');
   if(btn) btn.disabled=true;
   try{
@@ -1736,16 +1739,18 @@ async function loadAdminUserMap(silent=false){
     await ensureLeaflet();
     // Sign-out or a role change may occur while the library is downloading.
     if(!state.session||!state.isSuperAdmin) return;
-    const {data,error}=await getSuperAdminUserMap();
+    const {data,error}=await getSuperAdminUserMap(minutes);
+    if(request!==adminMapRequest||minutes!==adminMapWindow||!state.session||!state.isSuperAdmin) return;
     if(error) throw error;
     renderAdminUserMap(Array.isArray(data)?data:[]);
     const sync=$('#adminMapLastSync');
     if(sync) sync.textContent=new Date().toLocaleTimeString(localeMap[state.lang],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }catch(err){
+    if(request!==adminMapRequest) return;
     console.warn('admin user map',err);
     if(!silent) toast(humanError(err),'error');
   }finally{
-    if(btn) btn.disabled=false;
+    if(btn && request===adminMapRequest) btn.disabled=false;
   }
 }
 
@@ -2045,6 +2050,17 @@ function bindUI(){
   $('#notificationBtn')?.addEventListener('click',async(e)=>{e.stopPropagation();if(!state.session){$('#authModal')?.showModal();return;}const panel=$('#notificationPanel');panel?.classList.toggle('hidden');if(panel&&!panel.classList.contains('hidden'))await Promise.all([loadNotifications(),loadNearbySettings()]);});
   $('#retryNotifications').onclick=()=>loadNotifications(true);
   $('#markAllNotificationsRead')?.addEventListener('click',markAllNotificationsRead);
+  const mapWindow=$('#adminMapWindow');
+  if(mapWindow){
+    mapWindow.value=String(adminMapWindow);
+    mapWindow.addEventListener('change',()=>{
+      adminMapWindow=mapWindowMinutes(mapWindow.value);
+      try{localStorage.setItem('yoldash-admin-map-window',String(adminMapWindow));}catch{}
+      state.adminMapHasInitialFit=false;
+      renderAdminUserMap([]);
+      loadAdminUserMap(false);
+    });
+  }
   $('#refreshAdminUserMap')?.addEventListener('click',()=>loadAdminUserMap(false));
   document.addEventListener('click',e=>{const p=$('#notificationPanel');if(p&&!p.classList.contains('hidden')&&!p.contains(e.target)&&!$('#notificationBtn')?.contains(e.target))p.classList.add('hidden');});
   $('#refreshFx')?.addEventListener('click',()=>loadFxRates(false));
