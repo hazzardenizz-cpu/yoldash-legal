@@ -1,3 +1,4 @@
+import { recentMapRows } from './src/features/admin/map-freshness.js';
 import { cargoCityFields } from './src/features/loads/city-fields.js';
 import { renderLifecycle } from './src/features/transport/lifecycle-view.js';
 import { transportStatusLabel } from './src/features/transport/status.js';
@@ -1614,6 +1615,7 @@ function separateAdminMapMarkers(items,map){
 }
 
 function renderAdminUserMap(rows=[]){
+  rows=recentMapRows(rows);
   state.adminMapRows=rows;
   const mapEl=$('#adminUserMap');
   const empty=$('#adminMapEmpty');
@@ -1730,6 +1732,7 @@ async function loadAdminUserMap(silent=false){
   const btn=$('#refreshAdminUserMap');
   if(btn) btn.disabled=true;
   try{
+    renderAdminUserMap(state.adminMapRows||[]);
     await ensureLeaflet();
     // Sign-out or a role change may occur while the library is downloading.
     if(!state.session||!state.isSuperAdmin) return;
