@@ -360,7 +360,6 @@ dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
 
 @media(max-width:800px){
   .generic-page,.driver-hub-shell,.services-page{padding:14px}
-  .chat-shell.real-chat{min-height:calc(100vh - 150px)}
   .driver-hub-hero,.services-intro{padding:20px!important;border-radius:22px!important}
   .sidebar{background:var(--yd-surface)!important;box-shadow:var(--yd-shadow-lg)!important}
 }
@@ -394,4 +393,45 @@ dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
   .mobile-menu{display:inline-flex!important;align-items:center!important;justify-content:center!important}
   .page{width:100%!important;min-width:0!important}
   .page.active{display:grid!important}
+}
+
+
+/* Keep the composer in view; scroll the message history independently. */
+.main:has(> #page-chat.active){
+  display:flex!important;
+  flex-direction:column;
+  block-size:100vh;
+  block-size:100dvh;
+  min-block-size:0;
+}
+.main:has(> #page-chat.active) > .topbar{flex:none}
+#page-chat.active{flex:1 1 0;min-block-size:0;grid-template-rows:minmax(0,1fr)}
+#page-chat .real-chat,#page-chat .chat-room{min-block-size:0}
+#page-chat .real-chat{grid-template-rows:minmax(0,1fr)}
+#page-chat .chat-room{grid-template-rows:auto minmax(0,1fr) auto}
+#page-chat .chat-list,#chatMessages{overflow:auto;overscroll-behavior:contain}
+#chatMessages{min-block-size:0;justify-content:flex-start}
+#chatMessages > *{flex:none}
+#chatMessages > :first-child{margin-block-start:auto}
+#page-chat .composer input{min-inline-size:0;font-size:16px}
+#page-chat .composer .send{flex:0 0 44px;min-block-size:44px}
+#page-chat :is(.composer input,.composer button,.messages):focus-visible{
+  outline:2px solid var(--yd-primary);
+  outline-offset:-3px;
+}
+@media(max-width:900px){
+  .main:has(> #page-chat.active){
+    block-size:calc(100vh - 86px - env(safe-area-inset-bottom,0px));
+    block-size:calc(100dvh - 86px - env(safe-area-inset-bottom,0px));
+  }
+  #page-chat.active{padding:8px 12px!important}
+}
+@media(max-width:650px){
+  #page-chat .composer{padding:8px 10px}
+  #chatMessages{padding:12px}
+}
+@media(max-height:480px){
+  #page-chat.active{padding-block:4px!important}
+  #page-chat .chat-room-head{padding-block:6px}
+  #page-chat .composer{padding-block:4px}
 }
