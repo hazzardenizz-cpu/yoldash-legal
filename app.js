@@ -2105,7 +2105,13 @@ function bindUI(){
   $('#globalSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){page('loads');$('#loadSearch').value=e.target.value;renderLoads();}});
   $$('[data-filter]').forEach(b=>b.onclick=()=>{state.loadFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderLoads();});
   $('#publicChatRoom')?.addEventListener('click',openPublicChat);
-  $('#sendChat').onclick=sendChat; $('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+  $('#sendChat').onclick=sendChat;
+  $('#chatInput').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!e.isComposing){
+      e.preventDefault();
+      if(!e.repeat) sendChat();
+    }
+  });
   window.addEventListener('online',networkUI);window.addEventListener('offline',networkUI);
   window.addEventListener('focus',()=>{if(state.session) loadNotifications();});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&state.session) loadNotifications();});

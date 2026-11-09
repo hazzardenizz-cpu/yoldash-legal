@@ -282,7 +282,7 @@ dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
 .bubble.me{background:var(--yd-primary-soft)!important;border-color:color-mix(in srgb,var(--yd-primary) 18%,var(--yd-border))!important}
 .bubble .sender,.bubble time{color:var(--yd-muted)!important}
 .composer{background:var(--yd-surface)!important;border-top:1px solid var(--yd-border)!important}
-.composer input{background:var(--yd-surface-subtle)!important;border:1px solid var(--yd-border)!important;color:var(--yd-text)!important}
+.composer textarea{background:var(--yd-surface-subtle)!important;border:1px solid var(--yd-border)!important;color:var(--yd-text)!important}
 .composer button{background:var(--yd-surface-subtle)!important;border:1px solid var(--yd-border)!important;color:var(--yd-text)!important}
 .composer .send{background:var(--yd-primary)!important;color:#fff!important;border:0!important}
 
@@ -413,9 +413,25 @@ dialog::backdrop{background:rgba(2,6,23,.58);backdrop-filter:blur(10px)}
 #chatMessages{min-block-size:0;justify-content:flex-start}
 #chatMessages > *{flex:none}
 #chatMessages > :first-child{margin-block-start:auto}
-#page-chat .composer input{min-inline-size:0;font-size:16px}
+#page-chat .composer{align-items:flex-end}
+#page-chat .composer textarea{
+  flex:1 1 0;
+  min-inline-size:0;
+  min-block-size:44px;
+  max-block-size:120px;
+  max-block-size:clamp(56px,18dvh,120px);
+  padding:10px 12px;
+  border-radius:12px;
+  font:inherit;
+  font-size:16px;
+  line-height:1.4;
+  resize:none;
+  overflow-y:auto;
+  overflow-wrap:anywhere;
+  field-sizing:content;
+}
 #page-chat .composer .send{flex:0 0 44px;min-block-size:44px}
-#page-chat :is(.composer input,.composer button,.messages):focus-visible{
+#page-chat :is(.composer textarea,.composer button,.messages):focus-visible{
   outline:2px solid var(--yd-primary);
   outline-offset:-3px;
 }
