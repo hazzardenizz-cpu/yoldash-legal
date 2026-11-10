@@ -23,10 +23,60 @@ if(mode==='vehicles'&&rows.length){const {data:images,error:ie}=await client.fro
 if(current!==version)return;items=append?[...new Map([...items,...rows].map(c=>[c.id,c])).values()]:rows;offset+=rows.length;$('#more').hidden=rows.length<size;render();
 const id=new URLSearchParams(location.search).get('id');if(id&&!append)await openDetail(id);
 }catch(e){if(current!==version)return;if(!append)$('#cards').innerHTML='<div class="empty">دریافت آگهی‌ها انجام نشد. لطفاً دکمه «به‌روزرسانی» را بزنید.</div>';$('#status').textContent='ارتباط برقرار نشد؛ دوباره تلاش کنید.';}finally{if(current===version){busy=false;$('#cards').setAttribute('aria-busy','false');$('#more').disabled=false;$('#refresh').disabled=false}}}
-async function openDetail(id){const c=items.find(c=>c.id===id);if(!c)return;const vehicle=tab==='vehicles';$('#detailBody').innerHTML=`<h2 id="detailTitle">${safe(c.title)}</h2><p class="meta">${safe(locationText(c))} · ${safe(date(c))}</p>${vehicle?`<p class="price">${safe(price(c))}</p><dl>${[['نوع',types[c.equipment_type]],['برند',c.brand],['مدل',c.model],['سال ساخت',c.manufacture_year],['کارکرد',c.mileage_km==null?null:new Intl.NumberFormat('fa-IR').format(c.mileage_km)+' کیلومتر'],['رنگ',c.color],['وضعیت',conditions[c.condition]]].filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`<dt>${k}</dt><dd>${safe(v)}</dd>`).join('')}</dl>`:`<p>${safe(jobs[c.listing_type])} · ${c.employment_type==='PERMANENT'?'دائمی':'سرویسی'}</p>${c.show_identity?`<p>${safe([c.first_name,c.last_name].filter(Boolean).join(' '))}</p>`:''}` }<p class="description">${safe(c.description)}</p><div class="gallery">${(c.images||[]).map(u=>`<img src="${safe(u)}" alt="${safe(c.title)}" loading="lazy">`).join('')}</div>${!vehicle&&/^\+?[\d\s()-]{7,20}$/.test(c.contact_phone||'')?`<p><a href="tel:${safe(c.contact_phone.replace(/[^+\d]/g,''))}">تماس با آگهی‌دهنده: <bdi>${safe(c.contact_phone)}</bdi></a></p>`:'<p class="meta">برای پیگیری این آگهی، به بخش آگهی‌های اپ یولداش مراجعه کنید.</p>'}`+deleteButton(c)+'<p id="deleteFeedback" role="status"></p>';if(!$('#detail').open)$('#detail').showModal();}
+function contactNumber(value){
+ const number=String(value??'').normalize('NFKC')
+  .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-0x6f0))
+  .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x660))
+  .replace(/[\s().-]/g,'');
+ if(!/^\+?\d{7,15}$/.test(number))return '';
+ if(number.startsWith('00'))return '+'+number.slice(2);
+ if(/^(?:90|98)\d{10}$/.test(number))return '+'+number;
+ if(/^09\d{9}$/.test(number))return '+98'+number.slice(1);
+ if(/^05\d{9}$/.test(number))return '+90'+number.slice(1);
+ return number;
+}
+
+async function loadVehicleContact(listing,panel){
+ if(!actor){
+  panel.innerHTML='<p class="meta">برای مشاهده راه‌های تماس با آگهی‌دهنده وارد حساب یولداش شوید.</p><a href="/">ورود از صفحه اصلی یولداش</a>';
+  return;
+ }
+ if(listing.user_id===actor.id){
+  panel.textContent='این آگهی متعلق به شماست.';
+  return;
+ }
+
+ panel.textContent='در حال دریافت راه‌های تماس…';
+ try{
+  const {data,error}=await supabase.rpc('get_vehicle_marketplace_contact',{p_listing_id:listing.id}).maybeSingle();
+  if(error)throw error;
+  if(!panel.isConnected||!$('#detail').open)return;
+
+  const phone=contactNumber(data?.phone);
+  const whatsapp=contactNumber(data?.whatsapp_phone);
+  panel.replaceChildren();
+  if(phone){
+   const call=document.createElement('a');
+   call.href='tel:'+phone;
+   call.textContent='تماس';
+   panel.append(call);
+  }
+  if(/^\+[1-9]\d{6,14}$/.test(whatsapp)){
+   const message=document.createElement('a');
+   message.href='https://wa.me/'+whatsapp.slice(1);
+   message.textContent='واتساپ';
+   panel.append(message);
+  }
+  if(!panel.childElementCount)panel.textContent='راه تماس برای این آگهی در دسترس نیست.';
+ }catch{
+  if(panel.isConnected&&$('#detail').open)panel.textContent='دریافت راه‌های تماس انجام نشد. جزئیات آگهی را دوباره باز کنید.';
+ }
+}
+
+async function openDetail(id){const c=items.find(c=>c.id===id);if(!c)return;const vehicle=tab==='vehicles';$('#detailBody').innerHTML=`<h2 id="detailTitle">${safe(c.title)}</h2><p class="meta">${safe(locationText(c))} · ${safe(date(c))}</p>${vehicle?`<p class="price">${safe(price(c))}</p><dl>${[['نوع',types[c.equipment_type]],['برند',c.brand],['مدل',c.model],['سال ساخت',c.manufacture_year],['کارکرد',c.mileage_km==null?null:new Intl.NumberFormat('fa-IR').format(c.mileage_km)+' کیلومتر'],['رنگ',c.color],['وضعیت',conditions[c.condition]]].filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`<dt>${k}</dt><dd>${safe(v)}</dd>`).join('')}</dl>`:`<p>${safe(jobs[c.listing_type])} · ${c.employment_type==='PERMANENT'?'دائمی':'سرویسی'}</p>${c.show_identity?`<p>${safe([c.first_name,c.last_name].filter(Boolean).join(' '))}</p>`:''}` }<p class="description">${safe(c.description)}</p><div class="gallery">${(c.images||[]).map(u=>`<img src="${safe(u)}" alt="${safe(c.title)}" loading="lazy">`).join('')}</div>${vehicle?'<div class="vehicle-contact" role="status"></div>':/^\+?[\d\s()-]{7,20}$/.test(c.contact_phone||'')?`<p><a href="tel:${safe(c.contact_phone.replace(/[^+\d]/g,''))}">تماس با آگهی‌دهنده: <bdi>${safe(c.contact_phone)}</bdi></a></p>`:'<p class="meta">برای پیگیری این آگهی، به بخش آگهی‌های اپ یولداش مراجعه کنید.</p>'}`+deleteButton(c)+'<p id="deleteFeedback" role="status"></p>';if(!$('#detail').open)$('#detail').showModal();if(vehicle)await loadVehicleContact(c,$('.vehicle-contact'));}
 $('#cards').onclick=e=>{const d=e.target.closest('[data-delete-id]');if(d){deleteAd(d.dataset.deleteId);return}const b=e.target.closest('[data-id]');if(b)openDetail(b.dataset.id)};$('#close').onclick=()=>$('#detail').close();$('#detail').onclick=e=>{if(e.target===$('#detail')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close()}};document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{if(tab===b.dataset.tab)return;tab=b.dataset.tab;const url=new URL(location);url.searchParams.set('tab',tab);url.searchParams.delete('id');history.replaceState(null,'',url);configure();load()});['query','country','category'].forEach(id=>$('#'+id).addEventListener('input',()=>{if(!busy)render()}));$('#reset').onclick=()=>{['query','country','category'].forEach(id=>$('#'+id).value='');if(!busy)render()};$('#refresh').onclick=()=>load();$('#more').onclick=()=>{if(!busy)load(true)};configure();initAccess();
 
-async function initAccess(){try{const {data:{session}}=await supabase.auth.getSession();actor=session?.user||null;superAdmin=false;if(actor){const {data,error}=await supabase.rpc('yoldash_is_super_admin',{p_user_id:actor.id});superAdmin=!error&&data===true;}}catch{actor=null;superAdmin=false;}mine=mine&&!!actor;$('#mineAds').hidden=!actor;$('#mineAds').setAttribute('aria-pressed',String(mine));load();}
+async function initAccess(){const previousActor=actor?.id;try{const {data:{session}}=await supabase.auth.getSession();actor=session?.user||null;superAdmin=false;if(actor){const {data,error}=await supabase.rpc('yoldash_is_super_admin',{p_user_id:actor.id});superAdmin=!error&&data===true;}}catch{actor=null;superAdmin=false;}if(previousActor!==actor?.id&&$('#detail').open)$('#detail').close();mine=mine&&!!actor;$('#mineAds').hidden=!actor;$('#mineAds').setAttribute('aria-pressed',String(mine));load();}
 $('#mineAds').onclick=()=>{if(deleting||!actor)return;mine=!mine;$('#mineAds').setAttribute('aria-pressed',String(mine));load()};
 $('#detailBody').addEventListener('click',e=>{const d=e.target.closest('[data-delete-id]');if(d)deleteAd(d.dataset.deleteId)});
 async function deleteAd(id){if(deleting||busy)return;const c=items.find(row=>row.id===id);if(!c||!canDelete(c))return;if(!window.confirm('آیا این آگهی حذف شود؟ این کار قابل بازگشت نیست.'))return;deleting=true;const mode=tab;document.querySelectorAll('[data-delete-id]').forEach(b=>b.disabled=true);try{const {data:{user},error:authError}=await supabase.auth.getUser();if(authError||!user||user.id!==actor?.id)throw Error('auth');if(mode==='vehicles'){const {error}=await supabase.rpc('delete_vehicle_marketplace_listing',{p_listing_id:id});if(error)throw error;}else{const {data,error}=await supabase.from('driver_hub_listings').delete().eq('id',id).select('id');if(error||data?.length!==1)throw Error('forbidden');}if($('#detail').open)$('#detail').close();await load();$('#status').textContent='آگهی حذف شد.';}catch{const target=$('#detail').open?$('#deleteFeedback'):$('#status');if(target)target.textContent='حذف انجام نشد؛ دسترسی حساب و اتصال اینترنت را بررسی کنید.';}finally{deleting=false;document.querySelectorAll('[data-delete-id]').forEach(b=>b.disabled=false)}}
