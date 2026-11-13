@@ -1,12 +1,15 @@
 (() => {
   const labels={fa:'درباره ما',tr:'Hakkımızda',en:'About Us'};
   function currentLang(){
+    const root=(document.documentElement.lang||'').toLowerCase();
+    if(root.startsWith('tr'))return 'tr';
+    if(root.startsWith('en'))return 'en';
+    if(root.startsWith('fa'))return 'fa';
     const active=document.querySelector('.lang-switch button.active')?.dataset.lang;
     if(['fa','tr','en'].includes(active))return active;
-    const saved=localStorage.getItem('yoldash_lang');
-    if(['fa','tr','en'].includes(saved))return saved;
-    const l=(document.documentElement.lang||'fa').toLowerCase();
-    return l.startsWith('tr')?'tr':l.startsWith('en')?'en':'fa';
+    let saved='fa';
+    try{saved=localStorage.getItem('yoldash_lang')||'fa';}catch{}
+    return ['fa','tr','en'].includes(saved)?saved:'fa';
   }
   function updateLabel(){
     const el=document.querySelector('#aboutNavItem [data-about-nav-label]');
@@ -27,8 +30,16 @@
     }
     updateLabel();
     document.querySelectorAll('.lang-switch button[data-lang]').forEach(btn=>{
-      btn.addEventListener('click',()=>setTimeout(updateLabel,0));
+      btn.addEventListener('click',()=>{updateLabel();requestAnimationFrame(updateLabel);setTimeout(updateLabel,80);});
     });
+    window.addEventListener('storage',event=>{if(event.key==='yoldash_lang')updateLabel();});
+    const languageObserver=new MutationObserver(updateLabel);
+    languageObserver.observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+    const switcher=document.querySelector('.lang-switch');
+    if(switcher){
+      const activeObserver=new MutationObserver(updateLabel);
+      activeObserver.observe(switcher,{subtree:true,attributes:true,attributeFilter:['class','aria-pressed']});
+    }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();
