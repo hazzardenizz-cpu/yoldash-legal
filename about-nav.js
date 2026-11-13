@@ -1,12 +1,14 @@
 (() => {
   const labels={fa:'درباره ما',tr:'Hakkımızda',en:'About Us'};
   function currentLang(){
+    // The dashboard language switch is authoritative. The document lang can
+    // remain Persian because it is also used for the site's base/SEO markup.
+    const active=document.querySelector('.lang-switch button.active')?.dataset.lang;
+    if(['fa','tr','en'].includes(active))return active;
     const root=(document.documentElement.lang||'').toLowerCase();
     if(root.startsWith('tr'))return 'tr';
     if(root.startsWith('en'))return 'en';
     if(root.startsWith('fa'))return 'fa';
-    const active=document.querySelector('.lang-switch button.active')?.dataset.lang;
-    if(['fa','tr','en'].includes(active))return active;
     let saved='fa';
     try{saved=localStorage.getItem('yoldash_lang')||'fa';}catch{}
     return ['fa','tr','en'].includes(saved)?saved:'fa';
