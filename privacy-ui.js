@@ -3,8 +3,9 @@ fa:{title:'حریم خصوصی Yoldash',meta:'آخرین به‌روزرسانی
 tr:{title:'Yoldash Gizlilik Politikası',meta:'Son güncelleme: 29 Ekim 2026',back:'← Yoldash’a dön',body:`<p>Yoldash bir karayolu taşımacılığı platformudur. Web ve mobil uygulama ortak hesap ve altyapı kullanır.</p><h2>Hesap ve taşıma bilgileri</h2><p>Hizmet sunmak için e-posta, ad, telefon numarası, faaliyet türü, yük ilanları, çıkış ve varış noktaları, yük ve araç türleri, taşıma durumu, teklifler ve mesajlar saklanabilir ve işlenebilir.</p><h2>Konum verilerine erişim, toplama ve kullanım</h2><p>Yoldash, yalnızca izninizle cihazınızın yaklaşık veya kesin konumuna erişir, bu bilgiyi toplar ve Yoldash sunucularına gönderir. Uygulamayı kullanırken konum, yakındaki yükleri göstermek ve rota önerileri sunmak için kullanılır.</p><p>Canlı konum yalnızca canlı taşıma takibini kendiniz başlattığınızda kullanılır. Sürücü arka planda yakındaki yük bildirimlerini etkinleştirirse Yoldash, uygulama kapatıldıktan sonra yakındaki yükleri bulmak ve bildirim göndermek amacıyla yaklaşık konumu yaklaşık her 15 dakikada bir güncelleyip gönderebilir.</p><p>Bu özellik isteğe bağlıdır. Konum izni talebini reddedebilir veya Android ayarlarından konum ve arka plan güncelleme izinlerini istediğiniz zaman değiştirebilir ya da iptal edebilirsiniz. Konum verileri satılmaz ve reklam amacıyla kullanılmaz.</p><h2>Güvenlik ve kontrol</h2><p>Verilere erişim, kullanıcı hesabı ve sistem erişim politikalarıyla sınırlandırılır. Hesap bilgilerinizin düzeltilmesini veya silinmesini istemek için Yoldash destek ekibiyle iletişime geçebilirsiniz.</p><h2>İletişim</h2><p>Gizlilikle ilgili sorularınız için Yoldash’ın resmî iletişim kanallarını kullanın.</p>`},
 en:{title:'Yoldash Privacy Policy',meta:'Last updated: October 29, 2026',back:'← Back to Yoldash',body:`<p>Yoldash is a road-freight transportation platform. The web and mobile apps use a shared account and infrastructure.</p><h2>Account and transportation information</h2><p>To provide the service, Yoldash may store and process your email, name, phone number, business type, load postings, origins and destinations, cargo and vehicle types, shipment status, offers and messages.</p><h2>Access to, collection and use of location data</h2><p>Yoldash accesses your device’s approximate or precise location only with your permission, collects it and sends it to Yoldash servers. While you use the app, location is used to show nearby loads and suggest routes.</p><p>Live location is used only when you choose to start live shipment tracking. If a driver enables background nearby-load alerts, Yoldash may update and send approximate location about every 15 minutes after the app is closed to find nearby loads and send alerts.</p><p>This feature is optional. You may deny the permission request or change or revoke location and background-update permissions at any time in Android Settings. Location data is not sold or used for advertising.</p><h2>Security and control</h2><p>Data access is restricted based on user accounts and system access policies. To request correction or deletion of account information, contact Yoldash support.</p><h2>Contact</h2><p>For privacy-related questions, use Yoldash’s official support channels.</p>`}
 };
-function setLanguage(language,updateUrl=true){
- const lang=Object.hasOwn(copy,language)?language:'fa';
+window.setLegalLanguage=function(language,updateUrl){
+ if(updateUrl===undefined) updateUrl=true;
+ const lang=copy[language]?language:'fa';
  const c=copy[lang];
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==='fa'?'rtl':'ltr';
@@ -20,9 +21,9 @@ function setLanguage(language,updateUrl=true){
  try{localStorage.setItem('yoldash_legal_lang',lang);}catch{}
  if(updateUrl){const url=new URL(window.location.href);url.searchParams.set('lang',lang);window.history.replaceState({},'',url);}
 }
-document.addEventListener('DOMContentLoaded',()=>{
- document.querySelectorAll('[data-l]').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.l)));
- const requested=new URLSearchParams(window.location.search).get('lang');
- let saved='fa';try{saved=localStorage.getItem('yoldash_legal_lang')||'fa';}catch{}
- setLanguage(['fa','tr','en'].includes(requested)?requested:(['fa','tr','en'].includes(saved)?saved:'fa'),false);
+document.querySelectorAll('[data-l]').forEach(function(button){
+ button.addEventListener('click',function(){window.setLegalLanguage(button.getAttribute('data-l'));});
 });
+var requested='';try{requested=new URLSearchParams(window.location.search).get('lang')||'';}catch{}
+var saved='fa';try{saved=localStorage.getItem('yoldash_legal_lang')||'fa';}catch{}
+window.setLegalLanguage((requested==='fa'||requested==='tr'||requested==='en')?requested:((saved==='fa'||saved==='tr'||saved==='en')?saved:'fa'),false);

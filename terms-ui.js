@@ -3,8 +3,9 @@ fa:{title:'شرایط استفاده Yoldash',meta:'آخرین به‌روزرس
 tr:{title:'Yoldash Kullanım Şartları',meta:'Son güncelleme: 1 Ekim 2026',back:'← Yoldash’a dön',body:`<p>Yoldash’ı kullanarak hesap ve taşıma bilgilerini doğru ve hukuka uygun şekilde girmeyi kabul edersiniz.</p><h2>Hizmetin niteliği</h2><p>Yoldash, karayolu taşımacılığı süreçleri için iletişim ve yönetim araçları sunar. Kullanıcılar kendi taşımalarıyla ilgili işlem koşullarını, belgeleri, izinleri, sigortayı ve geçerli yasal gereklilikleri kontrol etmekten sorumludur.</p><h2>Kullanıcı hesabı</h2><p>Hesabınızın ve giriş bilgilerinizin güvenliğinden siz sorumlusunuz. Başka bir kişinin hesabını kullanamazsınız.</p><h2>Yük ilanları ve taşıma talepleri</h2><p>Yük, fiyat, güzergâh ve kapasite bilgileri mümkün olduğunca doğru olmalıdır. Dolandırıcılık, yasa dışı içerik ve diğer kullanıcıların kötüye kullanılması yasaktır.</p><h2>Değişiklikler</h2><p>Yoldash, güvenlik, hizmet kalitesi veya yasal gereklilikler nedeniyle bu şartları ve hizmet özelliklerini güncelleyebilir.</p>`},
 en:{title:'Yoldash Terms of Use',meta:'Last updated: October 1, 2026',back:'← Back to Yoldash',body:`<p>By using Yoldash, you agree to enter accurate and lawful account and transportation information.</p><h2>Nature of the service</h2><p>Yoldash provides communication and workflow-management tools for road transportation. Users are responsible for checking the transaction terms, documents, permits, insurance and legal requirements applicable to their shipments.</p><h2>User account</h2><p>You are responsible for keeping your account and sign-in information secure. You must not use another person’s account.</p><h2>Load postings and transport requests</h2><p>Load, price, route and capacity details should be as accurate as possible. Fraudulent activity, unlawful content and misuse of other users are prohibited.</p><h2>Changes</h2><p>Yoldash may update these terms and service features for security, quality or legal-compliance reasons.</p>`}
 };
-function setLanguage(language, updateUrl=true){
- const lang=Object.hasOwn(copy,language)?language:'fa';
+window.setLegalLanguage=function(language, updateUrl){
+ if(updateUrl===undefined) updateUrl=true;
+ const lang=copy[language]?language:'fa';
  const c=copy[lang];
  document.documentElement.lang=lang;
  document.documentElement.dir=lang==='fa'?'rtl':'ltr';
@@ -24,9 +25,9 @@ function setLanguage(language, updateUrl=true){
   window.history.replaceState({},'',url);
  }
 }
-document.addEventListener('DOMContentLoaded',()=>{
- document.querySelectorAll('[data-l]').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.l)));
- const requested=new URLSearchParams(window.location.search).get('lang');
- let saved='fa';try{saved=localStorage.getItem('yoldash_legal_lang')||'fa';}catch{}
- setLanguage(['fa','tr','en'].includes(requested)?requested:(['fa','tr','en'].includes(saved)?saved:'fa'),false);
+document.querySelectorAll('[data-l]').forEach(function(button){
+ button.addEventListener('click',function(){window.setLegalLanguage(button.getAttribute('data-l'));});
 });
+var requested='';try{requested=new URLSearchParams(window.location.search).get('lang')||'';}catch{}
+var saved='fa';try{saved=localStorage.getItem('yoldash_legal_lang')||'fa';}catch{}
+window.setLegalLanguage((requested==='fa'||requested==='tr'||requested==='en')?requested:((saved==='fa'||saved==='tr'||saved==='en')?saved:'fa'),false);
