@@ -206,10 +206,20 @@
     nodes.forEach(translateTextNode);
     translateAttributes(root);
   };
+  const syncDashboardMarketplaceLabel = lang => {
+    const label = document.querySelector('#mainNavigation a[href="/marketplace"] span:last-child');
+    if (!label) return;
+    label.textContent = ({
+      fa: "آگهی‌ها",
+      tr: "İlanlar",
+      en: "Listings"
+    })[supported.has(lang) ? lang : "fa"];
+  };
   const setLanguage = (lang, persist = true) => {
     if (!supported.has(lang)) lang = "fa";
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+    syncDashboardMarketplaceLabel(lang);
     if (persist) {
       try { localStorage.setItem("yoldash_lang", lang); } catch {}
     }
