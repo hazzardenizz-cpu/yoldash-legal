@@ -213,7 +213,7 @@
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
-    translateTree(document.body);
+    if (document.getElementById('marketMain')) translateTree(document.body);
     const cta = document.querySelector('a[href="/marketplace"].home-marketplace-link');
     if (cta) cta.textContent = ({
       fa: "مشاهده آگهی‌های خودرو و رانندگان",
@@ -249,6 +249,7 @@
     if (event.key === "yoldash_lang") setLanguage(event.newValue || "fa", false);
   });
   const observer = new MutationObserver(records => {
+    if (!document.getElementById('marketMain')) return;
     for (const record of records) {
       if (record.type === "characterData") translateTextNode(record.target);
       else for (const node of record.addedNodes) if (node.nodeType === 1) translateTree(node); else if (node.nodeType === 3) translateTextNode(node);
