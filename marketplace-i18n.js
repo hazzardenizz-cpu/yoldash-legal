@@ -162,8 +162,8 @@
     if (row) return lang === "fa" ? source : row[lang === "tr" ? 0 : 1];
     const count = source.match(/^([\d۰-۹٠-٩,٬.]+)\s+آگهی از\s+([\d۰-۹٠-٩,٬.]+)\s+آگهی دریافت‌شده$/);
     if (count) {
-      if (lang === "tr") return count[1] + " eşleşen ilan / " + count[2] + " alınan ilan";
-      if (lang === "en") return count[1] + " matching / " + count[2] + " listings received";
+      if (lang === "tr") return count[1] + " eşleşme · " + count[2] + " ilan yüklendi";
+      if (lang === "en") return count[1] + " matches · " + count[2] + " listings loaded";
     }
     return source;
   };
