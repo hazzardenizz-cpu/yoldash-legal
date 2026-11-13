@@ -6,3 +6,15 @@
 .vehicle-contact .meta{flex-basis:100%;margin:0}
 .vehicle-contact a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:6px 16px;border:1px solid #40516c;border-radius:12px;color:var(--text)}
 .vehicle-contact a:hover{background:var(--surface-raised);border-color:var(--gold)}
+
+.market-lang-switch{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.market-lang-switch button{min-height:34px;padding:4px 10px;border-radius:9px;font:700 11px/1 Arial,sans-serif;letter-spacing:.4px;color:var(--muted);background:var(--surface);border-color:var(--line)}
+.market-lang-switch button.active{color:#211708;background:var(--gold);border-color:var(--gold)}
+:dir(ltr) .sidebar{inset:0 auto 0 0;border-left:0;border-right:1px solid var(--line)}
+:dir(ltr) .workspace{margin-right:0;margin-left:228px}
+:dir(ltr) .skip{right:auto;left:24px}
+:dir(ltr) .tabs button{text-align:left}
+:dir(ltr) #adClose,:dir(ltr) #close{float:right}
+@media(max-width:1200px){:dir(ltr) .workspace{margin-left:208px}}
+@media(max-width:850px){:dir(ltr) .workspace{margin-left:0}}
+@media(max-width:520px){.market-lang-switch{gap:4px}.market-lang-switch button{min-height:32px;padding:4px 8px}.topbar{gap:8px}}
