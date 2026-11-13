@@ -244,7 +244,7 @@
     const requested = new URL(location.href).searchParams.get("lang");
     let saved = "fa";
     try { saved = localStorage.getItem("yoldash_lang") || "fa"; } catch {}
-    setLanguage(supported.has(requested) ? requested : saved, false);
+    setLanguage(supported.has(requested) ? requested : saved, supported.has(requested));
   };
   document.addEventListener("click", event => {
     const button = event.target.closest("[data-market-lang]");
